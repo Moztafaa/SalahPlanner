@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PrayerTasker.Application.Services.PrayerTimeService;
 using PrayerTasker.Domain.IdentityEntities;
 using PrayerTasker.Infrastructure.DatabaseContext;
+using PrayerTasker.Infrastructure.PrayerTimeCall;
 
 namespace PrayerTasker.Infrastructure.DI;
 
@@ -36,6 +38,9 @@ public static class ServiceContainer
             options.LoginPath = "/Account/Login";
             options.AccessDeniedPath = "/Account/AccessDenied";
         });
+
+        // Register HttpClient for PrayerTimeService
+        services.AddHttpClient<IPrayerTimeService, PrayerTimeService>();
     }
 
 }

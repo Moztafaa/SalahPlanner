@@ -5,6 +5,8 @@ namespace PrayerTasker.Domain.IdentityEntities;
 
 public class ApplicationUser : IdentityUser<Guid>
 {
+
+    public required string FullName { get; set; }
     public string? DefaultCity { get; set; }
     public string? DefaultCountry { get; set; }
     public int CalculationMethod { get; set; }

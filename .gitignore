@@ -177,10 +177,9 @@ Desktop.ini
 *.tmp
 *~
 
-# Application specific settings
+# Application specific settings - Exclude all appsettings files with sensitive data
+appsettings.json
 appsettings.*.json
-!appsettings.json
-!appsettings.Development.json
 !appsettings.Example.json
 
 # Build and deployment
