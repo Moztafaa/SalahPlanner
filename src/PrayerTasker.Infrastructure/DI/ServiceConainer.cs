@@ -8,8 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PrayerTasker.Application.Services.PrayerTimeService;
 using PrayerTasker.Domain.IdentityEntities;
+using PrayerTasker.Domain.RepositoryInterfaces;
 using PrayerTasker.Infrastructure.DatabaseContext;
 using PrayerTasker.Infrastructure.PrayerTimeCall;
+using PrayerTasker.Infrastructure.RepositoryImplementation;
 
 namespace PrayerTasker.Infrastructure.DI;
 
@@ -18,6 +20,7 @@ public static class ServiceContainer
     public static void AddInfrastructureServices(this IServiceCollection services, WebApplicationBuilder builder)
     {
 
+        services.AddScoped<IDailyUserPrayerTimeRepository, DailyUserPrayerTimeRepository>();
 
         // add infrastructure services here for identity, database, logging, etc.
         // Identity
@@ -39,8 +42,10 @@ public static class ServiceContainer
             options.AccessDeniedPath = "/Account/AccessDenied";
         });
 
+
         // Register HttpClient for PrayerTimeService
         services.AddHttpClient<IPrayerTimeService, PrayerTimeService>();
+
     }
 
 }

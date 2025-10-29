@@ -7,7 +7,7 @@ namespace PrayerTasker.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[AllowAnonymous]
+
 public class PrayerTimeController : ControllerBase
 {
     private readonly IPrayerTimeService _prayerTimeService;

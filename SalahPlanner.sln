@@ -1,0 +1,52 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrayerTasker.Domain", "\home\mostafa\Documents\Projects\PrayerTime-Tasker\src\PrayerTasker.Domain\PrayerTasker.Domain.csproj", "{49CCD85C-FB9F-0597-4A04-E5AF61B73981}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrayerTasker.Infrastructure", "\home\mostafa\Documents\Projects\PrayerTime-Tasker\src\PrayerTasker.Infrastructure\PrayerTasker.Infrastructure.csproj", "{4E92BB6C-3CD6-16DA-ED27-594CE2F0C6F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrayerTasker.Application", "\home\mostafa\Documents\Projects\PrayerTime-Tasker\src\PrayerTasker.Application\PrayerTasker.Application.csproj", "{9BD8B1C6-2AAD-90D2-D671-84BD849AA298}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrayerTasker.Api", "\home\mostafa\Documents\Projects\PrayerTime-Tasker\src\PrayerTasker.Api\PrayerTasker.Api.csproj", "{83F7793C-F8AC-B204-E1ED-2B4FF54155F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0C88DD14-F956-CE84-757C-A364CCF449FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{49CCD85C-FB9F-0597-4A04-E5AF61B73981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49CCD85C-FB9F-0597-4A04-E5AF61B73981}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49CCD85C-FB9F-0597-4A04-E5AF61B73981}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49CCD85C-FB9F-0597-4A04-E5AF61B73981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E92BB6C-3CD6-16DA-ED27-594CE2F0C6F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E92BB6C-3CD6-16DA-ED27-594CE2F0C6F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E92BB6C-3CD6-16DA-ED27-594CE2F0C6F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E92BB6C-3CD6-16DA-ED27-594CE2F0C6F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BD8B1C6-2AAD-90D2-D671-84BD849AA298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD8B1C6-2AAD-90D2-D671-84BD849AA298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BD8B1C6-2AAD-90D2-D671-84BD849AA298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BD8B1C6-2AAD-90D2-D671-84BD849AA298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F7793C-F8AC-B204-E1ED-2B4FF54155F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F7793C-F8AC-B204-E1ED-2B4FF54155F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F7793C-F8AC-B204-E1ED-2B4FF54155F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F7793C-F8AC-B204-E1ED-2B4FF54155F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{49CCD85C-FB9F-0597-4A04-E5AF61B73981} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{4E92BB6C-3CD6-16DA-ED27-594CE2F0C6F1} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{9BD8B1C6-2AAD-90D2-D671-84BD849AA298} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{83F7793C-F8AC-B204-E1ED-2B4FF54155F2} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE1D5769-5F01-4D2D-8062-F1E00EF7D954}
+	EndGlobalSection
+EndGlobal

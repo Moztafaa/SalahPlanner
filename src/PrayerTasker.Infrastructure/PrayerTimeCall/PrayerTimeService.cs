@@ -1,16 +1,20 @@
 using System.Text.Json;
 using PrayerTasker.Application.DTOs.PrayerTime;
 using PrayerTasker.Application.Services.PrayerTimeService;
+using PrayerTasker.Domain.Entities;
+using PrayerTasker.Domain.RepositoryInterfaces;
 using PrayerTasker.Infrastructure.Exceptions;
 namespace PrayerTasker.Infrastructure.PrayerTimeCall;
 
 public class PrayerTimeService : IPrayerTimeService
 {
+    private readonly IDailyUserPrayerTimeRepository _dailyUserPrayerTimeRepository;
     private readonly HttpClient _httpClient;
     private const string BaseUrl = "https://api.aladhan.com/v1";
 
-    public PrayerTimeService(HttpClient httpClient)
+    public PrayerTimeService(IDailyUserPrayerTimeRepository dailyUserPrayerTimeRepository, HttpClient httpClient)
     {
+        _dailyUserPrayerTimeRepository = dailyUserPrayerTimeRepository;
         _httpClient = httpClient;
         _httpClient.BaseAddress = new Uri(BaseUrl);
     }
@@ -24,6 +28,22 @@ public class PrayerTimeService : IPrayerTimeService
 
             // Build the API URL
             string url = $"/timingsByCity/{dateString}?city={Uri.EscapeDataString(city)}&country={Uri.EscapeDataString(country)}&method={method}";
+
+            // Check the cache from DailyUserPrayerTime table before making the API call
+            DailyUserPrayerTime? cachedPrayerTime = await _dailyUserPrayerTimeRepository.GetCachedPrayerTimeAsync(date, method);
+
+            if (cachedPrayerTime != null)
+            {
+                return new PrayerTimesDto
+                {
+                    Date = cachedPrayerTime.Date,
+                    Fajr = cachedPrayerTime.Fajr!,
+                    Dhuhr = cachedPrayerTime.Dhuhr!,
+                    Asr = cachedPrayerTime.Asr!,
+                    Maghrib = cachedPrayerTime.Maghrib!,
+                    Isha = cachedPrayerTime.Isha!
+                };
+            }
 
             // Make the API call
             HttpResponseMessage response = await _httpClient.GetAsync(url);
@@ -40,6 +60,18 @@ public class PrayerTimeService : IPrayerTimeService
             {
                 throw new PrayerTimeServiceException($"Failed to fetch prayer times. API returned code: {apiResponse?.Code}");
             }
+            // Save to cache
+            var newPrayerTime = new DailyUserPrayerTime
+            {
+                Id = Guid.NewGuid(),
+                Date = date,
+                Fajr = apiResponse.Data.Timings.Fajr,
+                Dhuhr = apiResponse.Data.Timings.Dhuhr,
+                Asr = apiResponse.Data.Timings.Asr,
+                Maghrib = apiResponse.Data.Timings.Maghrib,
+                Isha = apiResponse.Data.Timings.Isha
+            };
+            await _dailyUserPrayerTimeRepository.AddPrayerTimeAsync(newPrayerTime);
 
             // Map the API response to our DTO
             return new PrayerTimesDto
@@ -62,5 +94,3 @@ public class PrayerTimeService : IPrayerTimeService
         }
     }
 }
-
-// Internal classes for deserializing the AlAdhan API response
