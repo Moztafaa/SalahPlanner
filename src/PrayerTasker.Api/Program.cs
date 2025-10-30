@@ -14,6 +14,7 @@ builder.Services.AddDomainServices();
 builder.Services.AddInfrastructureServices(builder);
 builder.Services.AddApplicationServices();
 
+// TODO: Fix Maghrib is empty in Prayer Times response
 
 
 WebApplication app = builder.Build();
@@ -25,7 +26,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseHangfireDashboard();
 app.MapControllers();

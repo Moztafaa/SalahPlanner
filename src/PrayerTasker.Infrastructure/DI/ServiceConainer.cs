@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PrayerTasker.Application.Services.PrayerTimeService;
 using PrayerTasker.Domain.IdentityEntities;
+using PrayerTasker.Domain.RepositoryInterface;
 using PrayerTasker.Domain.RepositoryInterfaces;
 using PrayerTasker.Infrastructure.DatabaseContext;
 using PrayerTasker.Infrastructure.PrayerTimeCall;
@@ -21,6 +22,7 @@ public static class ServiceContainer
     {
 
         services.AddScoped<IDailyUserPrayerTimeRepository, DailyUserPrayerTimeRepository>();
+        services.AddScoped<ITaskRepository, TaskRepository>();
 
         // add infrastructure services here for identity, database, logging, etc.
         // Identity

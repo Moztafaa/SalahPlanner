@@ -7,6 +7,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
+# ignore Code review md CODE_REVIEW.md
+CODE_REVIEW.md
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

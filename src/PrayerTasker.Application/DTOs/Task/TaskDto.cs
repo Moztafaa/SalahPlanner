@@ -1,9 +1,10 @@
+using System;
 using PrayerTasker.Domain.Enums;
 using PrayerTasker.Domain.IdentityEntities;
 
-namespace PrayerTasker.Domain.Entities;
+namespace PrayerTasker.Application.DTOs.Task;
 
-public class Taask
+public class TaskDto
 {
     public Guid Id { get; set; }
     public string? Title { get; set; }
@@ -14,5 +15,5 @@ public class Taask
 
     public Guid? ApplicationUserId { get; set; }
     public ApplicationUser? ApplicationUser { get; set; }
-}
 
+}
