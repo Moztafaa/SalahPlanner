@@ -42,4 +42,44 @@ public class AccountService(UserManager<ApplicationUser> _userManager,
     }
 
     public async Task<ApplicationUser?> GetUserByEmailAsync(string email) => await _userManager.FindByEmailAsync(email);
+    public async Task<IdentityResult> SetUserSettingsAsync(string userId, UserSettingsDto settings)
+    {
+        ApplicationUser? user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            return IdentityResult.Failed(new IdentityError
+            {
+                Code = "UserNotFound",
+                Description = "User not found."
+            });
+        }
+
+        // update user settings
+        user.DefaultCity = settings.DefaultCity;
+        user.DefaultCountry = settings.DefaultCountry;
+        user.CalculationMethod = settings.CalculationMethod;
+
+        return await _userManager.UpdateAsync(user);
+
+    }
+
+    public async Task<UserSettingsDto?> GetUserSettingsAsync(string userId)
+    {
+        ApplicationUser? user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            return null;
+        }
+
+        // map user settings to dto
+        var settings = new UserSettingsDto
+        {
+            DefaultCity = user.DefaultCity!,
+            DefaultCountry = user.DefaultCountry!,
+            CalculationMethod = user.CalculationMethod!
+        };
+
+        return settings;
+
+    }
 }

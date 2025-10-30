@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PrayerTasker.Application.Services.Account;
 using PrayerTasker.Application.DTOs.Account;
 using PrayerTasker.Domain.IdentityEntities;
+using System.Security.Claims;
 
 namespace PrayerTasker.Api.Controllers;
 
@@ -11,6 +12,32 @@ namespace PrayerTasker.Api.Controllers;
 [ApiController]
 public class AccountController(IAccountService _accountService) : ControllerBase
 {
+    // TODO: PUT /api/auth/me/settings to update user settings like default city, country, calculation method, etc.
+    [HttpPut("me/settings")]
+    public async Task<IActionResult> UpdateUserSettings([FromBody] UserSettingsDto settings)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Unauthorized(new { Message = "User is not authenticated" });
+        }
+
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new { Message = "User ID not found in token" });
+        }
+
+        IdentityResult result = await _accountService.SetUserSettingsAsync(userId, settings);
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "User settings updated successfully" });
+        }
+        return BadRequest(new
+        {
+            errors = result.Errors.Select(e => new { e.Code, e.Description })
+        });
+    }
+
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {

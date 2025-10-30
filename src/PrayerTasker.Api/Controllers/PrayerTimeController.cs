@@ -3,6 +3,8 @@ using PrayerTasker.Application.Services.PrayerTimeService;
 using PrayerTasker.Application.DTOs.PrayerTime;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using PrayerTasker.Application.Services.Account;
+using PrayerTasker.Application.DTOs.Account;
 
 namespace PrayerTasker.Api.Controllers;
 
@@ -13,9 +15,11 @@ public class PrayerTimeController : ControllerBase
 {
     private readonly IPrayerTimeService _prayerTimeService;
     private readonly ILogger<PrayerTimeController> _logger;
+    private readonly IAccountService _accountService;
 
-    public PrayerTimeController(IPrayerTimeService prayerTimeService, ILogger<PrayerTimeController> logger)
+    public PrayerTimeController(IPrayerTimeService prayerTimeService, IAccountService accountService, ILogger<PrayerTimeController> logger)
     {
+        _accountService = accountService;
         _prayerTimeService = prayerTimeService;
         _logger = logger;
     }
@@ -56,25 +60,38 @@ public class PrayerTimeController : ControllerBase
     /// <returns>Prayer times for the specified location and date</returns>
     [HttpGet]
     public async Task<ActionResult<PrayerTimesDto>> GetPrayerTimes(
-        [FromQuery] string city,
-        [FromQuery] string country,
-        [FromQuery] int method = 5,
+        [FromQuery] string? city,
+        [FromQuery] string? country,
+        [FromQuery] int? method = null,
         [FromQuery] string? date = null)
     {
         try
         {
 
-            // Validate required parameters
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                UserSettingsDto? userSettings = await _accountService.GetUserSettingsAsync(userId);
+                if (userSettings != null)
+                {
+                    //  Override city, country, method if user settings are available
+                    city = userSettings.DefaultCity ?? city;
+                    country = userSettings.DefaultCountry ?? country;
+                    method ??= userSettings.CalculationMethod != 0 ? userSettings.CalculationMethod : null;
+                }
+            }
+            // Validate required parameters (after attempting to load from user settings)
             if (string.IsNullOrWhiteSpace(city))
             {
-                return BadRequest("City parameter is required");
+                return BadRequest(new { error = "City parameter is required. Please provide a city or set your default city in user settings." });
             }
 
             if (string.IsNullOrWhiteSpace(country))
             {
-                return BadRequest("Country parameter is required");
+                return BadRequest(new { error = "Country parameter is required. Please provide a country or set your default country in user settings." });
             }
-
+            int calcMethod = method ?? 5; // Default to 8 (Gulf Region) if not provided
             // Parse date or use today
             DateTime requestDate;
             if (string.IsNullOrWhiteSpace(date))
@@ -91,10 +108,8 @@ public class PrayerTimeController : ControllerBase
 
             // Get UserId from authenticated user if Available
             // string? userId = User?.Identity?.IsAuthenticated == true ? User.Identity.Name : null;
-            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             // Get prayer times
-            PrayerTimesDto prayerTimes = await _prayerTimeService.GetPrayerTimesAsync(city, country, method, requestDate, userId);
+            PrayerTimesDto prayerTimes = await _prayerTimeService.GetPrayerTimesAsync(city, country, calcMethod, requestDate, userId);
 
             return Ok(prayerTimes);
         }
