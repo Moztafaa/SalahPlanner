@@ -47,4 +47,39 @@ public class AccountController(IAccountService _accountService) : ControllerBase
         });
     }
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto loginDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var signInResult = await _accountService.LoginAsync(loginDto);
+        if (signInResult.Succeeded)
+        {
+            ApplicationUser? user = await _accountService.GetUserByEmailAsync(loginDto.Email);
+            if (user != null)
+            {
+                return Ok(new LoginResponseDto
+                {
+                    UserId = user.Id.ToString(),
+                    UserName = user.UserName!,
+                    Email = user.Email!,
+                    FullName = user.FullName!,
+                    Message = "Login successful"
+                });
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, "Login succeeded but user data is unavailable.");
+        }
+        return Unauthorized(new { Message = "Invalid email or password" });
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _accountService.LogoutAsync();
+        return Ok(new { Message = "Logout successful" });
+    }
+
 }

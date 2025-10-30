@@ -13,6 +13,7 @@ public class DailyUserPrayerTime
     public string? Asr { get; set; }
     public string? Maghrib { get; set; }
     public string? Isha { get; set; }
+    public int Method { get; set; }
     public Guid? ApplicationUserId { get; set; }
     public ApplicationUser? ApplicationUser { get; set; }
 }

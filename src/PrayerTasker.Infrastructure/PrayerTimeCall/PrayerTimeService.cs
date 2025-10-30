@@ -19,7 +19,7 @@ public class PrayerTimeService : IPrayerTimeService
         _httpClient.BaseAddress = new Uri(BaseUrl);
     }
 
-    public async Task<PrayerTimesDto> GetPrayerTimesAsync(string city, string country, int method, DateTime date)
+    public async Task<PrayerTimesDto> GetPrayerTimesAsync(string city, string country, int method, DateTime date, string? userId = null)
     {
         try
         {
@@ -29,8 +29,10 @@ public class PrayerTimeService : IPrayerTimeService
             // Build the API URL
             string url = $"/timingsByCity/{dateString}?city={Uri.EscapeDataString(city)}&country={Uri.EscapeDataString(country)}&method={method}";
 
+            // Get the User from cookie
+
             // Check the cache from DailyUserPrayerTime table before making the API call
-            DailyUserPrayerTime? cachedPrayerTime = await _dailyUserPrayerTimeRepository.GetCachedPrayerTimeAsync(date, method);
+            DailyUserPrayerTime? cachedPrayerTime = await _dailyUserPrayerTimeRepository.GetCachedPrayerTimeAsync(date, method, userId);
 
             if (cachedPrayerTime != null)
             {
@@ -69,7 +71,9 @@ public class PrayerTimeService : IPrayerTimeService
                 Dhuhr = apiResponse.Data.Timings.Dhuhr,
                 Asr = apiResponse.Data.Timings.Asr,
                 Maghrib = apiResponse.Data.Timings.Maghrib,
-                Isha = apiResponse.Data.Timings.Isha
+                Isha = apiResponse.Data.Timings.Isha,
+                Method = method,
+                ApplicationUserId = userId!.ToString() != null ? Guid.Parse(userId) : null
             };
             await _dailyUserPrayerTimeRepository.AddPrayerTimeAsync(newPrayerTime);
 

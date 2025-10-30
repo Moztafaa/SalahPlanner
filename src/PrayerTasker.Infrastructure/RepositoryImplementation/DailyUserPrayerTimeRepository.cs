@@ -13,10 +13,12 @@ public class DailyUserPrayerTimeRepository(AppDbContext _context) : IDailyUserPr
         await _context.DailyUserPrayerTimes.AddAsync(prayerTime);
         await _context.SaveChangesAsync();
     }
-    public async Task<DailyUserPrayerTime?> GetCachedPrayerTimeAsync(DateTime date, int method)
+    public async Task<DailyUserPrayerTime?> GetCachedPrayerTimeAsync(DateTime date, int method, string? userId = null)
     {
         // TODO: Use 'method' parameter to filter cached prayer times if needed in future && Add UserId filtering
         return await _context.DailyUserPrayerTimes
-            .FirstOrDefaultAsync(pt => pt.Date.Date == date.Date);
+            .FirstOrDefaultAsync(pt => pt.Date.Date == date.Date
+            && pt.ApplicationUserId.ToString() == userId
+            && pt.Method == method);
     }
 }

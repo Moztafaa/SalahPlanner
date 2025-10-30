@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using PrayerTasker.Application.Services.PrayerTimeService;
 using PrayerTasker.Application.DTOs.PrayerTime;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace PrayerTasker.Api.Controllers;
 
@@ -62,6 +63,7 @@ public class PrayerTimeController : ControllerBase
     {
         try
         {
+
             // Validate required parameters
             if (string.IsNullOrWhiteSpace(city))
             {
@@ -87,8 +89,12 @@ public class PrayerTimeController : ControllerBase
                 }
             }
 
+            // Get UserId from authenticated user if Available
+            // string? userId = User?.Identity?.IsAuthenticated == true ? User.Identity.Name : null;
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             // Get prayer times
-            PrayerTimesDto prayerTimes = await _prayerTimeService.GetPrayerTimesAsync(city, country, method, requestDate);
+            PrayerTimesDto prayerTimes = await _prayerTimeService.GetPrayerTimesAsync(city, country, method, requestDate, userId);
 
             return Ok(prayerTimes);
         }

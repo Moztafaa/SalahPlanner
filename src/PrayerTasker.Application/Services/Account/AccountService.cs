@@ -9,8 +9,17 @@ namespace PrayerTasker.Application.Services.Account;
 public class AccountService(UserManager<ApplicationUser> _userManager,
                             SignInManager<ApplicationUser> _signInManager, IMapper _mapper) : IAccountService
 {
-    public Task<SignInResult> LoginAsync(LoginDto loginDto) => throw new NotImplementedException();
-    public Task LogoutAsync() => throw new NotImplementedException();
+    public async Task<SignInResult> LoginAsync(LoginDto loginDto)
+    {
+        ApplicationUser? user = await _userManager.FindByEmailAsync(loginDto.Email);
+        if (user == null)
+        {
+            return SignInResult.Failed;
+        }
+        return await _signInManager.PasswordSignInAsync(user.UserName!, loginDto.Password, isPersistent: true, lockoutOnFailure: false);
+
+    }
+    public async Task LogoutAsync() => await _signInManager.SignOutAsync();
     public async Task<(IdentityResult Result, ApplicationUser User)> RegisterAsync(RegisterDto registerDto)
     {
         // map register dto to application user
@@ -32,5 +41,5 @@ public class AccountService(UserManager<ApplicationUser> _userManager,
 
     }
 
-
+    public async Task<ApplicationUser?> GetUserByEmailAsync(string email) => await _userManager.FindByEmailAsync(email);
 }
