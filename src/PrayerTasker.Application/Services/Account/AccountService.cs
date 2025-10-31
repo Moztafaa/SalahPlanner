@@ -9,6 +9,7 @@ namespace PrayerTasker.Application.Services.Account;
 public class AccountService(UserManager<ApplicationUser> _userManager,
                             SignInManager<ApplicationUser> _signInManager, IMapper _mapper) : IAccountService
 {
+    // TODO: Implement Rate limiting on login attempts to prevent brute-force attacks
     public async Task<SignInResult> LoginAsync(LoginDto loginDto)
     {
         ApplicationUser? user = await _userManager.FindByEmailAsync(loginDto.Email);
@@ -16,7 +17,7 @@ public class AccountService(UserManager<ApplicationUser> _userManager,
         {
             return SignInResult.Failed;
         }
-        return await _signInManager.PasswordSignInAsync(user.UserName!, loginDto.Password, isPersistent: true, lockoutOnFailure: false);
+        return await _signInManager.PasswordSignInAsync(user.UserName!, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
 
     }
     public async Task LogoutAsync() => await _signInManager.SignOutAsync();
@@ -30,14 +31,7 @@ public class AccountService(UserManager<ApplicationUser> _userManager,
     public async Task<bool> IsEmailAlreadyRegistered(string email)
     {
         ApplicationUser? user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
-        {
-            return await Task.FromResult(false);
-        }
-        else
-        {
-            return await Task.FromResult(true);
-        }
+        return user is not null;
 
     }
 
@@ -62,6 +56,9 @@ public class AccountService(UserManager<ApplicationUser> _userManager,
         return await _userManager.UpdateAsync(user);
 
     }
+
+    // Update user settings
+    
 
     public async Task<UserSettingsDto?> GetUserSettingsAsync(string userId)
     {

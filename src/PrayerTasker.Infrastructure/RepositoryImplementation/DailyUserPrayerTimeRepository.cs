@@ -8,14 +8,17 @@ namespace PrayerTasker.Infrastructure.RepositoryImplementation;
 
 public class DailyUserPrayerTimeRepository(AppDbContext _context) : IDailyUserPrayerTimeRepository
 {
+
     public async Task AddPrayerTimeAsync(DailyUserPrayerTime prayerTime)
     {
         await _context.DailyUserPrayerTimes.AddAsync(prayerTime);
         await _context.SaveChangesAsync();
     }
+
+    // TODO: User Redis or In-Memory caching for better performance
     public async Task<DailyUserPrayerTime?> GetCachedPrayerTimeAsync(DateTime date, int method, string? userId = null)
     {
-        // TODO: Use 'method' parameter to filter cached prayer times if needed in future && Add UserId filtering
+        // ! "Done" Use 'method' parameter to filter cached prayer times if needed in future && Add UserId filtering
         return await _context.DailyUserPrayerTimes
             .FirstOrDefaultAsync(pt => pt.Date.Date == date.Date
             && pt.ApplicationUserId.ToString() == userId

@@ -10,9 +10,9 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddDomainServices();
 builder.Services.AddInfrastructureServices(builder);
 builder.Services.AddApplicationServices();
+builder.Services.AddPresentationServices();
 
 // TODO: Fix Maghrib is empty in Prayer Times response
 

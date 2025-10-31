@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using PrayerTasker.Domain.Entities;
-using PrayerTasker.Domain.RepositoryInterface;
+using PrayerTasker.Domain.RepositoryInterfaces;
 using PrayerTasker.Infrastructure.DatabaseContext;
 
 namespace PrayerTasker.Infrastructure.RepositoryImplementation;

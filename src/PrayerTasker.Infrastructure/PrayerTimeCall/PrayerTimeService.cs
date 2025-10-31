@@ -46,6 +46,8 @@ public class PrayerTimeService : IPrayerTimeService
                     Isha = cachedPrayerTime.Isha!
                 };
             }
+            // TODO: Include timeout for HTTP calls
+
 
             // Make the API call
             HttpResponseMessage response = await _httpClient.GetAsync(url);

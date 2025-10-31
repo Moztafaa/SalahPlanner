@@ -1,7 +1,7 @@
 using System;
 using PrayerTasker.Domain.Entities;
 
-namespace PrayerTasker.Domain.RepositoryInterface;
+namespace PrayerTasker.Domain.RepositoryInterfaces;
 
 public interface ITaskRepository
 {

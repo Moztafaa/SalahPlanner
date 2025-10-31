@@ -25,7 +25,7 @@ public class MappingProfile : Profile
         CreateMap<CreateTaskDto, Taask>().ReverseMap();
 
         CreateMap<Taask, TaskDto>().ReverseMap();
-        CreateMap<List<Taask>, List<TaskDto>>().ReverseMap();
+        // CreateMap<List<Taask>, List<TaskDto>>().ReverseMap();
 
     }
 

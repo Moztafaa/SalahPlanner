@@ -4,9 +4,9 @@ namespace PrayerTasker.Api.DI;
 
 public static  class ServiceContainer
 {
-    public static void AddDomainServices(this IServiceCollection services)
+    public static void AddPresentationServices(this IServiceCollection services)
     {
-        // Add domain services here
+        // Add presentation services here
     }
 
 }

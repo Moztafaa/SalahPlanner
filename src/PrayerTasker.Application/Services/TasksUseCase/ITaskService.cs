@@ -6,8 +6,8 @@ public interface ITaskService
 {
     Task<TaskDto> CreateTaskAsync(CreateTaskDto dto);
     Task<List<TaskDto>> GetTasksByDateAsync(DateTime date);
-    Task<TaskDto?> GetTaskByIdAsync(int taskId);
-    Task<TaskDto> UpdateTaskAsync(int taskId, UpdateTaskDto dto);
-    Task<TaskDto> ToggleTaskCompleteAsync(int taskId);
-    Task DeleteTaskAsync(int taskId);
+    Task<TaskDto?> GetTaskByIdAsync(Guid taskId);
+    Task<TaskDto> UpdateTaskAsync(Guid taskId, UpdateTaskDto dto);
+    Task<TaskDto> ToggleTaskCompleteAsync(Guid taskId);
+    Task DeleteTaskAsync(Guid taskId);
 }
