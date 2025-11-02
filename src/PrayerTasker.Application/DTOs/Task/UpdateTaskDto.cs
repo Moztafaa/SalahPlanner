@@ -14,7 +14,6 @@ public class UpdateTaskDto
 
     public PrayerTimeSlot? Slot { get; set; }
 
-    [Required(ErrorMessage = "IsCompleted status is required")]
     public bool? IsCompleted { get; set; }
 
 }
