@@ -16,19 +16,15 @@ builder.Services.AddPresentationServices();
 
 // Configure CORS
 // add also react app with port 3000 if needed alongwside with angular app
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngularApp", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200", "http://localhost:3000",
-                          "https://localhost:4200", "https://localhost:3000")
+builder.Services.AddCors(options => options.AddPolicy("AllowAngularApp", policy => policy.WithOrigins("http://localhost:4200",
+                                                                                                      "http://localhost:3000",
+                                                                                                      "https://localhost:4200",
+                                                                                                      "https://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials();
-    });
-});
+            .AllowCredentials()));
 
-// TODO: Fix Maghrib is empty in Prayer Times response
+// ?: Fix Maghrib is empty in Prayer Times response (Done)
 
 
 WebApplication app = builder.Build();

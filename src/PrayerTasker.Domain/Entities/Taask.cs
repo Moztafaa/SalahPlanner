@@ -14,6 +14,7 @@ public class Taask
     public string? Description { get; set; }
     [Required]
     public DateTime CreatedAt { get; set; }
+    public DateTime? TaskDate { get; set; }
     public bool IsCompleted { get; set; }
     [Required]
     public PrayerTimeSlot Slot { get; set; }

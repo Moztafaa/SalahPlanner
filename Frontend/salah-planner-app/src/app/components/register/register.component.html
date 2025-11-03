@@ -1,0 +1,174 @@
+<div class="register-container">
+  <div class="register-wrapper">
+    <!-- Header with Logo and Title -->
+    <header class="register-header">
+      <div class="logo-container">
+        <svg class="logo-icon" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M44 11.2727C44 14.0109 39.8386 16.3957 33.69 17.6364C39.8386 18.877 44 21.2618 44 24C44 26.7382 39.8386 29.123 33.69 30.3636C39.8386 31.6043 44 33.9891 44 36.7273C44 40.7439 35.0457 44 24 44C12.9543 44 4 40.7439 4 36.7273C4 33.9891 8.16144 31.6043 14.31 30.3636C8.16144 29.123 4 26.7382 4 24C4 21.2618 8.16144 18.877 14.31 17.6364C8.16144 16.3957 4 14.0109 4 11.2727C4 7.25611 12.9543 4 24 4C35.0457 4 44 7.25611 44 11.2727Z"
+            fill="currentColor"
+          />
+        </svg>
+        <h1 class="logo-title">Salah Planner</h1>
+      </div>
+      <div class="header-content">
+        <h2 class="page-title">Create Your Account</h2>
+        <p class="page-subtitle">Organize your life around your prayers.</p>
+      </div>
+    </header>
+
+    <!-- Registration Form -->
+    <main class="register-main">
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit()" class="register-form">
+        <div class="form-fields">
+          <!-- Full Name Field -->
+          <label class="form-field">
+            <p class="field-label">Full Name</p>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">badge</span>
+              <input
+                type="text"
+                name="fullName"
+                class="form-input"
+                [(ngModel)]="registerData.fullName"
+                (input)="clearError()"
+                required
+                minlength="3"
+                placeholder="Enter your full name"
+                autocomplete="name"
+              />
+            </div>
+          </label>
+
+          <!-- Username Field -->
+          <label class="form-field">
+            <p class="field-label">Username</p>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">person</span>
+              <input
+                type="text"
+                name="userName"
+                class="form-input"
+                [(ngModel)]="registerData.userName"
+                (input)="clearError()"
+                required
+                minlength="3"
+                placeholder="Enter your desired username"
+                autocomplete="username"
+              />
+            </div>
+          </label>
+
+          <!-- Email Field -->
+          <label class="form-field">
+            <p class="field-label">Email</p>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">mail</span>
+              <input
+                type="email"
+                name="email"
+                class="form-input"
+                [(ngModel)]="registerData.email"
+                (input)="clearError()"
+                required
+                email
+                placeholder="Enter your email address"
+                autocomplete="email"
+              />
+            </div>
+          </label>
+
+          <!-- Password Field -->
+          <label class="form-field">
+            <p class="field-label">Password</p>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">lock</span>
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                name="password"
+                class="form-input"
+                [(ngModel)]="registerData.password"
+                (input)="clearError()"
+                required
+                minlength="6"
+                placeholder="Create a strong password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                (click)="togglePasswordVisibility()"
+                aria-label="Toggle password visibility"
+              >
+                <span class="material-symbols-outlined">
+                  {{ showPassword() ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
+            </div>
+          </label>
+
+          <!-- Confirm Password Field -->
+          <label class="form-field">
+            <p class="field-label">Confirm Password</p>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">lock</span>
+              <input
+                type="password"
+                name="confirmPassword"
+                class="form-input"
+                [(ngModel)]="registerData.confirmPassword"
+                (input)="clearError()"
+                required
+                minlength="6"
+                placeholder="Confirm your password"
+                autocomplete="new-password"
+              />
+            </div>
+            @if (passwordMismatch()) {
+            <p class="field-error">Passwords do not match.</p>
+            }
+          </label>
+        </div>
+
+        <!-- Error Alert -->
+        @if (errorMessage()) {
+        <div class="alert alert-error">
+          {{ errorMessage() }}
+        </div>
+        }
+
+        <!-- Success Alert -->
+        @if (successMessage()) {
+        <div class="alert alert-success">
+          {{ successMessage() }}
+        </div>
+        }
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-button" [disabled]="!registerForm.valid || isLoading()">
+          @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>Creating Account...</span>
+          } @else {
+          <span>Create Account</span>
+          }
+        </button>
+      </form>
+
+      <!-- Login Link -->
+      <div class="footer-link">
+        <p class="footer-text">
+          Already have an account? <a routerLink="/login" class="login-link">Log In</a>
+        </p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="register-footer">
+      <p>
+        <a href="#" class="footer-link-item">Terms of Service</a> •
+        <a href="#" class="footer-link-item">Privacy Policy</a>
+      </p>
+    </footer>
+  </div>
+</div>

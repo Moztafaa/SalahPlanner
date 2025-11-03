@@ -1,0 +1,100 @@
+<div class="login-container">
+  <div class="login-wrapper">
+    <!-- Header with Title -->
+    <header class="login-header">
+      <h1 class="page-title">Salah Planner</h1>
+      <p class="page-subtitle">Welcome back! Organize your day around your prayers.</p>
+    </header>
+
+    <!-- Login Form -->
+    <main class="login-main">
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-fields">
+          <!-- Email or Username Field -->
+          <label class="form-field">
+            <p class="field-label">Email or Username</p>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">person</span>
+              <input
+                type="email"
+                name="email"
+                class="form-input"
+                [(ngModel)]="credentials.email"
+                (input)="clearError()"
+                required
+                placeholder="Enter your email or username"
+                autocomplete="email"
+              />
+            </div>
+          </label>
+
+          <!-- Password Field -->
+          <label class="form-field">
+            <p class="field-label">Password</p>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">lock</span>
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                name="password"
+                class="form-input"
+                [(ngModel)]="credentials.password"
+                (input)="clearError()"
+                required
+                minlength="6"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                (click)="togglePasswordVisibility()"
+                aria-label="Toggle password visibility"
+              >
+                <span class="material-symbols-outlined">
+                  {{ showPassword() ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
+            </div>
+          </label>
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="forgot-password">
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <!-- Error Alert -->
+        @if (errorMessage()) {
+        <div class="alert alert-error">
+          {{ errorMessage() }}
+        </div>
+        }
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-button" [disabled]="!loginForm.valid || isLoading()">
+          @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>Signing in...</span>
+          } @else {
+          <span>Log In</span>
+          }
+        </button>
+      </form>
+
+      <!-- Register Link -->
+      <div class="footer-link">
+        <p class="footer-text">
+          Don't have an account? <a routerLink="/register" class="register-link">Register</a>
+        </p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="login-footer">
+      <p>
+        <a href="#" class="footer-link-item">Terms of Service</a> •
+        <a href="#" class="footer-link-item">Privacy Policy</a>
+      </p>
+    </footer>
+  </div>
+</div>

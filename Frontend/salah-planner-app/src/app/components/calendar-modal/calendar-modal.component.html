@@ -1,0 +1,95 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="calendar-modal">
+    <!-- Header -->
+    <div class="calendar-header">
+      <div class="calendar-title">
+        <h3>{{ monthName() }} {{ year() }}</h3>
+      </div>
+      <div class="calendar-actions">
+        <button class="calendar-btn" (click)="goToToday()" title="Today">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </button>
+        <button class="calendar-btn" (click)="previousMonth()" title="Previous Month">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button class="calendar-btn" (click)="nextMonth()" title="Next Month">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <button class="calendar-btn close-btn" (click)="closeModal()" title="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Week days header -->
+    <div class="week-days">
+      @for (day of weekDays; track day) {
+      <div class="week-day">{{ day }}</div>
+      }
+    </div>
+
+    <!-- Calendar grid -->
+    <div class="calendar-grid">
+      @for (day of calendarDays(); track day.date.getTime()) {
+      <button
+        class="calendar-day"
+        [class.other-month]="!day.isCurrentMonth"
+        [class.today]="day.isToday"
+        [class.selected]="day.isSelected"
+        (click)="selectDate(day)"
+      >
+        {{ day.dayNumber }}
+      </button>
+      }
+    </div>
+
+    <!-- Selected date info -->
+    @if (selectedDate()) {
+    <div class="selected-date-info">
+      <p>Selected: {{ selectedDate()! | date : 'MMMM d, yyyy' }}</p>
+    </div>
+    }
+  </div>
+</div>

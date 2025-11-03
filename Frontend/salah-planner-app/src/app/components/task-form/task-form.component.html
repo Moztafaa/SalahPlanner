@@ -1,0 +1,115 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <p class="modal-title">{{ modalTitle }}</p>
+        <p class="modal-subtitle">Organize your day around your prayers.</p>
+      </div>
+      <button class="close-btn" (click)="onClose()" type="button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <form #taskForm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+        <!-- Error Alert -->
+        @if (errorMessage()) {
+        <div class="alert-error">
+          {{ errorMessage() }}
+        </div>
+        }
+
+        <!-- Task Title -->
+        <div class="form-field">
+          <label for="taskTitle" class="field-label">Task Title</label>
+          <input
+            type="text"
+            id="taskTitle"
+            name="title"
+            class="field-input"
+            [(ngModel)]="formData.title"
+            required
+            maxlength="100"
+            placeholder="e.g., Read Quran for 15 minutes"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Description -->
+        <div class="form-field">
+          <label for="taskDescription" class="field-label">Description (Optional)</label>
+          <textarea
+            id="taskDescription"
+            name="description"
+            class="field-textarea"
+            [(ngModel)]="formData.description"
+            maxlength="500"
+            placeholder="Add more details about your task here..."
+            rows="4"
+          ></textarea>
+        </div>
+
+        <!-- Task Date -->
+        <div class="form-field">
+          <label for="taskDate" class="field-label">Task Date</label>
+          <input
+            type="date"
+            id="taskDate"
+            name="taskDate"
+            class="field-input"
+            [(ngModel)]="formData.taskDate"
+            required
+          />
+          <p class="field-hint">Select the date for this task</p>
+        </div>
+
+        <!-- Assign to Prayer Time -->
+        <div class="form-field">
+          <label for="taskSlot" class="field-label">Assign to Prayer Time</label>
+          <select
+            id="taskSlot"
+            name="slot"
+            class="field-select"
+            [(ngModel)]="formData.slot"
+            required
+            [compareWith]="compareSlots"
+          >
+            @for (slot of prayerTimeSlots; track slot.value) {
+            <option [ngValue]="slot.value">{{ slot.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="submit" class="btn-save" [disabled]="!taskForm.valid || isLoading()">
+          @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>{{ isEditMode ? 'Updating...' : 'Saving...' }}</span>
+          } @else {
+          <span>{{ isEditMode ? 'Update Task' : 'Save Task' }}</span>
+          }
+        </button>
+        <button type="button" class="btn-cancel" (click)="onClose()" [disabled]="isLoading()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -40,6 +40,7 @@ public class PrayerTimeService : IPrayerTimeService
                 {
                     Date = cachedPrayerTime.Date,
                     Fajr = cachedPrayerTime.Fajr!,
+                    Sunrise = cachedPrayerTime.Shurooq!,
                     Dhuhr = cachedPrayerTime.Dhuhr!,
                     Asr = cachedPrayerTime.Asr!,
                     Maghrib = cachedPrayerTime.Maghrib!,
@@ -70,6 +71,7 @@ public class PrayerTimeService : IPrayerTimeService
                 Id = Guid.NewGuid(),
                 Date = date,
                 Fajr = apiResponse.Data.Timings.Fajr,
+                Shurooq = apiResponse.Data.Timings.Sunrise,
                 Dhuhr = apiResponse.Data.Timings.Dhuhr,
                 Asr = apiResponse.Data.Timings.Asr,
                 Maghrib = apiResponse.Data.Timings.Maghrib,
@@ -84,6 +86,7 @@ public class PrayerTimeService : IPrayerTimeService
             {
                 Date = date,
                 Fajr = apiResponse.Data.Timings.Fajr,
+                Sunrise = apiResponse.Data.Timings.Sunrise,
                 Dhuhr = apiResponse.Data.Timings.Dhuhr,
                 Asr = apiResponse.Data.Timings.Asr,
                 Maghrib = apiResponse.Data.Timings.Maghrib,

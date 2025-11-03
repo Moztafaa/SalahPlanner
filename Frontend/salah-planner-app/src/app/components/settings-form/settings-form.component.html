@@ -1,0 +1,112 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <p class="modal-title">Settings</p>
+        <p class="modal-subtitle">Manage your prayer time preferences and account details.</p>
+      </div>
+      <button class="close-btn" (click)="onClose()" type="button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <form #settingsForm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+        <!-- Success Alert -->
+        @if (successMessage()) {
+        <div class="alert-success">✓ {{ successMessage() }}</div>
+        }
+
+        <!-- Error Alert -->
+        @if (errorMessage()) {
+        <div class="alert-error">
+          {{ errorMessage() }}
+        </div>
+        }
+
+        <!-- Location Section -->
+        <div class="settings-section">
+          <h2 class="section-title">Location</h2>
+          <p class="section-description">Provide your location to get accurate prayer times.</p>
+          <div class="form-fields-row">
+            <div class="form-field">
+              <label for="country" class="field-label">Country</label>
+              <input
+                type="text"
+                id="country"
+                name="country"
+                class="field-input"
+                [(ngModel)]="formData.defaultCountry"
+                placeholder="e.g., Egypt, USA, UK"
+                autocomplete="off"
+              />
+              <small class="field-hint">Enter the country name</small>
+            </div>
+            <div class="form-field">
+              <label for="city" class="field-label">City</label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                class="field-input"
+                [(ngModel)]="formData.defaultCity"
+                placeholder="e.g., Cairo, New York, London"
+                autocomplete="off"
+              />
+              <small class="field-hint">Enter the city name</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculation Method Section -->
+        <div class="settings-section">
+          <h2 class="section-title">Calculation Method</h2>
+          <p class="section-description">
+            Choose the calculation method that best suits your location and preference.
+          </p>
+          <div class="form-field">
+            <label for="calculationMethod" class="field-label">Method</label>
+            <select
+              id="calculationMethod"
+              name="calculationMethod"
+              class="field-select"
+              [(ngModel)]="formData.calculationMethod"
+              required
+            >
+              @for (method of calculationMethods; track method.value) {
+              <option [value]="method.value">{{ method.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="submit" class="btn-save" [disabled]="isLoading()">
+          @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>Saving...</span>
+          } @else {
+          <span>Save Settings</span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

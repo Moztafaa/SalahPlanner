@@ -16,4 +16,6 @@ public class CreateTaskDto
     [Required(ErrorMessage = "Prayer time slot is required.")]
     public PrayerTimeSlot Slot { get; set; }
 
+    public DateTime? TaskDate { get; set; }
+
 }

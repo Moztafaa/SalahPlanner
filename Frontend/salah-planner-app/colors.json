@@ -1,0 +1,172 @@
+{
+  "primary": {
+    "dark": "#1a1412",
+    "darker": "#141210",
+    "darkest": "#0f0d0b"
+  },
+  "background": {
+    "gradient_start": "#1a1412",
+    "gradient_mid": "#2d1810",
+    "container": "#2b1f1a",
+    "container_alt": "#1f1612",
+    "container_light": "#251a15"
+  },
+  "header": {
+    "background_start": "#3d2817",
+    "background_end": "#2b1f1a",
+    "border": "rgba(139, 90, 43, 0.15)"
+  },
+  "accent": {
+    "brown_light": "#8b5a2b",
+    "brown_darker": "#654321",
+    "tan_light": "#c79059",
+    "tan_lighter": "#f4e4d7",
+    "tan_golden": "#e8a566",
+    "tan_muted": "#d4b59a",
+    "tan_warm": "#c79f82",
+    "tan_dusty": "#b8957a",
+    "tan_placeholder": "#6b5647"
+  },
+  "text": {
+    "light": "#e8d5c4",
+    "default": "#d4b59a",
+    "muted": "#b8957a",
+    "accent_warm": "#e8a566",
+    "accent_hover": "#f4b97a",
+    "bright": "#f4e4d7",
+    "subtle": "#c79f82"
+  },
+  "interactive": {
+    "button_border": "rgba(139, 90, 43, 0.25)",
+    "button_background": "rgba(26, 20, 18, 0.4)",
+    "button_hover_background": "rgba(139, 90, 43, 0.15)",
+    "button_hover_border": "rgba(139, 90, 43, 0.4)",
+    "button_active_start": "#8b5a2b",
+    "button_active_end": "#654321",
+    "button_active_border": "rgba(199, 144, 89, 0.5)",
+    "focus_ring": "rgba(139, 90, 43, 0.15)"
+  },
+  "borders": {
+    "light": "rgba(139, 90, 43, 0.1)",
+    "lighter": "rgba(139, 90, 43, 0.15)",
+    "medium": "rgba(139, 90, 43, 0.2)",
+    "strong": "rgba(139, 90, 43, 0.3)",
+    "accent": "rgba(199, 144, 89, 0.3)",
+    "accent_light": "rgba(199, 144, 89, 0.2)"
+  },
+  "messages": {
+    "user_background_start": "#8b5a2b",
+    "user_background_end": "#654321",
+    "user_text": "#f4e4d7",
+    "user_border": "rgba(139, 90, 43, 0.3)",
+    "bot_background_start": "#2b1f1a",
+    "bot_background_end": "#251a15",
+    "bot_text": "#d4b59a",
+    "bot_border": "rgba(139, 90, 43, 0.2)",
+    "welcome_background_start": "#3d2817",
+    "welcome_background_end": "#2b1f1a",
+    "welcome_text": "#e8a566",
+    "welcome_border": "rgba(199, 144, 89, 0.3)"
+  },
+  "code": {
+    "background_start": "#141210",
+    "background_end": "#0f0d0b",
+    "text": "#e8d5c4",
+    "inline_background": "rgba(139, 90, 43, 0.12)",
+    "inline_text": "#e8a566",
+    "inline_border": "rgba(139, 90, 43, 0.15)",
+    "border": "rgba(139, 90, 43, 0.15)"
+  },
+  "elements": {
+    "blockquote_border": "#8b5a2b",
+    "blockquote_background": "rgba(139, 90, 43, 0.05)",
+    "blockquote_text": "#b8957a",
+    "link_text": "#e8a566",
+    "link_border": "rgba(232, 165, 102, 0.3)",
+    "link_hover_text": "#f4b97a",
+    "link_hover_border": "#f4b97a",
+    "error_background_start": "#3d1f1f",
+    "error_background_end": "#2d1515",
+    "error_text": "#f4a5a5",
+    "error_border": "rgba(244, 165, 165, 0.3)"
+  },
+  "scrollbar": {
+    "track": "#141210",
+    "thumb_start": "#654321",
+    "thumb_end": "#4a3219",
+    "thumb_hover_start": "#8b5a2b",
+    "thumb_hover_end": "#654321",
+    "border": "#141210"
+  },
+  "overlays": {
+    "radial_overlay_1": "rgba(139, 90, 43, 0.08)",
+    "radial_overlay_2": "rgba(101, 67, 33, 0.06)",
+    "white_overlay": "rgba(255, 255, 255, 0.03)",
+    "white_overlay_light": "rgba(255, 255, 255, 0.1)",
+    "white_overlay_lighter": "rgba(255, 255, 255, 0.15)",
+    "white_overlay_lightest": "rgba(255, 255, 255, 0.05)",
+    "black_shadow": "rgba(0, 0, 0, 0.3)",
+    "black_shadow_deep": "rgba(0, 0, 0, 0.4)",
+    "black_shadow_deeper": "rgba(0, 0, 0, 0.6)",
+    "brown_shadow": "rgba(139, 90, 43, 0.2)",
+    "brown_shadow_light": "rgba(139, 90, 43, 0.15)",
+    "brown_shadow_medium": "rgba(139, 90, 43, 0.3)",
+    "red_shadow": "rgba(244, 67, 54, 0.15)"
+  },
+  "gradients": {
+    "accent_linear": {
+      "direction": "135deg",
+      "colors": ["#f4e4d7 0%", "#c79059 100%"]
+    },
+    "accent_linear_h1": {
+      "direction": "135deg",
+      "colors": ["#f4e4d7 0%", "#c79059 100%"]
+    },
+    "header_gradient": {
+      "direction": "135deg",
+      "colors": ["#3d2817 0%", "#2b1f1a 100%"]
+    },
+    "container_gradient": {
+      "direction": "165deg",
+      "colors": ["#2b1f1a 0%", "#1f1612 100%"]
+    },
+    "body_gradient": {
+      "direction": "145deg",
+      "colors": ["#1a1412 0%", "#2d1810 50%", "#1a1412 100%"]
+    },
+    "button_gradient": {
+      "direction": "135deg",
+      "colors": ["#8b5a2b 0%", "#654321 100%"]
+    },
+    "code_gradient": {
+      "direction": "145deg",
+      "colors": ["#141210 0%", "#0f0d0b 100%"]
+    },
+    "table_gradient": {
+      "direction": "135deg",
+      "colors": ["#2b1f1a 0%", "#251a15 100%"]
+    },
+    "scrollbar_thumb_gradient": {
+      "direction": "180deg",
+      "colors": ["#654321 0%", "#4a3219 100%"]
+    },
+    "thinking_dot_gradient": {
+      "direction": "135deg",
+      "colors": ["#c79059 0%", "#8b5a2b 100%"]
+    }
+  },
+  "shadows": {
+    "container_shadow": "0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(139, 90, 43, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.03)",
+    "button_hover_shadow": "0 6px 24px rgba(139, 90, 43, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+    "button_shadow": "0 4px 16px rgba(139, 90, 43, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15)",
+    "user_message_shadow": "0 4px 16px rgba(139, 90, 43, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+    "bot_message_shadow": "0 2px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)",
+    "welcome_message_shadow": "0 4px 20px rgba(139, 90, 43, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+    "code_block_shadow": "inset 0 2px 8px rgba(0, 0, 0, 0.4)",
+    "input_shadow": "inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.03)",
+    "input_focus_shadow": "inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(139, 90, 43, 0.15), 0 1px 0 rgba(255, 255, 255, 0.05)",
+    "thinking_dot_shadow": "0 2px 8px rgba(199, 144, 89, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+    "scrollbar_shadow": "inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+    "error_message_shadow": "0 4px 16px rgba(244, 67, 54, 0.15)"
+  }
+}

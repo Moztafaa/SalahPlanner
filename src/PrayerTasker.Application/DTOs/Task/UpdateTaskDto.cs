@@ -16,4 +16,6 @@ public class UpdateTaskDto
 
     public bool? IsCompleted { get; set; }
 
+    public DateTime? TaskDate { get; set; }
+
 }

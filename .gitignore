@@ -7,9 +7,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
-# ignore Code review md CODE_REVIEW.md
-CODE_REVIEW.md
-
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -46,7 +43,7 @@ CodeCoverage/
 
 # MSBuild Binary and Structured Log
 *.binlog
-
+CODE_REVIEW.md
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
@@ -56,38 +53,35 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 
-# Angular
+# Angular Frontend
+Frontend/**/node_modules/
+Frontend/**/.angular/
+Frontend/**/dist/
+Frontend/**/out-tsc/
+Frontend/**/tmp/
+Frontend/**/.ng/
+Frontend/**/coverage/
+Frontend/**/e2e/test-output/
 
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
-
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
-
-# Environment files
-/.env
-
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
+# Angular dependency files
+Frontend/**/package-lock.json
+Frontend/**/yarn.lock
+Frontend/**/.angular-cli.json
 
 # TypeScript cache
-*.tsbuildinfo
+Frontend/**/*.tsbuildinfo
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
+# Frontend logs
+Frontend/**/npm-debug.log*
+Frontend/**/yarn-debug.log*
+Frontend/**/yarn-error.log*
+Frontend/**/lerna-debug.log*
+Frontend/**/.pnpm-debug.log*
+
+# Frontend environment files
+Frontend/**/.env
+Frontend/**/.env.local
+Frontend/**/.env.*.local
 
 # Visual Studio and IDEs (team collaboration)
 .vs/
@@ -109,7 +103,7 @@ lerna-debug.log*
 # Entity Framework
 *.edmx.diagram
 *.edmx.sql
-Migrations/
+# Migrations/
 
 # Database files
 *.mdf
@@ -146,12 +140,12 @@ lib-cov/
 .rts2_cache_umd/
 
 # Package managers
-.npm
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-.pnp.*
+Frontend/**/.npm
+Frontend/**/.yarn/cache
+Frontend/**/.yarn/unplugged
+Frontend/**/.yarn/build-state.yml
+Frontend/**/.yarn/install-state.gz
+Frontend/**/.pnp.*
 
 # OS generated files (cross-platform team)
 .DS_Store
@@ -163,14 +157,9 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 
-# Environment variables (team safety)
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env.*.local
-
 # Keep example env files for team reference
+!Frontend/**/.env.example
+!Frontend/**/.env.template
 !.env.example
 !.env.template
 
@@ -180,9 +169,10 @@ Desktop.ini
 *.tmp
 *~
 
-# Application specific settings - Exclude all appsettings files with sensitive data
-appsettings.json
+# Application specific settings
 appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
 !appsettings.Example.json
 
 # Build and deployment
@@ -194,5 +184,7 @@ wwwroot/js/
 
 # Keep shared configuration files
 !.editorconfig
-!prettier.config.js
-!.eslintrc.json
+!Frontend/**/prettier.config.js
+!Frontend/**/.eslintrc.json
+!Frontend/**/tsconfig.json
+!Frontend/**/angular.json

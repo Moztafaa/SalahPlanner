@@ -1,0 +1,699 @@
+/* Dashboard Container - Matching Figma Design */
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #112116 0%, #0d1a11 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===========================
+   HEADER - New Design
+   =========================== */
+.header {
+  background: transparent;
+  border-bottom: 1px solid rgba(25, 230, 94, 0.1);
+  padding: 0.75rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.header-content {
+  max-width: 1536px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.header-left {
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #19e65e;
+}
+
+.logo-text {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+
+.header-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #19e65e 0%, #14b84a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(25, 230, 94, 0.3);
+}
+
+.avatar-text {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ===========================
+   MAIN CONTENT
+   =========================== */
+.main-content {
+  flex: 1;
+  padding: 2rem 1.5rem;
+}
+
+.content-wrapper {
+  max-width: 1536px;
+  margin: 0 auto;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+}
+
+/* ===========================
+   LEFT SIDEBAR
+   =========================== */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Date Card */
+.date-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.hijri-date {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+  letter-spacing: -0.033em;
+}
+
+.gregorian-date {
+  font-size: 1rem;
+  color: rgba(25, 230, 94, 0.7);
+  margin: 0;
+}
+
+/* Countdown Card */
+.countdown-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.countdown-label {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #19e65e;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.015em;
+}
+
+.countdown-display {
+  display: flex;
+  gap: 1rem;
+}
+
+.countdown-unit {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.countdown-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.015em;
+}
+
+.countdown-unit-label {
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Prayer Times Card */
+.prayer-times-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.prayer-times-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.prayer-time-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 150ms;
+}
+
+.prayer-time-item.current-prayer {
+  background: rgba(25, 230, 94, 0.2);
+  border: 1px solid #19e65e;
+  box-shadow: 0 0 16px rgba(25, 230, 94, 0.3);
+}
+
+.prayer-name {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.current-prayer .prayer-name {
+  color: rgba(25, 230, 94, 0.8);
+}
+
+.prayer-time {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: white;
+  margin: 0;
+}
+
+.current-prayer .prayer-time {
+  color: #19e65e;
+  font-weight: 700;
+}
+
+/* ===========================
+   MAIN AREA - Right Side
+   =========================== */
+.main-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.plan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.plan-title-section {
+  flex: 1;
+}
+
+.plan-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: -0.015em;
+}
+
+.plan-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.btn-add-first-task {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: #19e65e;
+  color: #112116;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.btn-add-first-task:hover {
+  background: rgba(25, 230, 94, 0.9);
+  transform: translateY(-1px);
+}
+
+/* Task Slots Grid */
+.task-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.task-slot-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.task-slot-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(25, 230, 94, 0.5);
+}
+
+.task-slot-card:nth-last-child(1) {
+  grid-column: span 2;
+}
+
+.slot-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.slot-description {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+.slot-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(25, 230, 94, 0.1);
+  color: #19e65e;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.slot-add-btn:hover {
+  background: rgba(25, 230, 94, 0.2);
+}
+
+/* Slot Tasks Preview */
+.slot-tasks-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.preview-task {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.375rem;
+}
+
+.preview-task.completed {
+  opacity: 0.5;
+}
+
+.task-checkbox {
+  width: 1rem;
+  height: 1rem;
+  appearance: none;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 150ms;
+  position: relative;
+  background: rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.task-checkbox:hover {
+  border-color: #19e65e;
+}
+
+.task-checkbox:checked {
+  background: #19e65e;
+  border-color: #19e65e;
+}
+
+.task-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.preview-task-title {
+  font-size: 0.875rem;
+  color: white;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-task.completed .preview-task-title {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.more-tasks {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #19e65e;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0.75rem 1rem;
+  }
+
+  .header-content {
+    gap: 1rem;
+  }
+
+  .logo-text {
+    font-size: 1rem;
+  }
+
+  .main-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .content-grid {
+    gap: 1.5rem;
+  }
+
+  .plan-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-add-first-task {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .task-slots-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .task-slot-card:nth-last-child(1) {
+    grid-column: span 1;
+  }
+
+  .sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .hijri-date {
+    font-size: 1.5rem;
+  }
+
+  .countdown-value {
+    font-size: 1.875rem;
+    height: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-actions {
+    gap: 0.25rem;
+  }
+
+  .icon-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .icon-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .user-avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .avatar-text {
+    font-size: 0.75rem;
+  }
+
+  .main-content {
+    padding: 1rem 0.75rem;
+  }
+
+  .date-card,
+  .countdown-card,
+  .prayer-times-card {
+    padding: 1rem;
+  }
+
+  .hijri-date {
+    font-size: 1.25rem;
+  }
+
+  .countdown-display {
+    gap: 0.5rem;
+  }
+
+  .countdown-value {
+    font-size: 1.5rem;
+    height: 2.5rem;
+  }
+
+  .countdown-unit-label {
+    font-size: 0.75rem;
+  }
+
+  .prayer-times-grid {
+    gap: 0.75rem;
+  }
+
+  .plan-title {
+    font-size: 1.5rem;
+  }
+
+  .plan-subtitle {
+    font-size: 0.875rem;
+  }
+
+  /* Make task actions always visible on mobile */
+  .task-actions {
+    opacity: 1 !important;
+  }
+
+  .task-action-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Slot Header - Clickable area for adding tasks */
+.slot-header {
+  cursor: pointer;
+}
+
+/* Task Actions */
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+.preview-task:hover .task-actions {
+  opacity: 1;
+}
+
+.task-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 150ms;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.task-action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.task-action-btn.edit-btn:hover {
+  background: rgba(25, 230, 94, 0.15);
+  color: #19e65e;
+  border-color: #19e65e;
+}
+
+.task-action-btn.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.preview-task-title {
+  cursor: pointer;
+  transition: color 150ms;
+}
+
+.preview-task-title:hover {
+  color: #19e65e;
+}

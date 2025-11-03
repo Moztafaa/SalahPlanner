@@ -23,6 +23,8 @@ public class TaskService(ITaskRepository taskRepository, IMapper mapper, IHttpCo
         task.ApplicationUserId = Guid.Parse(userId);
         task.IsCompleted = false;
         task.CreatedAt = DateTime.UtcNow;
+        // Set TaskDate to provided value or default to current date
+        task.TaskDate = dto.TaskDate ?? DateTime.UtcNow.Date;
         await taskRepository.AddAsync(task);
         return mapper.Map<TaskDto>(task);
 
@@ -62,6 +64,10 @@ public class TaskService(ITaskRepository taskRepository, IMapper mapper, IHttpCo
         task.Description = dto.Description ?? task.Description;
         task.Slot = dto.Slot ?? task.Slot;
         task.IsCompleted = dto.IsCompleted ?? task.IsCompleted;
+        if (dto.TaskDate.HasValue)
+        {
+            task.TaskDate = dto.TaskDate.Value.Date;
+        }
 
         await taskRepository.UpdateAsync(task);
         return mapper.Map<TaskDto>(task);
