@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
 /*
  * Salah Planner - Global Styles
  * Islamic-themed design with woody color palette
@@ -73,10 +73,10 @@
   --shadow-xl: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(139, 90, 43, 0.1);
   --shadow-inset: inset 0 2px 8px rgba(0, 0, 0, 0.3);
 
-  /* Typography - Modern, Clean Fonts */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+  /* Typography - Modern, Relaxing Fonts */
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Calibri', 'Helvetica Neue',
     Arial, sans-serif;
-  --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-arabic: 'Noto Naskh Arabic', 'Amiri', 'Traditional Arabic', 'Scheherazade', serif;
 
   /* Font Sizes */
