@@ -1,0 +1,43 @@
+name: Deploy API to MonsterASP
+
+on:
+  push:
+    branches:
+      - main  # Change to your main branch name if different
+    paths:
+      - 'src/**'
+      - '.github/workflows/deploy-api.yml'
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore src/PrayerTasker.Api/PrayerTasker.Api.csproj
+      
+    - name: Build
+      run: dotnet build src/PrayerTasker.Api/PrayerTasker.Api.csproj --configuration Release --no-restore
+      
+    - name: Publish
+      run: dotnet publish src/PrayerTasker.Api/PrayerTasker.Api.csproj --configuration Release --output ./publish --no-build
+      
+    - name: Deploy to MonsterASP via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./publish/
+        server-dir: ./wwwroot/
+        dangerous-clean-slate: true  # This cleans the target directory before deploying
+

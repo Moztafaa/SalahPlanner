@@ -23,6 +23,10 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+# Publish folders (deployment artifacts)
+[Pp]ublish/
+**/publish/
+
 # .NET Core
 project.lock.json
 project.fragment.lock.json
