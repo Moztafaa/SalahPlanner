@@ -13,6 +13,7 @@ import { PrayerTimes, Task, PrayerTimeSlot, PrayerTimeSlotDisplay } from '../../
 import { TaskFormComponent } from '../task-form/task-form.component';
 import { SettingsFormComponent } from '../settings-form/settings-form.component';
 import { CalendarModalComponent } from '../calendar-modal/calendar-modal.component';
+import moment from 'moment-hijri';
 
 interface TaskGroup {
   slot: PrayerTimeSlot;
@@ -506,13 +507,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get Hijri date (placeholder - would need proper Hijri calendar library)
+   * Get Hijri date dynamically using moment-hijri
    */
   getHijriDate(): string {
-    // Placeholder - In production, use a proper Hijri calendar library
     const date = this.currentDate();
+    const hijriDate = moment(date);
+
+    // Get day of week in English
     const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
-    return `${dayOfWeek}, 20 Dhul-Hijjah 1445`;
+
+    // Format: "Monday, 20 Dhul-Hijjah 1445"
+    const hijriDay = hijriDate.iDate();
+    const hijriMonth = hijriDate.format('iMMMM'); // Islamic month name
+    const hijriYear = hijriDate.iYear();
+
+    return `${dayOfWeek}, ${hijriDay} ${hijriMonth} ${hijriYear}`;
   }
 
   /**
