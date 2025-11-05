@@ -34,13 +34,22 @@ export class AuthService {
    */
   private loadUserFromStorage(): void {
     const userJson = localStorage.getItem('currentUser');
-    if (userJson) {
+    const token = localStorage.getItem('token');
+
+    if (userJson && token) {
       try {
         const user = JSON.parse(userJson) as LoginResponse;
+
+        // Check if token is expired
+        if (this.isTokenExpired()) {
+          this.clearAuthData();
+          return;
+        }
+
         this.setUser(user);
       } catch (error) {
         console.error('Error parsing user data from localStorage', error);
-        localStorage.removeItem('currentUser');
+        this.clearAuthData();
       }
     }
   }
@@ -54,9 +63,37 @@ export class AuthService {
 
     if (user) {
       localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('token', user.token);
+      localStorage.setItem('tokenExpiration', user.expiration);
     } else {
-      localStorage.removeItem('currentUser');
+      this.clearAuthData();
     }
+  }
+
+  /**
+   * Clear all authentication data from localStorage
+   */
+  private clearAuthData(): void {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    localStorage.removeItem('tokenExpiration');
+  }
+
+  /**
+   * Check if JWT token is expired
+   */
+  private isTokenExpired(): boolean {
+    const expiration = localStorage.getItem('tokenExpiration');
+    if (!expiration) return true;
+
+    return new Date() > new Date(expiration);
+  }
+
+  /**
+   * Get JWT token from localStorage
+   */
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   /**
@@ -88,6 +125,7 @@ export class AuthService {
 
   /**
    * Logout current user
+   * For JWT, this clears local token and optionally calls backend for logging
    */
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/Account/logout`, {}).pipe(
@@ -97,6 +135,7 @@ export class AuthService {
       }),
       catchError((error) => {
         // Even if logout fails on backend, clear local state
+        // JWT logout is primarily client-side
         this.setUser(null);
         this.router.navigate(['/login']);
         return of(null);

@@ -14,6 +14,8 @@ export interface LoginResponse {
   userName: string;
   email: string;
   fullName: string;
+  token: string;
+  expiration: string;
   message: string;
 }
 

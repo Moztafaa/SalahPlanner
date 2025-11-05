@@ -8,7 +8,7 @@ namespace PrayerTasker.Application.Services.Account;
 public interface IAccountService
 {
     Task<(IdentityResult Result, ApplicationUser User)> RegisterAsync(RegisterDto registerDto);
-    Task<SignInResult> LoginAsync(LoginDto loginDto);
+    Task<LoginResponseDto> LoginAsync(LoginDto loginDto);
     Task LogoutAsync();
     Task<bool> IsEmailAlreadyRegistered(string email);
     Task<ApplicationUser?> GetUserByEmailAsync(string email);

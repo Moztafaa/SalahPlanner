@@ -7,18 +7,21 @@ using PrayerTasker.Domain.IdentityEntities;
 namespace PrayerTasker.Application.Services.Account;
 
 public class AccountService(UserManager<ApplicationUser> _userManager,
-                            SignInManager<ApplicationUser> _signInManager, IMapper _mapper) : IAccountService
+                            SignInManager<ApplicationUser> _signInManager, IMapper _mapper, IJwtService _jwtService) : IAccountService
 {
     // TODO: Implement Rate limiting on login attempts to prevent brute-force attacks
-    public async Task<SignInResult> LoginAsync(LoginDto loginDto)
+    public async Task<LoginResponseDto> LoginAsync(LoginDto loginDto)
     {
-        ApplicationUser? user = await _userManager.FindByEmailAsync(loginDto.Email);
-        if (user == null)
-        {
-            return SignInResult.Failed;
-        }
-        return await _signInManager.PasswordSignInAsync(user.UserName!, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+        ApplicationUser? user = await _userManager.FindByEmailAsync(loginDto.Email) ?? throw new UnauthorizedAccessException("Invalid email or password.");
+        // return await _signInManager.PasswordSignInAsync(user.UserName!, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+        SignInResult result = await _signInManager.PasswordSignInAsync(user.UserName!, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
 
+        if (!result.Succeeded)
+        {
+            throw new UnauthorizedAccessException("Invalid email or password.");
+        }
+        LoginResponseDto authenticationResponse = _jwtService.CreateToken(user);
+        return authenticationResponse;
     }
     public async Task LogoutAsync() => await _signInManager.SignOutAsync();
     public async Task<(IdentityResult Result, ApplicationUser User)> RegisterAsync(RegisterDto registerDto)
@@ -58,7 +61,7 @@ public class AccountService(UserManager<ApplicationUser> _userManager,
     }
 
     // Update user settings
-    
+
 
     public async Task<UserSettingsDto?> GetUserSettingsAsync(string userId)
     {

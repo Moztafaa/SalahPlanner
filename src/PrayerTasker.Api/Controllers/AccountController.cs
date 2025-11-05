@@ -5,6 +5,7 @@ using PrayerTasker.Application.Services.Account;
 using PrayerTasker.Application.DTOs.Account;
 using PrayerTasker.Domain.IdentityEntities;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PrayerTasker.Api.Controllers;
 
@@ -14,6 +15,7 @@ public class AccountController(IAccountService _accountService) : ControllerBase
 {
     // TODO: PUT /api/auth/me/settings to update user settings like default city, country, calculation method, etc.
     [HttpPut("me/settings")]
+    [Authorize]
     public async Task<IActionResult> UpdateUserSettings([FromBody] UserSettingsDto settings)
     {
         if (!User.Identity?.IsAuthenticated ?? true)
@@ -73,7 +75,6 @@ public class AccountController(IAccountService _accountService) : ControllerBase
             errors = result.Errors.Select(e => new { e.Code, e.Description })
         });
     }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
@@ -82,22 +83,20 @@ public class AccountController(IAccountService _accountService) : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var signInResult = await _accountService.LoginAsync(loginDto);
-        if (signInResult.Succeeded)
+        LoginResponseDto signInResult = await _accountService.LoginAsync(loginDto);
+        ApplicationUser? user = await _accountService.GetUserByEmailAsync(loginDto.Email);
+        if (user != null)
         {
-            ApplicationUser? user = await _accountService.GetUserByEmailAsync(loginDto.Email);
-            if (user != null)
+            return Ok(new LoginResponseDto
             {
-                return Ok(new LoginResponseDto
-                {
-                    UserId = user.Id.ToString(),
-                    UserName = user.UserName!,
-                    Email = user.Email!,
-                    FullName = user.FullName!,
-                    Message = "Login successful"
-                });
-            }
-            return StatusCode(StatusCodes.Status500InternalServerError, "Login succeeded but user data is unavailable.");
+                UserId = user.Id.ToString(),
+                UserName = user.UserName!,
+                Email = user.Email!,
+                FullName = user.FullName!,
+                Token = signInResult.Token,
+                Expiration = signInResult.Expiration,
+                Message = "Login successful"
+            });
         }
         return Unauthorized(new { Message = "Invalid email or password" });
     }
