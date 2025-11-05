@@ -8,47 +8,47 @@
    CSS Custom Properties (Variables)
    =========================== */
 :root {
-  /* Primary Background Colors - Dark Woody Theme */
-  --color-background: #1a1412; /* Dark woody background */
-  --color-background-gradient-mid: #2d1810;
-  --color-surface: #2b1f1a; /* Container background */
-  --color-surface-alt: #1f1612; /* Alternative container */
-  --color-surface-light: #251a15; /* Light container */
+  /* Primary Background Colors - Dark Green Theme */
+  --color-background: #112116; /* Dark green background */
+  --color-background-gradient-mid: #0d1a11;
+  --color-surface: #1a2e1f; /* Container background */
+  --color-surface-alt: #152218; /* Alternative container */
+  --color-surface-light: #1f3324; /* Light container */
 
-  /* Accent Colors - Woody Browns & Tans */
-  --color-primary: #8b5a2b; /* Brown light */
-  --color-primary-dark: #654321; /* Brown darker */
-  --color-primary-light: #c79059; /* Tan light */
-  --color-secondary: #d4b59a; /* Tan muted */
-  --color-accent: #e8a566; /* Tan golden */
-  --color-accent-light: #f4b97a; /* Tan hover */
+  /* Accent Colors - Green Theme */
+  --color-primary: #19e65e; /* Bright green */
+  --color-primary-dark: #14b84a; /* Medium green */
+  --color-primary-light: #2eff7a; /* Light green */
+  --color-secondary: #0f9a3c; /* Dark green */
+  --color-accent: #19e65e; /* Green accent */
+  --color-accent-light: #2eff7a; /* Green hover */
 
   /* Text Colors */
-  --color-text-primary: #e8d5c4; /* Light text */
-  --color-text-secondary: #d4b59a; /* Default text */
-  --color-text-muted: #b8957a; /* Muted text */
-  --color-text-inverse: #f4e4d7; /* Bright text */
-  --color-text-accent: #e8a566; /* Accent warm */
+  --color-text-primary: #ffffff; /* White text */
+  --color-text-secondary: rgba(255, 255, 255, 0.9); /* Light text */
+  --color-text-muted: rgba(255, 255, 255, 0.6); /* Muted text */
+  --color-text-inverse: #112116; /* Dark text on light bg */
+  --color-text-accent: #19e65e; /* Accent green */
 
   /* Border Colors */
-  --color-border: rgba(139, 90, 43, 0.2);
-  --color-border-light: rgba(139, 90, 43, 0.15);
-  --color-border-lighter: rgba(139, 90, 43, 0.1);
-  --color-border-strong: rgba(139, 90, 43, 0.3);
-  --color-border-accent: rgba(199, 144, 89, 0.3);
+  --color-border: rgba(25, 230, 94, 0.2);
+  --color-border-light: rgba(25, 230, 94, 0.15);
+  --color-border-lighter: rgba(25, 230, 94, 0.1);
+  --color-border-strong: rgba(25, 230, 94, 0.3);
+  --color-border-accent: rgba(25, 230, 94, 0.4);
 
   /* Status Colors */
-  --color-success: #6b8e4e;
-  --color-warning: #e8a566;
-  --color-error: #f4a5a5;
-  --color-info: #7a9fb8;
+  --color-success: #19e65e;
+  --color-warning: #ffa726;
+  --color-error: #ef5350;
+  --color-info: #42a5f5;
 
-  /* Prayer Time Slot Colors */
-  --color-fajr: #5a7c9b;
-  --color-dhuhr: #c79059;
-  --color-asr: #b8957a;
-  --color-maghrib: #e8a566;
-  --color-isha: #8b5a2b;
+  /* Prayer Time Slot Colors - Green variations */
+  --color-fajr: #19e65e;
+  --color-dhuhr: #2eff7a;
+  --color-asr: #14b84a;
+  --color-maghrib: #0f9a3c;
+  --color-isha: #0d7a30;
 
   /* Spacing System (8px base) */
   --spacing-xs: 0.25rem; /* 4px */
@@ -125,7 +125,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-text-primary);
-  background: linear-gradient(145deg, #1a1412 0%, #2d1810 50%, #1a1412 100%);
+  background: linear-gradient(145deg, #112116 0%, #0d1a11 50%, #112116 100%);
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -194,7 +194,7 @@ a:hover {
 
 /* Card styles */
 .card {
-  background: linear-gradient(165deg, #2b1f1a 0%, #1f1612 100%);
+  background: linear-gradient(165deg, #1a2e1f 0%, #152218 100%);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-lg);
@@ -247,19 +247,20 @@ a:hover {
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  .btn-primary {
-    background: linear-gradient(135deg, #8b5a2b 0%, #654321 100%);
-    color: var(--color-text-bright);
-    border: 1px solid rgba(199, 144, 89, 0.5);
-  }
+}
 
-  .btn-primary:hover:not(:disabled) {
-    background: linear-gradient(135deg, #c79059 0%, #8b5a2b 100%);
-    box-shadow: 0 6px 24px rgba(139, 90, 43, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border-color: var(--color-accent);
-  }
+.btn-primary {
+  background: linear-gradient(135deg, #19e65e 0%, #14b84a 100%);
+  color: #112116;
+  border: 1px solid rgba(25, 230, 94, 0.5);
+  font-weight: 600;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2eff7a 0%, #19e65e 100%);
+  box-shadow: 0 6px 24px rgba(25, 230, 94, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: var(--color-accent);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
@@ -322,7 +323,7 @@ a:hover {
   font-size: var(--text-base);
   font-family: var(--font-sans);
   color: var(--color-text-primary);
-  background: rgba(26, 20, 18, 0.4);
+  background: rgba(17, 33, 22, 0.4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-inset);
@@ -333,10 +334,9 @@ a:hover {
 .form-textarea:focus,
 .form-select:focus {
   outline: none;
-  background: rgba(26, 20, 18, 0.6);
+  background: rgba(17, 33, 22, 0.6);
   border-color: var(--color-primary);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(139, 90, 43, 0.15);
-  box-shadow: 0 0 0 3px rgba(139, 90, 60, 0.1);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(25, 230, 94, 0.15);
 }
 
 .form-input::placeholder,
@@ -432,223 +432,92 @@ a:hover {
   }
 }
 
-/* Islamic decorative pattern (subtle background) */
-.islamic-pattern {
-  position: relative;
-  overflow: hidden;
+/* Responsive utilities */
+.show-mobile {
+  display: none;
 }
 
-.islamic-pattern::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.03;
-  background-image: repeating-linear-gradient(
-      45deg,
-      var(--color-primary) 0,
-      var(--color-primary) 1px,
-      transparent 0,
-      transparent 50%
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      var(--color-primary) 0,
-      var(--color-primary) 1px,
-      transparent 0,
-      transparent 50%
-    );
-  background-size: 20px 20px;
-  pointer-events: none;
-  /* Salah time slot colors - Modern card-based layout */
-  .slot-before-fajr {
-    border-left: 4px solid var(--color-fajr);
-    background: linear-gradient(135deg, rgba(90, 124, 155, 0.12) 0%, rgba(90, 124, 155, 0.05) 100%);
+.hide-mobile {
+  display: block;
+}
+
+/* ===========================
+   Responsive Design
+   =========================== */
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
   }
 
-  .slot-fajr-shurooq {
-    border-left: 4px solid var(--color-fajr);
-    background: linear-gradient(135deg, rgba(90, 124, 155, 0.15) 0%, rgba(90, 124, 155, 0.06) 100%);
+  .container {
+    padding: 0 var(--spacing-sm);
   }
 
-  .slot-shurooq-dhuhr {
-    border-left: 4px solid var(--color-dhuhr);
-    background: linear-gradient(135deg, rgba(199, 144, 89, 0.12) 0%, rgba(199, 144, 89, 0.05) 100%);
+  .card {
+    padding: var(--spacing-md);
   }
 
-  .slot-dhuhr-asr {
-    border-left: 4px solid var(--color-dhuhr);
-    background: linear-gradient(135deg, rgba(199, 144, 89, 0.15) 0%, rgba(199, 144, 89, 0.06) 100%);
-  }
-
-  .slot-asr-maghrib {
-    border-left: 4px solid var(--color-asr);
-    background: linear-gradient(
-      135deg,
-      rgba(184, 149, 122, 0.12) 0%,
-      rgba(184, 149, 122, 0.05) 100%
-    );
-  }
-
-  .slot-maghrib-isha {
-    border-left: 4px solid var(--color-maghrib);
-    background: linear-gradient(
-      135deg,
-      rgba(232, 165, 102, 0.12) 0%,
-      rgba(232, 165, 102, 0.05) 100%
-    );
-  }
-
-  .slot-after-isha {
-    border-left: 4px solid var(--color-isha);
-    background: linear-gradient(135deg, rgba(139, 90, 43, 0.12) 0%, rgba(139, 90, 43, 0.05) 100%);
-  }
-
-  /* Current Salah highlighting with glow effect */
-  .current-salah {
-    position: relative;
-    background: linear-gradient(
-      135deg,
-      rgba(232, 165, 102, 0.25) 0%,
-      rgba(199, 144, 89, 0.15) 100%
-    ) !important;
-    border: 2px solid var(--color-accent) !important;
-    box-shadow: 0 0 20px rgba(232, 165, 102, 0.4), 0 0 40px rgba(232, 165, 102, 0.2),
-      var(--shadow-lg) !important;
-    transform: scale(1.02);
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-glow {
-    0%,
-    100% {
-      box-shadow: 0 0 20px rgba(232, 165, 102, 0.4), 0 0 40px rgba(232, 165, 102, 0.2),
-        var(--shadow-lg);
-    }
-    50% {
-      box-shadow: 0 0 30px rgba(232, 165, 102, 0.6), 0 0 60px rgba(232, 165, 102, 0.3),
-        var(--shadow-xl);
-    }
-  }
-
-  .current-salah::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(
-      45deg,
-      var(--color-accent),
-      var(--color-primary-light),
-      var(--color-accent)
-    );
-    border-radius: var(--radius-md);
-    opacity: 0.5;
-    z-index: -1;
-    filter: blur(8px);
-    animation: rotate-gradient 3s linear infinite;
-  }
-
-  @keyframes rotate-gradient {
-    0% {
-      filter: blur(8px) hue-rotate(0deg);
-    }
-    100% {
-      filter: blur(8px) hue-rotate(360deg);
-    }
-  }
-
-  /* Responsive utilities */
   .show-mobile {
-    display: none;
-  }
-
-  .hide-mobile {
     display: block;
   }
 
-  /* ===========================
-   Responsive Design
-   =========================== */
-  @media (max-width: 768px) {
-    :root {
-      font-size: 14px;
-    }
-
-    .container {
-      padding: 0 var(--spacing-sm);
-    }
-
-    .card {
-      padding: var(--spacing-md);
-    }
-
-    .show-mobile {
-      display: block;
-    }
-
-    .hide-mobile {
-      display: none;
-    }
-
-    h1 {
-      font-size: var(--text-3xl);
-    }
-    h2 {
-      font-size: var(--text-2xl);
-    }
-    h3 {
-      font-size: var(--text-xl);
-    }
+  .hide-mobile {
+    display: none;
   }
 
-  @media (max-width: 480px) {
-    :root {
-      font-size: 13px;
-    }
+  h1 {
+    font-size: var(--text-3xl);
+  }
+  h2 {
+    font-size: var(--text-2xl);
+  }
+  h3 {
+    font-size: var(--text-xl);
+  }
+}
 
-    .btn {
-      width: 100%;
-    }
-
-    .card {
-      padding: var(--spacing-sm) var(--spacing-md);
-    }
+@media (max-width: 480px) {
+  :root {
+    font-size: 13px;
   }
 
-  /* ===========================
+  .btn {
+    width: 100%;
+  }
+
+  .card {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+/* ===========================
    Accessibility
    =========================== */
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
-  /* Focus styles for keyboard navigation */
-  *:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
+/* Focus styles for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
 
-  /* Reduce motion for users who prefer it */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
