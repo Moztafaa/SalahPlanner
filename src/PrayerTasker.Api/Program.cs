@@ -36,9 +36,25 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAngularApp");
-app.UseHttpsRedirection();
+
+// Only use HTTPS redirection in development or if HTTPS is available
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHangfireDashboard();
+
+// Add a root endpoint for health check
+app.MapGet("/", () => new 
+{
+    status = "running",
+    message = "SalahPlanner API is running successfully!",
+    timestamp = DateTime.UtcNow,
+    environment = app.Environment.EnvironmentName
+});
+
 app.MapControllers();
 await app.RunAsync();
