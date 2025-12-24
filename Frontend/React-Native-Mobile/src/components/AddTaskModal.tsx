@@ -107,10 +107,12 @@ export default function AddTaskModal({
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-end bg-black/50">
-        <View className="bg-[#f3f4f6] rounded-t-3xl p-6 max-h-[90%]">
+        <View className="bg-[#f3f4f6] dark:bg-gray-900 rounded-t-3xl p-6 max-h-[90%]">
           {/* Header */}
           <View className="flex-row justify-between items-center mb-6">
-            <Text className="text-2xl font-bold text-text-primary">{taskToEdit ? 'Edit Task' : 'Add Task'}</Text>
+            <Text className="text-2xl font-bold text-gray-900 dark:text-white">
+              {taskToEdit ? 'Edit Task' : 'Add Task'}
+            </Text>
             <TouchableOpacity onPress={onClose} disabled={loading}>
               <Ionicons name="close" size={28} color="#6b7280" />
             </TouchableOpacity>
@@ -119,9 +121,9 @@ export default function AddTaskModal({
           <ScrollView showsVerticalScrollIndicator={false}>
             {/* Title Input */}
             <View className="mb-4">
-              <Text className="text-text-primary font-medium mb-2">Title *</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">Title *</Text>
               <TextInput
-                className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-text-primary"
+                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white"
                 placeholder="Enter task title"
                 placeholderTextColor="#9ca3af"
                 value={title}
@@ -133,9 +135,9 @@ export default function AddTaskModal({
 
             {/* Description Input */}
             <View className="mb-4">
-              <Text className="text-text-primary font-medium mb-2">Description</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">Description</Text>
               <TextInput
-                className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-text-primary"
+                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white"
                 placeholder="Enter task description (optional)"
                 placeholderTextColor="#9ca3af"
                 value={description}
@@ -150,14 +152,14 @@ export default function AddTaskModal({
 
             {/* Date Picker */}
             <View className="mb-4">
-              <Text className="text-text-primary font-medium mb-2">Date</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">Date</Text>
               <TouchableOpacity
-                className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 flex-row items-center"
+                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 flex-row items-center"
                 onPress={() => setShowDatePicker(true)}
                 disabled={loading}
               >
                 <Ionicons name="calendar-outline" size={20} color="#9ca3af" />
-                <Text className="ml-3 text-text-primary flex-1">
+                <Text className="ml-3 text-gray-900 dark:text-white flex-1">
                   {format(taskDate, 'MMMM d, yyyy')}
                 </Text>
                 <Ionicons name="chevron-down" size={20} color="#9ca3af" />
@@ -180,14 +182,14 @@ export default function AddTaskModal({
 
             {/* Prayer Time Slot Picker */}
             <View className="mb-6">
-              <Text className="text-text-primary font-medium mb-2">Prayer Time Slot *</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">Prayer Time Slot *</Text>
               <TouchableOpacity
-                className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 flex-row items-center"
+                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 flex-row items-center"
                 onPress={() => setShowSlotPicker(!showSlotPicker)}
                 disabled={loading}
               >
                 <Ionicons name="time-outline" size={20} color="#9ca3af" />
-                <Text className="ml-3 text-text-primary flex-1">
+                <Text className="ml-3 text-gray-900 dark:text-white flex-1">
                   {PrayerTimeSlotLabels[slot]}
                 </Text>
                 <Ionicons
@@ -198,12 +200,12 @@ export default function AddTaskModal({
               </TouchableOpacity>
 
               {showSlotPicker && (
-                <View className="mt-2 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+                <View className="mt-2 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                   {slotOptions.map((slotOption) => (
                     <TouchableOpacity
                       key={slotOption}
-                      className={`px-4 py-3 border-b border-gray-200 ${
-                        slot === slotOption ? 'bg-primary-50' : ''
+                      className={`px-4 py-3 border-b border-gray-200 dark:border-gray-700 ${
+                        slot === slotOption ? 'bg-primary-50 dark:bg-primary-900/20' : ''
                       }`}
                       onPress={() => {
                         setSlot(slotOption);
@@ -213,7 +215,9 @@ export default function AddTaskModal({
                     >
                       <Text
                         className={`${
-                          slot === slotOption ? 'text-primary-600 font-semibold' : 'text-text-primary'
+                          slot === slotOption
+                            ? 'text-primary-600 dark:text-primary-400 font-semibold'
+                            : 'text-gray-900 dark:text-white'
                         }`}
                       >
                         {PrayerTimeSlotLabels[slotOption]}
@@ -226,7 +230,7 @@ export default function AddTaskModal({
 
             {/* Submit Button */}
             <TouchableOpacity
-              className={`bg-primary-500 rounded-xl py-4 mb-4 ${
+              className={`bg-primary-500 dark:bg-primary-600 rounded-xl py-4 mb-4 ${
                 !title.trim() || loading ? 'opacity-50' : ''
               }`}
               onPress={handleSubmit}

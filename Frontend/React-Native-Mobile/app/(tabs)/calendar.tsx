@@ -16,10 +16,12 @@ import AddTaskModal from '../../src/components/AddTaskModal';
 import Toast from 'react-native-toast-message';
 import { format, addDays, subDays, startOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { useSelectedDate } from '../../src/contexts/DateContext';
+import { useTheme } from '../../src/contexts/ThemeContext';
 
 export default function CalendarScreen() {
   const queryClient = useQueryClient();
   const { selectedDate, setSelectedDate } = useSelectedDate();
+  const { theme } = useTheme();
   const [showAddModal, setShowAddModal] = useState(false);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
 
@@ -131,31 +133,31 @@ export default function CalendarScreen() {
   const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-background-gray" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       {/* Header */}
-      <View className="bg-white px-6 py-4 border-b border-gray-200">
-        <Text className="text-text-primary text-2xl font-bold">Calendar</Text>
+      <View className="bg-white dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <Text className="text-gray-900 dark:text-white text-2xl font-bold">Calendar</Text>
       </View>
 
       {/* Week Navigation */}
-      <View className="bg-white px-6 py-4 flex-row justify-between items-center border-b border-gray-200">
+      <View className="bg-white dark:bg-gray-800 px-6 py-4 flex-row justify-between items-center border-b border-gray-200 dark:border-gray-700">
         <TouchableOpacity onPress={handlePreviousWeek} className="p-2">
-          <Ionicons name="chevron-back" size={24} color="#6b7280" />
+          <Ionicons name="chevron-back" size={24} color={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleToday} activeOpacity={0.7}>
-          <Text className="text-text-primary font-semibold text-lg">
+          <Text className="text-gray-900 dark:text-white font-semibold text-lg">
             {format(selectedDate, 'MMMM yyyy')}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleNextWeek} className="p-2">
-          <Ionicons name="chevron-forward" size={24} color="#6b7280" />
+          <Ionicons name="chevron-forward" size={24} color={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
         </TouchableOpacity>
       </View>
 
       {/* Week Days */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="bg-white px-4 py-2">
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="bg-white dark:bg-gray-800 px-4 py-2">
         {weekDates.map((date) => {
           const isSelected = format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
           const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
@@ -165,20 +167,20 @@ export default function CalendarScreen() {
               key={date.toISOString()}
               onPress={() => setSelectedDate(date)}
               className={`items-center justify-center mx-2 px-3 py-2 rounded-xl ${
-                isSelected ? 'bg-primary-500' : 'bg-gray-50'
+                isSelected ? 'bg-primary-500 dark:bg-primary-600' : 'bg-gray-50 dark:bg-gray-700'
               }`}
               activeOpacity={0.7}
             >
               <Text
                 className={`text-xs font-medium mb-1 ${
-                  isSelected ? 'text-white' : 'text-text-tertiary'
+                  isSelected ? 'text-white' : 'text-gray-400 dark:text-gray-500'
                 }`}
               >
                 {format(date, 'EEE')}
               </Text>
               <Text
                 className={`text-lg font-bold ${
-                  isSelected ? 'text-white' : isToday ? 'text-primary-500' : 'text-text-primary'
+                  isSelected ? 'text-white' : isToday ? 'text-primary-500 dark:text-primary-400' : 'text-gray-900 dark:text-white'
                 }`}
               >
                 {format(date, 'd')}
@@ -189,18 +191,18 @@ export default function CalendarScreen() {
       </ScrollView>
 
       {/* Task Stats */}
-      <View className="bg-white mx-4 mt-4 p-4 rounded-xl shadow-sm">
+      <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-4 rounded-xl shadow-sm">
         <View className="flex-row justify-between items-center mb-2">
-          <Text className="text-text-secondary text-sm">
+          <Text className="text-gray-600 dark:text-gray-300 text-sm">
             {format(selectedDate, 'EEEE, MMMM d')}
           </Text>
-          <Text className="text-text-secondary text-sm">
+          <Text className="text-gray-600 dark:text-gray-300 text-sm">
             {completedTasks}/{totalTasks} tasks
           </Text>
         </View>
-        <View className="bg-gray-200 h-2 rounded-full overflow-hidden">
+        <View className="bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
           <View
-            className="bg-primary-500 h-full"
+            className="bg-primary-500 dark:bg-primary-600 h-full"
             style={{ width: `${completionPercentage}%` }}
           />
         </View>
@@ -210,7 +212,7 @@ export default function CalendarScreen() {
       <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
         {tasksLoading ? (
           <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color="#22c55e" />
+            <ActivityIndicator size="large" color={theme === 'dark' ? '#4ade80' : '#22c55e'} />
           </View>
         ) : (
           slotOptions.map((slot) => {
@@ -222,13 +224,13 @@ export default function CalendarScreen() {
                 {/* Slot Header */}
                 <View className="flex-row justify-between items-center mb-3">
                   <View>
-                    <Text className="text-text-primary font-bold text-lg">
+                    <Text className="text-gray-900 dark:text-white font-bold text-lg">
                       {PrayerTimeSlotLabels[slot]}
                     </Text>
-                    <Text className="text-text-tertiary text-sm">{slotTasks.length} tasks</Text>
+                    <Text className="text-gray-400 dark:text-gray-500 text-sm">{slotTasks.length} tasks</Text>
                   </View>
                   <TouchableOpacity
-                    className="bg-primary-500 rounded-full w-8 h-8 items-center justify-center"
+                    className="bg-primary-500 dark:bg-primary-600 rounded-full w-8 h-8 items-center justify-center"
                     onPress={() => handleOpenAddModal(slot)}
                   >
                     <Ionicons name="add" size={20} color="white" />
@@ -251,10 +253,10 @@ export default function CalendarScreen() {
 
         {!tasksLoading && tasks.length === 0 && (
           <View className="items-center justify-center py-20">
-            <Ionicons name="calendar-outline" size={64} color="#d1d5db" />
-            <Text className="text-text-tertiary text-lg mt-4">No tasks for this day</Text>
+            <Ionicons name="calendar-outline" size={64} color={theme === 'dark' ? '#4b5563' : '#d1d5db'} />
+            <Text className="text-gray-400 dark:text-gray-500 text-lg mt-4">No tasks for this day</Text>
             <TouchableOpacity
-              className="bg-primary-500 px-6 py-3 rounded-xl mt-6"
+              className="bg-primary-500 dark:bg-primary-600 px-6 py-3 rounded-xl mt-6"
               onPress={() => handleOpenAddModal(PrayerTimeSlot.BeforeFajr)}
             >
               <Text className="text-white font-semibold">Add Your First Task</Text>
@@ -268,7 +270,7 @@ export default function CalendarScreen() {
 
       {/* Floating Add Button */}
       <TouchableOpacity
-        className="absolute bottom-28 right-6 bg-primary-500 w-16 h-16 rounded-full items-center justify-center shadow-lg"
+        className="absolute bottom-28 right-6 bg-primary-500 dark:bg-primary-600 w-16 h-16 rounded-full items-center justify-center shadow-lg"
         onPress={() => handleOpenAddModal(PrayerTimeSlot.BeforeFajr)}
         activeOpacity={0.8}
       >
