@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { taskApi, prayerTimeApi, handleApiError } from '../../src/services/api';
-import { PrayerTimeSlot, PrayerTimeSlotLabels, Task, CreateTaskDto } from '../../src/types';
+import { PrayerTimeSlot, PrayerTimeSlotLabels, Task, CreateTaskDto, UpdateTaskDto } from '../../src/types';
 import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
 import Toast from 'react-native-toast-message';
@@ -22,6 +22,7 @@ export default function DashboardScreen() {
   const queryClient = useQueryClient();
   const { selectedDate } = useSelectedDate();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
   const [countdown, setCountdown] = useState('');
 
@@ -51,6 +52,27 @@ export default function DashboardScreen() {
         type: 'success',
         text1: 'Success',
         text2: 'Task created successfully!',
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: handleApiError(error),
+      });
+    },
+  });
+
+  // Update task mutation
+  const updateTaskMutation = useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: UpdateTaskDto }) =>
+      taskApi.updateTask(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Task updated successfully!',
       });
     },
     onError: (error) => {
@@ -141,6 +163,16 @@ export default function DashboardScreen() {
     return () => clearInterval(interval);
   }, [prayerTimes]);
 
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
+    setShowAddModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    setEditingTask(null);
+  };
+
   const handleAddTask = async (task: CreateTaskDto) => {
     await createTaskMutation.mutateAsync(task);
   };
@@ -218,6 +250,7 @@ export default function DashboardScreen() {
                     task={task}
                     onToggleComplete={toggleTaskMutation.mutate}
                     onDelete={deleteTaskMutation.mutate}
+                    onEdit={handleEditTask}
                   />
                 ))
               ) : (
@@ -246,8 +279,12 @@ export default function DashboardScreen() {
       {/* Add Task Modal */}
       <AddTaskModal
         visible={showAddModal}
-        onClose={() => setShowAddModal(false)}
+        onClose={handleCloseModal}
         onSubmit={handleAddTask}
+        onUpdate={async (id, updates) => {
+          await updateTaskMutation.mutateAsync({ id, updates });
+        }}
+        taskToEdit={editingTask}
         defaultSlot={defaultSlot}
         defaultDate={selectedDate}
       />

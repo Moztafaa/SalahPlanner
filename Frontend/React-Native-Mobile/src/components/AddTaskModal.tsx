@@ -11,13 +11,15 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { PrayerTimeSlot, PrayerTimeSlotLabels, CreateTaskDto } from '../types';
+import { PrayerTimeSlot, PrayerTimeSlotLabels, CreateTaskDto, Task, UpdateTaskDto } from '../types';
 import { format } from 'date-fns';
 
 interface AddTaskModalProps {
   visible: boolean;
   onClose: () => void;
   onSubmit: (task: CreateTaskDto) => Promise<void>;
+  onUpdate?: (id: string, task: UpdateTaskDto) => Promise<void>;
+  taskToEdit?: Task | null;
   defaultSlot?: PrayerTimeSlot;
   defaultDate?: Date;
 }
@@ -26,6 +28,8 @@ export default function AddTaskModal({
   visible,
   onClose,
   onSubmit,
+  onUpdate,
+  taskToEdit,
   defaultSlot = PrayerTimeSlot.BeforeFajr,
   defaultDate,
 }: AddTaskModalProps) {
@@ -39,12 +43,21 @@ export default function AddTaskModal({
 
   useEffect(() => {
     if (visible) {
-      setSlot(defaultSlot);
-      if (defaultDate) {
-        setTaskDate(defaultDate);
+      if (taskToEdit) {
+        setTitle(taskToEdit.title);
+        setDescription(taskToEdit.description || '');
+        setSlot(taskToEdit.slot);
+        setTaskDate(taskToEdit.taskDate ? new Date(taskToEdit.taskDate) : new Date());
+      } else {
+        setTitle('');
+        setDescription('');
+        setSlot(defaultSlot);
+        if (defaultDate) {
+          setTaskDate(defaultDate);
+        }
       }
     }
-  }, [visible, defaultSlot, defaultDate]);
+  }, [visible, defaultSlot, defaultDate, taskToEdit]);
 
   const handleSubmit = async () => {
     if (!title.trim()) {
@@ -53,12 +66,21 @@ export default function AddTaskModal({
 
     setLoading(true);
     try {
-      await onSubmit({
-        title: title.trim(),
-        description: description.trim() || undefined,
-        slot,
-        taskDate,
-      });
+      if (taskToEdit && onUpdate) {
+        await onUpdate(taskToEdit.id, {
+          title: title.trim(),
+          description: description.trim() || undefined,
+          slot,
+          taskDate,
+        });
+      } else {
+        await onSubmit({
+          title: title.trim(),
+          description: description.trim() || undefined,
+          slot,
+          taskDate,
+        });
+      }
 
       // Reset form
       setTitle('');
@@ -67,7 +89,7 @@ export default function AddTaskModal({
       setTaskDate(defaultDate || new Date());
       onClose();
     } catch (error) {
-      console.error('Error creating task:', error);
+      console.error('Error saving task:', error);
     } finally {
       setLoading(false);
     }
@@ -88,7 +110,7 @@ export default function AddTaskModal({
         <View className="bg-[#f3f4f6] rounded-t-3xl p-6 max-h-[90%]">
           {/* Header */}
           <View className="flex-row justify-between items-center mb-6">
-            <Text className="text-2xl font-bold text-text-primary">Add Task</Text>
+            <Text className="text-2xl font-bold text-text-primary">{taskToEdit ? 'Edit Task' : 'Add Task'}</Text>
             <TouchableOpacity onPress={onClose} disabled={loading}>
               <Ionicons name="close" size={28} color="#6b7280" />
             </TouchableOpacity>
@@ -215,7 +237,7 @@ export default function AddTaskModal({
                 <ActivityIndicator color="white" />
               ) : (
                 <Text className="text-white text-center font-semibold text-lg">
-                  Create Task
+                  {taskToEdit ? 'Save Changes' : 'Create Task'}
                 </Text>
               )}
             </TouchableOpacity>

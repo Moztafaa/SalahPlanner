@@ -63,28 +63,35 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
         </TouchableOpacity>
 
         {/* Task Content */}
-        <View className="flex-1">
-          <Text
-            className={`text-base font-medium ${
-              task.isCompleted ? 'text-gray-400 line-through' : 'text-text-primary'
-            }`}
-          >
-            {task.title}
-          </Text>
-          {task.description && (
+        <TouchableOpacity
+          className="flex-1 flex-row items-center"
+          onPress={() => onEdit && onEdit(task)}
+          disabled={!onEdit}
+          activeOpacity={0.7}
+        >
+          <View className="flex-1">
             <Text
-              className={`text-sm mt-1 ${
-                task.isCompleted ? 'text-gray-300' : 'text-text-secondary'
+              className={`text-base font-medium ${
+                task.isCompleted ? 'text-gray-400 line-through' : 'text-text-primary'
               }`}
-              numberOfLines={2}
             >
-              {task.description}
+              {task.title}
             </Text>
-          )}
-        </View>
+            {task.description && (
+              <Text
+                className={`text-sm mt-1 ${
+                  task.isCompleted ? 'text-gray-300' : 'text-text-secondary'
+                }`}
+                numberOfLines={2}
+              >
+                {task.description}
+              </Text>
+            )}
+          </View>
 
-        {/* Arrow Indicator */}
-        <Ionicons name="chevron-back" size={20} color="#d1d5db" />
+          {/* Arrow Indicator */}
+          <Ionicons name="chevron-back" size={20} color="#d1d5db" />
+        </TouchableOpacity>
       </View>
     </Swipeable>
   );
