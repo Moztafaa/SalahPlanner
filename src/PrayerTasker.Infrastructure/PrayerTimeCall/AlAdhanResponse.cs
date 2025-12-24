@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace PrayerTasker.Infrastructure;
+namespace PrayerTasker.Infrastructure.PrayerTimeCall;
 
 internal class AlAdhanApiResponse
 {

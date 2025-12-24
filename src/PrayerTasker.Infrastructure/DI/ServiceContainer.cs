@@ -1,4 +1,3 @@
-using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -29,8 +28,6 @@ public static class ServiceContainer
         // Identity
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddHangfire(config => config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
-        services.AddHangfireServer();
 
         // Enable Identity services
         services.AddIdentity<ApplicationUser, ApplicationRole>()

@@ -1,4 +1,3 @@
-using Hangfire;
 using PrayerTasker.Api.DI;
 using PrayerTasker.Application.DI;
 using PrayerTasker.Infrastructure.DI;
@@ -14,15 +13,11 @@ builder.Services.AddInfrastructureServices(builder, builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddPresentationServices();
 
-// Configure CORS
-// add also react app with port 3000 if needed alongwside with angular app
-builder.Services.AddCors(options => options.AddPolicy("AllowAngularApp", policy => policy.WithOrigins("http://localhost:4200",
-                                                                                                      "http://localhost:3000",
-                                                                                                      "https://localhost:4200",
-                                                                                                      "https://localhost:3000")
+// Configure CORS - Allow from anywhere (Development only - restrict in production!)
+builder.Services.AddCors(options => options.AddPolicy("AllowAngularApp", policy => policy
+            .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()));
+            .AllowAnyMethod()));
 
 // ?: Fix Maghrib is empty in Prayer Times response (Done)
 
@@ -45,10 +40,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHangfireDashboard();
 
 // Add a root endpoint for health check
-app.MapGet("/", () => new 
+app.MapGet("/", () => new
 {
     status = "running",
     message = "SalahPlanner API is running successfully!",

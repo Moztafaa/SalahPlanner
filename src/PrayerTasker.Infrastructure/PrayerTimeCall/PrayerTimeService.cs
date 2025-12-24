@@ -4,6 +4,7 @@ using PrayerTasker.Application.Services.PrayerTimeService;
 using PrayerTasker.Domain.Entities;
 using PrayerTasker.Domain.RepositoryInterfaces;
 using PrayerTasker.Infrastructure.Exceptions;
+
 namespace PrayerTasker.Infrastructure.PrayerTimeCall;
 
 public class PrayerTimeService : IPrayerTimeService
@@ -56,10 +57,22 @@ public class PrayerTimeService : IPrayerTimeService
 
             // Read and deserialize the response
             string content = await response.Content.ReadAsStringAsync();
-            AlAdhanApiResponse? apiResponse = JsonSerializer.Deserialize<AlAdhanApiResponse>(content, new JsonSerializerOptions
+            
+            AlAdhanApiResponse? apiResponse;
+            try
             {
-                PropertyNameCaseInsensitive = true
-            });
+                apiResponse = JsonSerializer.Deserialize<AlAdhanApiResponse>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+            catch (JsonException jsonEx)
+            {
+                // Log the actual response content for debugging
+                throw new PrayerTimeServiceException(
+                    $"Error deserializing AlAdhan API response. Content: {(content.Length > 500 ? content.Substring(0, 500) + "..." : content)}", 
+                    jsonEx);
+            }
 
             if (apiResponse?.Code != 200 || apiResponse.Data?.Timings == null)
             {

@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using PrayerTasker.Application.DTOs.Account;
 using PrayerTasker.Domain.IdentityEntities;
+using PrayerTasker.Application.Services.Account;
 
 namespace PrayerTasker.Application.Services.Account;
 
