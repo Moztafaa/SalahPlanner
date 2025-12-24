@@ -93,9 +93,8 @@ export default function MoveTasksModal({ visible, onClose, taskIds, currentSlot 
           <ScrollView className="max-h-60">
             <View className="flex-row flex-wrap justify-between pb-4">
                 {Object.values(PrayerTimeSlot)
-                .filter(val => typeof val === 'number' && val !== currentSlot)
-                .map((slotVal) => {
-                    const slot = slotVal as PrayerTimeSlot;
+                .filter((val): val is PrayerTimeSlot => typeof val === 'number' && val !== currentSlot)
+                .map((slot) => {
                     return (
                     <TouchableOpacity
                         key={slot}
