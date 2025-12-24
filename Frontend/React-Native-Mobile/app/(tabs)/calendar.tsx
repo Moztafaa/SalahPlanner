@@ -19,6 +19,7 @@ import { enUS, ar } from 'date-fns/locale';
 import { useSelectedDate } from '../../src/contexts/DateContext';
 import { useTheme } from '../../src/contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { formatHijriDate } from '../../src/utils/date';
 
 export default function CalendarScreen() {
   const { t, i18n } = useTranslation();
@@ -161,9 +162,12 @@ export default function CalendarScreen() {
           <Ionicons name="chevron-back" size={24} color={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleToday} activeOpacity={0.7}>
+        <TouchableOpacity onPress={handleToday} activeOpacity={0.7} className="items-center">
           <Text className="text-gray-900 dark:text-white font-semibold text-lg">
             {format(selectedDate, 'MMMM yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
+          </Text>
+          <Text className="text-gray-500 dark:text-gray-400 text-xs">
+            {formatHijriDate(selectedDate, i18n.language)}
           </Text>
         </TouchableOpacity>
 
