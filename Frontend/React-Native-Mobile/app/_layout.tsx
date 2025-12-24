@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from '@/src/contexts/AuthContext';
 import { DateProvider } from '@/src/contexts/DateContext';
 import { ThemeProvider } from '@/src/contexts/ThemeContext';
+import { PrayerTimesProvider } from '@/src/contexts/PrayerTimesContext';
+import { NotificationProvider } from '@/src/contexts/NotificationContext';
 import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -52,8 +54,12 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <DateProvider>
-              <RootLayoutNav />
-              <Toast />
+              <PrayerTimesProvider>
+                <NotificationProvider>
+                  <RootLayoutNav />
+                  <Toast />
+                </NotificationProvider>
+              </PrayerTimesProvider>
             </DateProvider>
           </AuthProvider>
         </QueryClientProvider>

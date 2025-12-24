@@ -17,10 +17,12 @@ import { CalculationMethod, CalculationMethodLabels, UserSettingsDto } from '../
 import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../src/contexts/ThemeContext';
+import { useNotifications } from '../../src/contexts/NotificationContext';
 
 export default function SettingsScreen() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { isEnabled: notificationsEnabled, toggleNotifications } = useNotifications();
   const router = useRouter();
 
   const [defaultCity, setDefaultCity] = useState('Cairo');
@@ -147,6 +149,28 @@ export default function SettingsScreen() {
             <Switch
               value={theme === 'dark'}
               onValueChange={toggleTheme}
+              trackColor={{ false: '#d1d5db', true: '#22c55e' }}
+              thumbColor={Platform.OS === 'ios' ? '#fff' : '#fff'}
+            />
+          </View>
+        </View>
+
+        {/* Notifications Section */}
+        <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Notifications</Text>
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center flex-1 mr-4">
+              <Ionicons name="notifications" size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
+              <View className="ml-3">
+                <Text className="text-gray-900 dark:text-white font-medium">Incomplete Tasks</Text>
+                <Text className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+                  Remind me when a prayer slot ends if I have unfinished tasks
+                </Text>
+              </View>
+            </View>
+            <Switch
+              value={notificationsEnabled}
+              onValueChange={toggleNotifications}
               trackColor={{ false: '#d1d5db', true: '#22c55e' }}
               thumbColor={Platform.OS === 'ios' ? '#fff' : '#fff'}
             />
