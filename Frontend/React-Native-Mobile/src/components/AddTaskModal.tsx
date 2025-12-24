@@ -115,6 +115,35 @@ export default function AddTaskModal({
     (v) => typeof v === 'number'
   ) as PrayerTimeSlot[];
 
+  const getSuggestedTasks = () => {
+    const suggestions: string[] = [];
+
+    switch (slot) {
+      case PrayerTimeSlot.FajrToShurooq:
+        suggestions.push('Morning Adhkar');
+        break;
+      case PrayerTimeSlot.DhuhrToAsr:
+      case PrayerTimeSlot.AsrToMaghrib:
+        suggestions.push('Rawatib Sunnah');
+        break;
+      case PrayerTimeSlot.MaghribToIsha:
+        suggestions.push('Evening Adhkar');
+        break;
+      case PrayerTimeSlot.AfterIsha:
+        suggestions.push('Witr Prayer');
+        suggestions.push('Surah Al-Mulk');
+        break;
+    }
+
+    if (taskDate && taskDate.getDay() === 5) {
+      suggestions.push('Surah Al-Kahf');
+    }
+
+    return suggestions;
+  };
+
+  const suggestedTasks = getSuggestedTasks();
+
   return (
     <Modal
       visible={visible}
@@ -148,6 +177,28 @@ export default function AddTaskModal({
                 maxLength={100}
               />
             </View>
+
+            {/* Suggested Tasks */}
+            {suggestedTasks.length > 0 && (
+              <View className="mb-4">
+                <Text className="text-xs text-green-600 dark:text-green-400 font-medium mb-2 uppercase tracking-wider">
+                  Quick Add
+                </Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {suggestedTasks.map((task) => (
+                    <TouchableOpacity
+                      key={task}
+                      className="bg-green-900/10 dark:bg-green-900/30 border border-green-800/20 dark:border-green-400/20 rounded-full px-3 py-1 flex-row items-center"
+                      onPress={() => setTitle(task)}
+                    >
+                      <Text className="text-green-800 dark:text-green-100 text-sm">
+                        + {task}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            )}
 
             {/* Description Input */}
             <View className="mb-4">

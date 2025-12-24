@@ -48,6 +48,20 @@
             placeholder="e.g., Read Quran for 15 minutes"
             autocomplete="off"
           />
+
+          <!-- Suggested Tasks -->
+          @if (suggestedTasks.length > 0) {
+          <div class="suggestions-container">
+            <span class="suggestions-label">Quick Add:</span>
+            <div class="suggestions-list">
+              @for (task of suggestedTasks; track task) {
+              <button type="button" class="suggestion-chip" (click)="applySuggestion(task)">
+                + {{ task }}
+              </button>
+              }
+            </div>
+          </div>
+          }
         </div>
 
         <!-- Description -->
