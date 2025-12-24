@@ -3,8 +3,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { View, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { BlurView } from 'expo-blur';
+import { useColorScheme } from 'nativewind';
 
 export default function TabLayout() {
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   const handleTabPress = () => {
     if (Platform.OS === 'ios') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -23,7 +27,7 @@ export default function TabLayout() {
           left: 20,
           right: 20,
           elevation: 0,
-          backgroundColor: Platform.OS === 'ios' ? 'transparent' : '#f3f4f6',
+          backgroundColor: Platform.OS === 'ios' ? 'transparent' : (isDark ? '#1f2937' : '#f3f4f6'),
           borderRadius: 25,
           height: 70,
           paddingBottom: 10,
@@ -41,7 +45,7 @@ export default function TabLayout() {
           Platform.OS === 'ios' ? (
             <BlurView
               intensity={80}
-              tint="light"
+              tint={isDark ? "dark" : "light"}
               style={{
                 position: 'absolute',
                 top: 0,
@@ -50,7 +54,7 @@ export default function TabLayout() {
                 bottom: 0,
                 borderRadius: 25,
                 overflow: 'hidden',
-                backgroundColor: 'rgba(243, 244, 246, 0.8)',
+                backgroundColor: isDark ? 'rgba(31, 41, 55, 0.8)' : 'rgba(243, 244, 246, 0.8)',
               }}
             />
           ) : null

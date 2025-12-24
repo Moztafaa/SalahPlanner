@@ -50,6 +50,11 @@ export interface UpdateTaskDto {
   taskDate?: Date;
 }
 
+export interface UpdateTaskSlotDto {
+  taskIds: string[];
+  newSlot: PrayerTimeSlot;
+}
+
 // ============================================
 // Account/Auth DTOs
 // ============================================

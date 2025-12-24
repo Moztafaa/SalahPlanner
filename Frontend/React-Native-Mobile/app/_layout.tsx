@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from '@/src/contexts/AuthContext';
 import { DateProvider } from '@/src/contexts/DateContext';
+import { ThemeProvider } from '@/src/contexts/ThemeContext';
+import { PrayerTimesProvider } from '@/src/contexts/PrayerTimesContext';
+import { NotificationProvider } from '@/src/contexts/NotificationContext';
 import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -47,14 +50,20 @@ function RootLayoutNav() {
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <DateProvider>
-            <RootLayoutNav />
-            <Toast />
-          </DateProvider>
-        </AuthProvider>
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <DateProvider>
+              <PrayerTimesProvider>
+                <NotificationProvider>
+                  <RootLayoutNav />
+                  <Toast />
+                </NotificationProvider>
+              </PrayerTimesProvider>
+            </DateProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </GestureHandlerRootView>
   );
 }

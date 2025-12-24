@@ -50,12 +50,14 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
 
   return (
     <Swipeable renderRightActions={renderRightActions} overshootRight={false}>
-      <View className="bg-white rounded-xl p-4 mb-3 flex-row items-center shadow-sm">
+      <View className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-3 flex-row items-center shadow-sm">
         {/* Checkbox */}
         <TouchableOpacity
           onPress={handleToggle}
           className={`w-6 h-6 rounded-full border-2 items-center justify-center mr-3 ${
-            task.isCompleted ? 'bg-primary-500 border-primary-500' : 'border-gray-300'
+            task.isCompleted
+              ? 'bg-primary-500 dark:bg-primary-600 border-primary-500 dark:border-primary-600'
+              : 'border-gray-300 dark:border-gray-600'
           }`}
           activeOpacity={0.7}
         >
@@ -63,28 +65,39 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
         </TouchableOpacity>
 
         {/* Task Content */}
-        <View className="flex-1">
-          <Text
-            className={`text-base font-medium ${
-              task.isCompleted ? 'text-gray-400 line-through' : 'text-text-primary'
-            }`}
-          >
-            {task.title}
-          </Text>
-          {task.description && (
+        <TouchableOpacity
+          className="flex-1 flex-row items-center"
+          onPress={() => onEdit && onEdit(task)}
+          disabled={!onEdit}
+          activeOpacity={0.7}
+        >
+          <View className="flex-1">
             <Text
-              className={`text-sm mt-1 ${
-                task.isCompleted ? 'text-gray-300' : 'text-text-secondary'
+              className={`text-base font-medium ${
+                task.isCompleted
+                  ? 'text-gray-400 dark:text-gray-500 line-through'
+                  : 'text-gray-900 dark:text-white'
               }`}
-              numberOfLines={2}
             >
-              {task.description}
+              {task.title}
             </Text>
-          )}
-        </View>
+            {task.description && (
+              <Text
+                className={`text-sm mt-1 ${
+                  task.isCompleted
+                    ? 'text-gray-300 dark:text-gray-600'
+                    : 'text-gray-600 dark:text-gray-300'
+                }`}
+                numberOfLines={2}
+              >
+                {task.description}
+              </Text>
+            )}
+          </View>
 
-        {/* Arrow Indicator */}
-        <Ionicons name="chevron-back" size={20} color="#d1d5db" />
+          {/* Arrow Indicator */}
+          <Ionicons name="chevron-back" size={20} color="#d1d5db" />
+        </TouchableOpacity>
       </View>
     </Swipeable>
   );

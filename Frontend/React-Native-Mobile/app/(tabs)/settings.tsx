@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   Platform,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,9 +16,13 @@ import { authApi, handleApiError } from '../../src/services/api';
 import { CalculationMethod, CalculationMethodLabels, UserSettingsDto } from '../../src/types';
 import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
+import { useTheme } from '../../src/contexts/ThemeContext';
+import { useNotifications } from '../../src/contexts/NotificationContext';
 
 export default function SettingsScreen() {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const { isEnabled: notificationsEnabled, toggleNotifications } = useNotifications();
   const router = useRouter();
 
   const [defaultCity, setDefaultCity] = useState('Cairo');
@@ -110,15 +115,15 @@ export default function SettingsScreen() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-background-gray" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       {/* Header */}
-      <View className="bg-white px-6 py-4 border-b border-gray-200">
-        <Text className="text-text-primary text-2xl font-bold">Settings</Text>
+      <View className="bg-white dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <Text className="text-gray-900 dark:text-white text-2xl font-bold">Settings</Text>
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* User Profile Section */}
-        <View className="bg-white mx-4 mt-4 p-6 rounded-xl shadow-sm">
+        <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
           <View className="flex-row items-center mb-4">
             <View className="w-16 h-16 bg-primary-500 rounded-full items-center justify-center mr-4">
               <Text className="text-white text-2xl font-bold">
@@ -126,24 +131,63 @@ export default function SettingsScreen() {
               </Text>
             </View>
             <View className="flex-1">
-              <Text className="text-text-primary font-bold text-lg">{user?.fullName}</Text>
-              <Text className="text-text-secondary text-sm">{user?.email}</Text>
-              <Text className="text-text-tertiary text-xs mt-1">@{user?.userName}</Text>
+              <Text className="text-gray-900 dark:text-white font-bold text-lg">{user?.fullName}</Text>
+              <Text className="text-gray-600 dark:text-gray-300 text-sm">{user?.email}</Text>
+              <Text className="text-gray-400 dark:text-gray-500 text-xs mt-1">@{user?.userName}</Text>
             </View>
           </View>
         </View>
 
+        {/* Appearance Section */}
+        <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Appearance</Text>
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center">
+              <Ionicons name={theme === 'dark' ? 'moon' : 'sunny'} size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
+              <Text className="text-gray-900 dark:text-white font-medium ml-3">Dark Mode</Text>
+            </View>
+            <Switch
+              value={theme === 'dark'}
+              onValueChange={toggleTheme}
+              trackColor={{ false: '#d1d5db', true: '#22c55e' }}
+              thumbColor={Platform.OS === 'ios' ? '#fff' : '#fff'}
+            />
+          </View>
+        </View>
+
+        {/* Notifications Section */}
+        <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Notifications</Text>
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center flex-1 mr-4">
+              <Ionicons name="notifications" size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
+              <View className="ml-3">
+                <Text className="text-gray-900 dark:text-white font-medium">Incomplete Tasks</Text>
+                <Text className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+                  Remind me when a prayer slot ends if I have unfinished tasks
+                </Text>
+              </View>
+            </View>
+            <Switch
+              value={notificationsEnabled}
+              onValueChange={toggleNotifications}
+              trackColor={{ false: '#d1d5db', true: '#22c55e' }}
+              thumbColor={Platform.OS === 'ios' ? '#fff' : '#fff'}
+            />
+          </View>
+        </View>
+
         {/* Location Settings */}
-        <View className="bg-white mx-4 mt-4 p-6 rounded-xl shadow-sm">
-          <Text className="text-text-primary font-bold text-lg mb-4">Location Settings</Text>
+        <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Location Settings</Text>
 
           {/* Default City */}
           <View className="mb-4">
-            <Text className="text-text-primary font-medium mb-2">Default City</Text>
-            <View className="flex-row items-center bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+            <Text className="text-gray-900 dark:text-white font-medium mb-2">Default City</Text>
+            <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
               <Ionicons name="location-outline" size={20} color="#9ca3af" />
               <TextInput
-                className="flex-1 ml-3 text-text-primary"
+                className="flex-1 ml-3 text-gray-900 dark:text-white"
                 placeholder="Enter your city"
                 placeholderTextColor="#9ca3af"
                 value={defaultCity}
@@ -154,11 +198,11 @@ export default function SettingsScreen() {
 
           {/* Default Country */}
           <View className="mb-4">
-            <Text className="text-text-primary font-medium mb-2">Default Country</Text>
-            <View className="flex-row items-center bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+            <Text className="text-gray-900 dark:text-white font-medium mb-2">Default Country</Text>
+            <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
               <Ionicons name="globe-outline" size={20} color="#9ca3af" />
               <TextInput
-                className="flex-1 ml-3 text-text-primary"
+                className="flex-1 ml-3 text-gray-900 dark:text-white"
                 placeholder="Enter your country"
                 placeholderTextColor="#9ca3af"
                 value={defaultCountry}
@@ -169,13 +213,13 @@ export default function SettingsScreen() {
 
           {/* Calculation Method */}
           <View className="mb-4">
-            <Text className="text-text-primary font-medium mb-2">Calculation Method</Text>
+            <Text className="text-gray-900 dark:text-white font-medium mb-2">Calculation Method</Text>
             <TouchableOpacity
-              className="flex-row items-center bg-gray-50 border border-gray-200 rounded-xl px-4 py-3"
+              className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3"
               onPress={() => setShowMethodPicker(!showMethodPicker)}
             >
               <Ionicons name="calculator-outline" size={20} color="#9ca3af" />
-              <Text className="ml-3 text-text-primary flex-1">
+              <Text className="ml-3 text-gray-900 dark:text-white flex-1">
                 {CalculationMethodLabels[calculationMethod]}
               </Text>
               <Ionicons
@@ -186,13 +230,13 @@ export default function SettingsScreen() {
             </TouchableOpacity>
 
             {showMethodPicker && (
-              <View className="mt-2 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden max-h-64">
+              <View className="mt-2 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 overflow-hidden max-h-64">
                 <ScrollView>
                   {calculationMethods.map((method) => (
                     <TouchableOpacity
                       key={method}
-                      className={`px-4 py-3 border-b border-gray-200 ${
-                        calculationMethod === method ? 'bg-primary-50' : ''
+                      className={`px-4 py-3 border-b border-gray-200 dark:border-gray-600 ${
+                        calculationMethod === method ? 'bg-primary-50 dark:bg-primary-900/20' : ''
                       }`}
                       onPress={() => {
                         setCalculationMethod(method);
@@ -202,8 +246,8 @@ export default function SettingsScreen() {
                       <Text
                         className={`${
                           calculationMethod === method
-                            ? 'text-primary-600 font-semibold'
-                            : 'text-text-primary'
+                            ? 'text-primary-600 dark:text-primary-400 font-semibold'
+                            : 'text-gray-900 dark:text-white'
                         }`}
                       >
                         {CalculationMethodLabels[method]}
@@ -229,24 +273,24 @@ export default function SettingsScreen() {
         </View>
 
         {/* Account Actions */}
-        <View className="bg-white mx-4 mt-4 mb-4 p-6 rounded-xl shadow-sm">
-          <Text className="text-text-primary font-bold text-lg mb-4">Account</Text>
+        <View className="bg-white dark:bg-gray-800 mx-4 mt-4 mb-4 p-6 rounded-xl shadow-sm">
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Account</Text>
 
           {/* Logout Button */}
           <TouchableOpacity
-            className="bg-red-50 border border-red-200 rounded-xl py-3 flex-row items-center justify-center"
+            className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900 rounded-xl py-3 flex-row items-center justify-center"
             onPress={handleLogout}
             activeOpacity={0.7}
           >
             <Ionicons name="log-out-outline" size={20} color="#ef4444" />
-            <Text className="text-red-500 font-semibold ml-2">Logout</Text>
+            <Text className="text-red-500 dark:text-red-400 font-semibold ml-2">Logout</Text>
           </TouchableOpacity>
         </View>
 
         {/* App Info */}
         <View className="items-center py-6">
-          <Text className="text-text-tertiary text-sm">Salah Planner v1.0.0</Text>
-          <Text className="text-text-tertiary text-xs mt-1">Made with ❤️ for Muslims</Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm">Salah Planner v1.0.0</Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-xs mt-1">Made with ❤️ for Muslims</Text>
         </View>
 
         {/* Bottom spacing for floating nav */}

@@ -14,6 +14,7 @@ import {
   Task,
   CreateTaskDto,
   UpdateTaskDto,
+  UpdateTaskSlotDto,
   PrayerTimesDto,
   ApiError,
 } from "../types";
@@ -221,6 +222,13 @@ export const taskApi = {
    */
   deleteTask: async (id: string): Promise<void> => {
     await apiClient.delete(`/Task/${id}`);
+  },
+
+  /**
+   * Update tasks slot
+   */
+  updateTaskSlot: async (dto: UpdateTaskSlotDto): Promise<void> => {
+    await apiClient.put("/Task/update-slot", dto);
   },
 };
 

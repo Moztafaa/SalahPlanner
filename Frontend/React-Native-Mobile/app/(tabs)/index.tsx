@@ -11,17 +11,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { taskApi, prayerTimeApi, handleApiError } from '../../src/services/api';
-import { PrayerTimeSlot, PrayerTimeSlotLabels, Task, CreateTaskDto } from '../../src/types';
+import { PrayerTimeSlot, PrayerTimeSlotLabels, Task, CreateTaskDto, UpdateTaskDto } from '../../src/types';
 import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
 import Toast from 'react-native-toast-message';
 import { format, differenceInSeconds } from 'date-fns';
 import { useSelectedDate } from '../../src/contexts/DateContext';
+import { useTheme } from '../../src/contexts/ThemeContext';
 
 export default function DashboardScreen() {
   const queryClient = useQueryClient();
   const { selectedDate } = useSelectedDate();
+  const { theme } = useTheme();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
   const [countdown, setCountdown] = useState('');
 
@@ -51,6 +54,27 @@ export default function DashboardScreen() {
         type: 'success',
         text1: 'Success',
         text2: 'Task created successfully!',
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: handleApiError(error),
+      });
+    },
+  });
+
+  // Update task mutation
+  const updateTaskMutation = useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: UpdateTaskDto }) =>
+      taskApi.updateTask(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Task updated successfully!',
       });
     },
     onError: (error) => {
@@ -141,6 +165,16 @@ export default function DashboardScreen() {
     return () => clearInterval(interval);
   }, [prayerTimes]);
 
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
+    setShowAddModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowAddModal(false);
+    setEditingTask(null);
+  };
+
   const handleAddTask = async (task: CreateTaskDto) => {
     await createTaskMutation.mutateAsync(task);
   };
@@ -155,9 +189,9 @@ export default function DashboardScreen() {
   ) as PrayerTimeSlot[];
 
   return (
-    <SafeAreaView className="flex-1 bg-background-gray" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       {/* Header */}
-      <View className="bg-primary-500 px-6 py-4 rounded-b-3xl">
+      <View className="bg-primary-500 dark:bg-primary-600 px-6 py-4 rounded-b-3xl">
         <Text className="text-white text-3xl font-bold">Salah Planner</Text>
         <Text className="text-white/90 text-sm mt-1">
           {format(selectedDate, 'EEEE, MMMM d, yyyy')}
@@ -181,13 +215,13 @@ export default function DashboardScreen() {
           <RefreshControl
             refreshing={tasksLoading || prayerTimesLoading}
             onRefresh={refetchTasks}
-            tintColor="#22c55e"
+            tintColor={theme === 'dark' ? '#4ade80' : '#22c55e'}
           />
         }
       >
         {tasksLoading ? (
           <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color="#22c55e" />
+            <ActivityIndicator size="large" color={theme === 'dark' ? '#4ade80' : '#22c55e'} />
           </View>
         ) : (
           slotOptions.map((slot) => (
@@ -195,15 +229,15 @@ export default function DashboardScreen() {
               {/* Slot Header */}
               <View className="flex-row justify-between items-center mb-3">
                 <View>
-                  <Text className="text-text-primary font-bold text-lg">
+                  <Text className="text-gray-900 dark:text-white font-bold text-lg">
                     {PrayerTimeSlotLabels[slot]}
                   </Text>
-                  <Text className="text-text-tertiary text-sm">
+                  <Text className="text-gray-500 dark:text-gray-400 text-sm">
                     {groupedTasks[slot]?.length || 0} tasks
                   </Text>
                 </View>
                 <TouchableOpacity
-                  className="bg-primary-500 rounded-full w-8 h-8 items-center justify-center"
+                  className="bg-primary-500 dark:bg-primary-600 rounded-full w-8 h-8 items-center justify-center"
                   onPress={() => handleOpenAddModal(slot)}
                 >
                   <Ionicons name="add" size={20} color="white" />
@@ -218,12 +252,13 @@ export default function DashboardScreen() {
                     task={task}
                     onToggleComplete={toggleTaskMutation.mutate}
                     onDelete={deleteTaskMutation.mutate}
+                    onEdit={handleEditTask}
                   />
                 ))
               ) : (
-                <View className="bg-white rounded-xl p-6 items-center">
-                  <Ionicons name="checkbox-outline" size={40} color="#d1d5db" />
-                  <Text className="text-text-tertiary mt-2">No tasks yet</Text>
+                <View className="bg-white dark:bg-gray-800 rounded-xl p-6 items-center">
+                  <Ionicons name="checkbox-outline" size={40} color={theme === 'dark' ? '#4b5563' : '#d1d5db'} />
+                  <Text className="text-gray-400 dark:text-gray-500 mt-2">No tasks yet</Text>
                 </View>
               )}
             </View>
@@ -236,7 +271,7 @@ export default function DashboardScreen() {
 
       {/* Floating Add Button */}
       <TouchableOpacity
-        className="absolute bottom-28 right-6 bg-primary-500 w-16 h-16 rounded-full items-center justify-center shadow-lg"
+        className="absolute bottom-28 right-6 bg-primary-500 dark:bg-primary-600 w-16 h-16 rounded-full items-center justify-center shadow-lg"
         onPress={() => handleOpenAddModal(PrayerTimeSlot.BeforeFajr)}
         activeOpacity={0.8}
       >
@@ -246,8 +281,12 @@ export default function DashboardScreen() {
       {/* Add Task Modal */}
       <AddTaskModal
         visible={showAddModal}
-        onClose={() => setShowAddModal(false)}
+        onClose={handleCloseModal}
         onSubmit={handleAddTask}
+        onUpdate={async (id, updates) => {
+          await updateTaskMutation.mutateAsync({ id, updates });
+        }}
+        taskToEdit={editingTask}
         defaultSlot={defaultSlot}
         defaultDate={selectedDate}
       />

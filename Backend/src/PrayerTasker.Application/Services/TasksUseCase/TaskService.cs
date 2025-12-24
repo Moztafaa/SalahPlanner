@@ -47,6 +47,20 @@ public class TaskService(ITaskRepository taskRepository, IMapper mapper, IHttpCo
         List<Taask> tasks = await taskRepository.GetByDateForUserAsync(date, userId);
         return mapper.Map<List<TaskDto>>(tasks);
     }
+    public async Task UpdateTasksSlotAsync(UpdateTaskSlotDto dto)
+    {
+        string? userId = GetUserId();
+        foreach (var taskId in dto.TaskIds)
+        {
+            var task = await taskRepository.GetByIdForUserAsync(taskId, userId);
+            if (task != null)
+            {
+                task.Slot = dto.NewSlot;
+                await taskRepository.UpdateAsync(task);
+            }
+        }
+    }
+
     public async Task<TaskDto> ToggleTaskCompleteAsync(Guid taskId)
     {
         string? userId = GetUserId();

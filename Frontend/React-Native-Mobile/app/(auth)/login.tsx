@@ -54,7 +54,7 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 bg-background-light"
+      className="flex-1 bg-white dark:bg-gray-900"
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -63,13 +63,13 @@ export default function LoginScreen() {
         <View className="flex-1 justify-center px-6 py-12">
           {/* Logo/Header */}
           <View className="items-center mb-12">
-            <View className="w-20 h-20 bg-primary-500 rounded-full items-center justify-center mb-4">
+            <View className="w-20 h-20 bg-primary-500 dark:bg-primary-600 rounded-full items-center justify-center mb-4">
               <Ionicons name="calendar" size={40} color="white" />
             </View>
-            <Text className="text-3xl font-bold text-text-primary mb-2">
+            <Text className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               Salah Planner
             </Text>
-            <Text className="text-text-secondary text-center">
+            <Text className="text-gray-600 dark:text-gray-300 text-center">
               Organize your tasks around prayer times
             </Text>
           </View>
@@ -78,11 +78,11 @@ export default function LoginScreen() {
           <View className="space-y-4">
             {/* Email Input */}
             <View>
-              <Text className="text-text-primary font-medium mb-2">Email</Text>
-              <View className="flex-row items-center bg-white border border-gray-200 rounded-xl px-4 py-3">
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">Email</Text>
+              <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="mail-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-text-primary"
+                  className="flex-1 ml-3 text-gray-900 dark:text-white"
                   placeholder="Enter your email"
                   placeholderTextColor="#9ca3af"
                   value={email}
@@ -97,11 +97,11 @@ export default function LoginScreen() {
 
             {/* Password Input */}
             <View>
-              <Text className="text-text-primary font-medium mb-2">Password</Text>
-              <View className="flex-row items-center bg-white border border-gray-200 rounded-xl px-4 py-3">
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">Password</Text>
+              <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-text-primary"
+                  className="flex-1 ml-3 text-gray-900 dark:text-white"
                   placeholder="Enter your password"
                   placeholderTextColor="#9ca3af"
                   value={password}
@@ -122,7 +122,7 @@ export default function LoginScreen() {
 
             {/* Login Button */}
             <TouchableOpacity
-              className="bg-primary-500 rounded-xl py-4 mt-6"
+              className="bg-primary-500 dark:bg-primary-600 rounded-xl py-4 mt-6"
               onPress={handleLogin}
               disabled={loading}
               activeOpacity={0.8}
@@ -138,10 +138,10 @@ export default function LoginScreen() {
 
             {/* Register Link */}
             <View className="flex-row justify-center items-center mt-6">
-              <Text className="text-text-secondary">Don't have an account? </Text>
+              <Text className="text-gray-600 dark:text-gray-300">Don't have an account? </Text>
               <Link href="/(auth)/register" asChild>
                 <TouchableOpacity disabled={loading}>
-                  <Text className="text-primary-500 font-semibold">Sign Up</Text>
+                  <Text className="text-primary-500 dark:text-primary-400 font-semibold">Sign Up</Text>
                 </TouchableOpacity>
               </Link>
             </View>

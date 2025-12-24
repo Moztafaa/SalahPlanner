@@ -50,6 +50,13 @@ public class TaskController(ITaskService taskService) : ControllerBase
         return Ok(updatedTask);
     }
 
+    [HttpPut("update-slot")]
+    public async Task<IActionResult> UpdateTasksSlot([FromBody] UpdateTaskSlotDto dto)
+    {
+        await taskService.UpdateTasksSlotAsync(dto);
+        return Ok();
+    }
+
     [HttpPatch("{id:guid}/toggle")]
     public async Task<IActionResult> ToggleTaskComplete(Guid id)
     {
