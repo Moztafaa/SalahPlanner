@@ -20,6 +20,7 @@ import { enUS, ar } from 'date-fns/locale';
 import { useSelectedDate } from '../../src/contexts/DateContext';
 import { useTheme } from '../../src/contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { formatHijriDate } from '../../src/utils/date';
 
 export default function DashboardScreen() {
   const { t, i18n } = useTranslation();
@@ -211,6 +212,9 @@ export default function DashboardScreen() {
         <Text className="text-white text-3xl font-bold">{t('common.appName')}</Text>
         <Text className="text-white/90 text-sm mt-1">
           {format(selectedDate, 'EEEE, d MMMM yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
+        </Text>
+        <Text className="text-white/80 text-xs mt-0.5">
+          {formatHijriDate(selectedDate, i18n.language)}
         </Text>
 
         {/* Prayer Countdown */}
