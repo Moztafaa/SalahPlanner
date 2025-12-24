@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, I18nManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
@@ -54,7 +54,7 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
         {/* Checkbox */}
         <TouchableOpacity
           onPress={handleToggle}
-          className={`w-6 h-6 rounded-full border-2 items-center justify-center mr-3 ${
+          className={`w-6 h-6 rounded-full border-2 items-center justify-center me-3 ${
             task.isCompleted
               ? 'bg-primary-500 dark:bg-primary-600 border-primary-500 dark:border-primary-600'
               : 'border-gray-300 dark:border-gray-600'
@@ -96,7 +96,7 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
           </View>
 
           {/* Arrow Indicator */}
-          <Ionicons name="chevron-back" size={20} color="#d1d5db" />
+          <Ionicons name={I18nManager.isRTL ? "chevron-forward" : "chevron-back"} size={20} color="#d1d5db" />
         </TouchableOpacity>
       </View>
     </Swipeable>

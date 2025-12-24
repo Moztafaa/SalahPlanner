@@ -13,8 +13,10 @@ import { Link } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
 import Toast from 'react-native-toast-message';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 export default function RegisterScreen() {
+  const { t } = useTranslation();
   const [fullName, setFullName] = useState('');
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -96,10 +98,10 @@ export default function RegisterScreen() {
               <Ionicons name="calendar" size={40} color="white" />
             </View>
             <Text className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Create Account
+              {t('auth.createAccount')}
             </Text>
             <Text className="text-gray-600 dark:text-gray-300 text-center">
-              Join Salah Planner today
+              {t('auth.joinApp')}
             </Text>
           </View>
 
@@ -107,12 +109,12 @@ export default function RegisterScreen() {
           <View className="space-y-4">
             {/* Full Name */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Full Name</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.fullName')}</Text>
               <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="person-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-gray-900 dark:text-white"
-                  placeholder="Enter your full name"
+                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  placeholder={t('auth.fullName')}
                   placeholderTextColor="#9ca3af"
                   value={fullName}
                   onChangeText={setFullName}
@@ -124,12 +126,12 @@ export default function RegisterScreen() {
 
             {/* Username */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Username</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.username')}</Text>
               <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="at-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-gray-900 dark:text-white"
-                  placeholder="Choose a username"
+                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  placeholder={t('auth.username')}
                   placeholderTextColor="#9ca3af"
                   value={userName}
                   onChangeText={setUserName}
@@ -141,12 +143,12 @@ export default function RegisterScreen() {
 
             {/* Email */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Email</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.email')}</Text>
               <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="mail-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-gray-900 dark:text-white"
-                  placeholder="Enter your email"
+                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  placeholder={t('auth.email')}
                   placeholderTextColor="#9ca3af"
                   value={email}
                   onChangeText={setEmail}
@@ -160,12 +162,12 @@ export default function RegisterScreen() {
 
             {/* Password */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Password</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.password')}</Text>
               <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-gray-900 dark:text-white"
-                  placeholder="Create a password"
+                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  placeholder={t('auth.password')}
                   placeholderTextColor="#9ca3af"
                   value={password}
                   onChangeText={setPassword}
@@ -185,12 +187,12 @@ export default function RegisterScreen() {
 
             {/* Confirm Password */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Confirm Password</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.confirmPassword')}</Text>
               <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-gray-900 dark:text-white"
-                  placeholder="Confirm your password"
+                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  placeholder={t('auth.confirmPassword')}
                   placeholderTextColor="#9ca3af"
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
@@ -219,17 +221,17 @@ export default function RegisterScreen() {
                 <ActivityIndicator color="white" />
               ) : (
                 <Text className="text-white text-center font-semibold text-lg">
-                  Create Account
+                  {t('auth.createAccount')}
                 </Text>
               )}
             </TouchableOpacity>
 
             {/* Login Link */}
             <View className="flex-row justify-center items-center mt-6">
-              <Text className="text-gray-600 dark:text-gray-300">Already have an account? </Text>
+              <Text className="text-gray-600 dark:text-gray-300">{t('auth.alreadyHaveAccount')} </Text>
               <Link href="/(auth)/login" asChild>
                 <TouchableOpacity disabled={loading}>
-                  <Text className="text-primary-500 dark:text-primary-400 font-semibold">Sign In</Text>
+                  <Text className="text-primary-500 dark:text-primary-400 font-semibold">{t('auth.login')}</Text>
                 </TouchableOpacity>
               </Link>
             </View>

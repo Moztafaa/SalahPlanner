@@ -1,0 +1,105 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "appName": "مخطط الصلاة",
+    "tasks": "مهام",
+    "completed": "مكتملة",
+    "restartApp": "يحتاج التطبيق إلى إعادة التشغيل لتغيير اللغة.",
+    "ok": "حسناً"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "name": "الاسم",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "dontHaveAccount": "ليس لديك حساب؟",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
+    "registerSuccess": "تم إنشاء الحساب بنجاح",
+    "welcomeBack": "مرحباً بعودتك",
+    "createAccount": "إنشاء حساب جديد",
+    "appSlogan": "نظم مهامك حول أوقات الصلاة",
+    "joinApp": "انضم إلى مخطط الصلاة اليوم",
+    "username": "اسم المستخدم",
+    "fullName": "الاسم الكامل"
+  },
+  "tabs": {
+    "home": "الرئيسية",
+    "calendar": "التقويم",
+    "settings": "الإعدادات"
+  },
+  "home": {
+    "today": "اليوم",
+    "fajr": "الفجر",
+    "dhuhr": "الظهر",
+    "asr": "العصر",
+    "maghrib": "المغرب",
+    "isha": "العشاء",
+    "noTasks": "لا توجد مهام لهذا الوقت",
+    "addTask": "إضافة مهمة",
+    "beforeFajr": "قبل صلاة الفجر",
+    "fajrToShurooq": "الفجر ← الشروق",
+    "shurooqToDhuhr": "الشروق ← الظهر",
+    "dhuhrToAsr": "الظهر ← العصر",
+    "asrToMaghrib": "العصر ← المغرب",
+    "maghribToIsha": "المغرب ← العشاء",
+    "afterIsha": "بعد صلاة العشاء"
+  },
+  "calendar": {
+    "title": "التقويم"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "darkMode": "الوضع الداكن",
+    "logout": "تسجيل الخروج",
+    "logoutConfirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+    "location": "الموقع",
+    "calculationMethod": "طريقة الحساب"
+  },
+  "tasks": {
+    "addTaskTitle": "إضافة مهمة جديدة",
+    "editTaskTitle": "تعديل المهمة",
+    "taskName": "اسم المهمة",
+    "description": "الوصف",
+    "prayerTime": "وقت الصلاة",
+    "date": "التاريخ",
+    "moveTasks": "نقل المهام",
+    "deleteTaskConfirm": "هل أنت متأكد أنك تريد حذف هذه المهمة؟",
+    "move_tasks_modal": {
+      "title": "مهام غير مكتملة",
+      "description": "لديك {{count}} مهام غير مكتملة في {{slot}}. ماذا تريد أن تفعل؟",
+      "move_to": "نقل إلى {{slot}}",
+      "or_choose": "أو اختر وقتاً آخر",
+      "success_title": "تم نقل المهام",
+      "success_message": "تم نقل {{count}} مهام إلى {{slot}}",
+      "error_title": "خطأ",
+      "error_message": "فشل نقل المهام"
+    }
+  },
+  "notifications": {
+    "unfinished_title": "مهام غير مكتملة",
+    "unfinished_body": "لديك {{count}} مهام غير مكتملة لـ {{slot}}. اضغط لنقلها."
+  },
+  "prayer_slots": {
+    "0": "قبل صلاة الفجر",
+    "1": "الفجر ← الشروق",
+    "2": "الشروق ← الظهر",
+    "3": "الظهر ← العصر",
+    "4": "العصر ← المغرب",
+    "5": "المغرب ← العشاء",
+    "6": "بعد صلاة العشاء"
+  }
+}

@@ -13,6 +13,8 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { PrayerTimeSlot, PrayerTimeSlotLabels, CreateTaskDto, Task, UpdateTaskDto } from '../types';
 import { format } from 'date-fns';
+import { enUS, ar } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 interface AddTaskModalProps {
   visible: boolean;
@@ -33,6 +35,7 @@ export default function AddTaskModal({
   defaultSlot = PrayerTimeSlot.BeforeFajr,
   defaultDate,
 }: AddTaskModalProps) {
+  const { t, i18n } = useTranslation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [slot, setSlot] = useState<PrayerTimeSlot>(defaultSlot);
@@ -95,6 +98,19 @@ export default function AddTaskModal({
     }
   };
 
+  const getSlotLabel = (slot: PrayerTimeSlot) => {
+    switch (slot) {
+      case PrayerTimeSlot.BeforeFajr: return t('home.beforeFajr');
+      case PrayerTimeSlot.FajrToShurooq: return t('home.fajrToShurooq');
+      case PrayerTimeSlot.ShurooqToDhuhr: return t('home.shurooqToDhuhr');
+      case PrayerTimeSlot.DhuhrToAsr: return t('home.dhuhrToAsr');
+      case PrayerTimeSlot.AsrToMaghrib: return t('home.asrToMaghrib');
+      case PrayerTimeSlot.MaghribToIsha: return t('home.maghribToIsha');
+      case PrayerTimeSlot.AfterIsha: return t('home.afterIsha');
+      default: return '';
+    }
+  };
+
   const slotOptions = Object.values(PrayerTimeSlot).filter(
     (v) => typeof v === 'number'
   ) as PrayerTimeSlot[];
@@ -111,7 +127,7 @@ export default function AddTaskModal({
           {/* Header */}
           <View className="flex-row justify-between items-center mb-6">
             <Text className="text-2xl font-bold text-gray-900 dark:text-white">
-              {taskToEdit ? 'Edit Task' : 'Add Task'}
+              {taskToEdit ? t('tasks.editTaskTitle') : t('tasks.addTaskTitle')}
             </Text>
             <TouchableOpacity onPress={onClose} disabled={loading}>
               <Ionicons name="close" size={28} color="#6b7280" />
@@ -121,10 +137,10 @@ export default function AddTaskModal({
           <ScrollView showsVerticalScrollIndicator={false}>
             {/* Title Input */}
             <View className="mb-4">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Title *</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('tasks.taskName')} *</Text>
               <TextInput
-                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white"
-                placeholder="Enter task title"
+                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-start"
+                placeholder={t('tasks.taskName')}
                 placeholderTextColor="#9ca3af"
                 value={title}
                 onChangeText={setTitle}
@@ -135,10 +151,10 @@ export default function AddTaskModal({
 
             {/* Description Input */}
             <View className="mb-4">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Description</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('tasks.description')}</Text>
               <TextInput
-                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white"
-                placeholder="Enter task description (optional)"
+                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-start"
+                placeholder={t('tasks.description')}
                 placeholderTextColor="#9ca3af"
                 value={description}
                 onChangeText={setDescription}
@@ -152,15 +168,15 @@ export default function AddTaskModal({
 
             {/* Date Picker */}
             <View className="mb-4">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Date</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('tasks.date')}</Text>
               <TouchableOpacity
                 className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 flex-row items-center"
                 onPress={() => setShowDatePicker(true)}
                 disabled={loading}
               >
                 <Ionicons name="calendar-outline" size={20} color="#9ca3af" />
-                <Text className="ml-3 text-gray-900 dark:text-white flex-1">
-                  {format(taskDate, 'MMMM d, yyyy')}
+                <Text className="ms-3 text-gray-900 dark:text-white flex-1">
+                  {format(taskDate, 'MMMM d, yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
                 </Text>
                 <Ionicons name="chevron-down" size={20} color="#9ca3af" />
               </TouchableOpacity>
@@ -182,15 +198,15 @@ export default function AddTaskModal({
 
             {/* Prayer Time Slot Picker */}
             <View className="mb-6">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Prayer Time Slot *</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('tasks.prayerTime')} *</Text>
               <TouchableOpacity
                 className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 flex-row items-center"
                 onPress={() => setShowSlotPicker(!showSlotPicker)}
                 disabled={loading}
               >
                 <Ionicons name="time-outline" size={20} color="#9ca3af" />
-                <Text className="ml-3 text-gray-900 dark:text-white flex-1">
-                  {PrayerTimeSlotLabels[slot]}
+                <Text className="ms-3 text-gray-900 dark:text-white flex-1">
+                  {getSlotLabel(slot)}
                 </Text>
                 <Ionicons
                   name={showSlotPicker ? 'chevron-up' : 'chevron-down'}
@@ -220,7 +236,7 @@ export default function AddTaskModal({
                             : 'text-gray-900 dark:text-white'
                         }`}
                       >
-                        {PrayerTimeSlotLabels[slotOption]}
+                        {getSlotLabel(slotOption)}
                       </Text>
                     </TouchableOpacity>
                   ))}
@@ -241,7 +257,7 @@ export default function AddTaskModal({
                 <ActivityIndicator color="white" />
               ) : (
                 <Text className="text-white text-center font-semibold text-lg">
-                  {taskToEdit ? 'Save Changes' : 'Create Task'}
+                  {taskToEdit ? t('common.save') : t('common.add')}
                 </Text>
               )}
             </TouchableOpacity>

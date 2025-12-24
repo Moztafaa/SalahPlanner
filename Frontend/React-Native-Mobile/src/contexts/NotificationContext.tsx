@@ -8,17 +8,22 @@ import { taskApi } from '../services/api';
 import { PrayerTimeSlot, PrayerTimeSlotLabels, Task } from '../types';
 import { Platform } from 'react-native';
 import MoveTasksModal from '../components/MoveTasksModal';
+import { useTranslation } from 'react-i18next';
 
 // Configure notifications
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+try {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+} catch (error) {
+  console.warn('Failed to set notification handler:', error);
+}
 
 const NOTIFICATION_SETTINGS_KEY = 'notification_settings_enabled';
 
@@ -33,6 +38,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const [isEnabled, setIsEnabled] = useState(false);
   const { todayPrayerTimes } = usePrayerTimes();
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTaskIds, setModalTaskIds] = useState<string[]>([]);
@@ -48,21 +54,26 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   // Handle notification tap
   useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-      const data = response.notification.request.content.data;
-      if (data.action === 'move_tasks' && tasks) {
-        const slot = data.slot as PrayerTimeSlot;
-        const incomplete = tasks.filter(t => t.slot === slot && !t.isCompleted).map(t => t.id);
+    let subscription: Notifications.Subscription | undefined;
+    try {
+      subscription = Notifications.addNotificationResponseReceivedListener(response => {
+        const data = response.notification.request.content.data;
+        if (data.action === 'move_tasks' && tasks) {
+          const slot = data.slot as PrayerTimeSlot;
+          const incomplete = tasks.filter(t => t.slot === slot && !t.isCompleted).map(t => t.id);
 
-        if (incomplete.length > 0) {
-            setModalSlot(slot);
-            setModalTaskIds(incomplete);
-            setModalVisible(true);
+          if (incomplete.length > 0) {
+              setModalSlot(slot);
+              setModalTaskIds(incomplete);
+              setModalVisible(true);
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      console.warn('Failed to add notification listener:', error);
+    }
 
-    return () => subscription.remove();
+    return () => subscription?.remove();
   }, [tasks]);
 
   // Load settings from storage
@@ -111,7 +122,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     // Slot 5: Maghrib -> Ends at Isha
     // Slot 6: After Isha -> No end time notification usually, or maybe midnight?
 
-    const scheduleForSlot = async (slot: PrayerTimeSlot, endTimeStr: string, slotName: string) => {
+    const scheduleForSlot = async (slot: PrayerTimeSlot, endTimeStr: string) => {
       const endTime = parseTime(endTimeStr);
       const now = new Date();
 
@@ -124,27 +135,35 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       );
 
       if (incompleteTasks.length > 0) {
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Unfinished Tasks",
-            body: `You have ${incompleteTasks.length} unfinished tasks for ${slotName}. Tap to move them.`,
-            data: { slot, action: 'move_tasks' },
-          },
-          trigger: endTime,
-        });
+        try {
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: t('notifications.unfinished_title'),
+              body: t('notifications.unfinished_body', { count: incompleteTasks.length, slot: t(`prayer_slots.${slot}`) }),
+              data: { slot, action: 'move_tasks' },
+            },
+            trigger: endTime,
+          });
+        } catch (error) {
+          console.warn('Failed to schedule notification:', error);
+        }
       }
     };
 
-    await scheduleForSlot(PrayerTimeSlot.BeforeFajr, todayPrayerTimes.fajr, "Before Fajr");
-    await scheduleForSlot(PrayerTimeSlot.FajrToShurooq, todayPrayerTimes.sunrise, "Fajr");
-    await scheduleForSlot(PrayerTimeSlot.ShurooqToDhuhr, todayPrayerTimes.dhuhr, "Shurooq");
-    await scheduleForSlot(PrayerTimeSlot.DhuhrToAsr, todayPrayerTimes.asr, "Dhuhr");
-    await scheduleForSlot(PrayerTimeSlot.AsrToMaghrib, todayPrayerTimes.maghrib, "Asr");
-    await scheduleForSlot(PrayerTimeSlot.MaghribToIsha, todayPrayerTimes.isha, "Maghrib");
+    await scheduleForSlot(PrayerTimeSlot.BeforeFajr, todayPrayerTimes.fajr);
+    await scheduleForSlot(PrayerTimeSlot.FajrToShurooq, todayPrayerTimes.sunrise);
+    await scheduleForSlot(PrayerTimeSlot.ShurooqToDhuhr, todayPrayerTimes.dhuhr);
+    await scheduleForSlot(PrayerTimeSlot.DhuhrToAsr, todayPrayerTimes.asr);
+    await scheduleForSlot(PrayerTimeSlot.AsrToMaghrib, todayPrayerTimes.maghrib);
+    await scheduleForSlot(PrayerTimeSlot.MaghribToIsha, todayPrayerTimes.isha);
   };
 
   const cancelAllNotifications = async () => {
-    await Notifications.cancelAllScheduledNotificationsAsync();
+    try {
+      await Notifications.cancelAllScheduledNotificationsAsync();
+    } catch (error) {
+      console.warn('Failed to cancel notifications:', error);
+    }
   };
 
   const toggleNotifications = async () => {
