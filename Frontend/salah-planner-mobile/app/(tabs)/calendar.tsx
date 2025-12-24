@@ -15,10 +15,11 @@ import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
 import Toast from 'react-native-toast-message';
 import { format, addDays, subDays, startOfWeek, addWeeks, subWeeks } from 'date-fns';
+import { useSelectedDate } from '../../src/contexts/DateContext';
 
 export default function CalendarScreen() {
   const queryClient = useQueryClient();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { selectedDate, setSelectedDate } = useSelectedDate();
   const [showAddModal, setShowAddModal] = useState(false);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
 
@@ -154,7 +155,7 @@ export default function CalendarScreen() {
       </View>
 
       {/* Week Days */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="bg-white px-4 py-3">
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="bg-white px-4 py-2">
         {weekDates.map((date) => {
           const isSelected = format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
           const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
@@ -163,7 +164,7 @@ export default function CalendarScreen() {
             <TouchableOpacity
               key={date.toISOString()}
               onPress={() => setSelectedDate(date)}
-              className={`items-center justify-center mx-2 px-4 py-3 rounded-xl ${
+              className={`items-center justify-center mx-2 px-3 py-2 rounded-xl ${
                 isSelected ? 'bg-primary-500' : 'bg-gray-50'
               }`}
               activeOpacity={0.7}

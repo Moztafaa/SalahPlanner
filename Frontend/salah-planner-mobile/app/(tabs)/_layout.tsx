@@ -23,7 +23,7 @@ export default function TabLayout() {
           left: 20,
           right: 20,
           elevation: 0,
-          backgroundColor: Platform.OS === 'ios' ? 'transparent' : '#ffffff',
+          backgroundColor: Platform.OS === 'ios' ? 'transparent' : '#f3f4f6',
           borderRadius: 25,
           height: 70,
           paddingBottom: 10,
@@ -50,7 +50,7 @@ export default function TabLayout() {
                 bottom: 0,
                 borderRadius: 25,
                 overflow: 'hidden',
-                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                backgroundColor: 'rgba(243, 244, 246, 0.8)',
               }}
             />
           ) : null

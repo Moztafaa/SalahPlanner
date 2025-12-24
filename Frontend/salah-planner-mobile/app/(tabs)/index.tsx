@@ -16,10 +16,11 @@ import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
 import Toast from 'react-native-toast-message';
 import { format, differenceInSeconds } from 'date-fns';
+import { useSelectedDate } from '../../src/contexts/DateContext';
 
 export default function DashboardScreen() {
   const queryClient = useQueryClient();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { selectedDate } = useSelectedDate();
   const [showAddModal, setShowAddModal] = useState(false);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
   const [countdown, setCountdown] = useState('');

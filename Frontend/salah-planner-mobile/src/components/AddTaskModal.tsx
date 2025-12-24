@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -36,6 +36,15 @@ export default function AddTaskModal({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showSlotPicker, setShowSlotPicker] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (visible) {
+      setSlot(defaultSlot);
+      if (defaultDate) {
+        setTaskDate(defaultDate);
+      }
+    }
+  }, [visible, defaultSlot, defaultDate]);
 
   const handleSubmit = async () => {
     if (!title.trim()) {
@@ -76,7 +85,7 @@ export default function AddTaskModal({
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-end bg-black/50">
-        <View className="bg-white rounded-t-3xl p-6 max-h-[90%]">
+        <View className="bg-[#f3f4f6] rounded-t-3xl p-6 max-h-[90%]">
           {/* Header */}
           <View className="flex-row justify-between items-center mb-6">
             <Text className="text-2xl font-bold text-text-primary">Add Task</Text>
