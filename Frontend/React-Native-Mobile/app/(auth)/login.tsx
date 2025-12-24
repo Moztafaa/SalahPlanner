@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
@@ -65,9 +66,11 @@ export default function LoginScreen() {
         <View className="flex-1 justify-center px-6 py-12">
           {/* Logo/Header */}
           <View className="items-center mb-12">
-            <View className="w-20 h-20 bg-primary-500 dark:bg-primary-600 rounded-full items-center justify-center mb-4">
-              <Ionicons name="calendar" size={40} color="white" />
-            </View>
+            <Image
+              source={require('../../assets/images/cropped_circle_image_without_text.png')}
+              className="w-32 h-32 mb-4"
+              resizeMode="contain"
+            />
             <Text className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               Salah Planner
             </Text>
