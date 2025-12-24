@@ -120,23 +120,23 @@ export default function AddTaskModal({
 
     switch (slot) {
       case PrayerTimeSlot.FajrToShurooq:
-        suggestions.push('Morning Adhkar');
+        suggestions.push(t('tasks.morningAdhkar'));
         break;
       case PrayerTimeSlot.DhuhrToAsr:
       case PrayerTimeSlot.AsrToMaghrib:
-        suggestions.push('Rawatib Sunnah');
+        suggestions.push(t('tasks.rawatibSunnah'));
         break;
       case PrayerTimeSlot.MaghribToIsha:
-        suggestions.push('Evening Adhkar');
+        suggestions.push(t('tasks.eveningAdhkar'));
         break;
       case PrayerTimeSlot.AfterIsha:
-        suggestions.push('Witr Prayer');
-        suggestions.push('Surah Al-Mulk');
+        suggestions.push(t('tasks.witrPrayer'));
+        suggestions.push(t('tasks.surahMulk'));
         break;
     }
 
     if (taskDate && taskDate.getDay() === 5) {
-      suggestions.push('Surah Al-Kahf');
+      suggestions.push(t('tasks.surahKahf'));
     }
 
     return suggestions;
@@ -182,7 +182,7 @@ export default function AddTaskModal({
             {suggestedTasks.length > 0 && (
               <View className="mb-4">
                 <Text className="text-xs text-green-600 dark:text-green-400 font-medium mb-2 uppercase tracking-wider">
-                  Quick Add
+                  {t('tasks.quickAdd')}
                 </Text>
                 <View className="flex-row flex-wrap gap-2">
                   {suggestedTasks.map((task) => (
