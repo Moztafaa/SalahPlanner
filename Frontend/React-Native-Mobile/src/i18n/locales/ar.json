@@ -76,6 +76,13 @@
     "description": "الوصف",
     "prayerTime": "وقت الصلاة",
     "date": "التاريخ",
+    "morningAdhkar": "أذكار الصباح",
+    "rawatibSunnah": "سنن الرواتب",
+    "eveningAdhkar": "أذكار المساء",
+    "witrPrayer": "صلاة الوتر",
+    "surahMulk": "سورة الملك",
+    "surahKahf": "سورة الكهف",
+    "quickAdd": "إضافة سريعة",
     "moveTasks": "نقل المهام",
     "deleteTaskConfirm": "هل أنت متأكد أنك تريد حذف هذه المهمة؟",
     "move_tasks_modal": {

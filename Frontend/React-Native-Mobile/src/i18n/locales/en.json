@@ -76,6 +76,13 @@
     "description": "Description",
     "prayerTime": "Prayer Time",
     "date": "Date",
+    "morningAdhkar": "Morning Adhkar",
+    "rawatibSunnah": "Rawatib Sunnah",
+    "eveningAdhkar": "Evening Adhkar",
+    "witrPrayer": "Witr Prayer",
+    "surahMulk": "Surah Al-Mulk",
+    "surahKahf": "Surah Al-Kahf",
+    "quickAdd": "Quick Add",
     "moveTasks": "Move Tasks",
     "deleteTaskConfirm": "Are you sure you want to delete this task?",
     "move_tasks_modal": {

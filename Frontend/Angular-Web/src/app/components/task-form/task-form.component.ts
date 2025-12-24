@@ -67,6 +67,44 @@ export class TaskFormComponent implements OnInit {
     return this.isEditMode ? 'Edit Task' : 'Create New Task';
   }
 
+  get suggestedTasks(): string[] {
+    const suggestions: string[] = [];
+    // Cast to number because ngModel might treat enum as string in some cases, though here it seems typed.
+    // But safe to ensure it's treated as the enum value.
+    const slot = Number(this.formData.slot);
+    const dateStr = this.formData.taskDate;
+
+    // Slot based suggestions
+    switch (slot) {
+      case PrayerTimeSlot.FajrToShurooq:
+        suggestions.push('Morning Adhkar');
+        break;
+      case PrayerTimeSlot.DhuhrToAsr:
+      case PrayerTimeSlot.AsrToMaghrib:
+        suggestions.push('Rawatib Sunnah');
+        break;
+      case PrayerTimeSlot.MaghribToIsha:
+        suggestions.push('Evening Adhkar');
+        break;
+      case PrayerTimeSlot.AfterIsha:
+        suggestions.push('Witr Prayer');
+        suggestions.push('Surah Al-Mulk');
+        break;
+    }
+
+    // Friday check
+    if (dateStr) {
+      // dateStr is YYYY-MM-DD
+      const date = new Date(dateStr);
+      // Check if valid date and is Friday (5)
+      if (!isNaN(date.getTime()) && date.getDay() === 5) {
+        suggestions.push('Surah Al-Kahf');
+      }
+    }
+
+    return suggestions;
+  }
+
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
@@ -87,6 +125,13 @@ export class TaskFormComponent implements OnInit {
       const dateToUse = this.selectedDate || new Date();
       this.formData.taskDate = this.formatDateForInput(dateToUse);
     }
+  }
+
+  /**
+   * Apply a suggested task title
+   */
+  applySuggestion(title: string): void {
+    this.formData.title = title;
   }
 
   /**
