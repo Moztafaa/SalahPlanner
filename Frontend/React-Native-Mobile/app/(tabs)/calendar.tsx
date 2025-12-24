@@ -15,10 +15,13 @@ import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
 import Toast from 'react-native-toast-message';
 import { format, addDays, subDays, startOfWeek, addWeeks, subWeeks } from 'date-fns';
+import { enUS, ar } from 'date-fns/locale';
 import { useSelectedDate } from '../../src/contexts/DateContext';
 import { useTheme } from '../../src/contexts/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 export default function CalendarScreen() {
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const { selectedDate, setSelectedDate } = useSelectedDate();
   const { theme } = useTheme();
@@ -124,6 +127,19 @@ export default function CalendarScreen() {
     setShowAddModal(true);
   };
 
+  const getSlotLabel = (slot: PrayerTimeSlot) => {
+    switch (slot) {
+      case PrayerTimeSlot.BeforeFajr: return t('home.beforeFajr');
+      case PrayerTimeSlot.FajrToShurooq: return t('home.fajrToShurooq');
+      case PrayerTimeSlot.ShurooqToDhuhr: return t('home.shurooqToDhuhr');
+      case PrayerTimeSlot.DhuhrToAsr: return t('home.dhuhrToAsr');
+      case PrayerTimeSlot.AsrToMaghrib: return t('home.asrToMaghrib');
+      case PrayerTimeSlot.MaghribToIsha: return t('home.maghribToIsha');
+      case PrayerTimeSlot.AfterIsha: return t('home.afterIsha');
+      default: return '';
+    }
+  };
+
   const slotOptions = Object.values(PrayerTimeSlot).filter(
     (v) => typeof v === 'number'
   ) as PrayerTimeSlot[];
@@ -136,7 +152,7 @@ export default function CalendarScreen() {
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       {/* Header */}
       <View className="bg-white dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-        <Text className="text-gray-900 dark:text-white text-2xl font-bold">Calendar</Text>
+        <Text className="text-gray-900 dark:text-white text-2xl font-bold">{t('calendar.title')}</Text>
       </View>
 
       {/* Week Navigation */}
@@ -147,7 +163,7 @@ export default function CalendarScreen() {
 
         <TouchableOpacity onPress={handleToday} activeOpacity={0.7}>
           <Text className="text-gray-900 dark:text-white font-semibold text-lg">
-            {format(selectedDate, 'MMMM yyyy')}
+            {format(selectedDate, 'MMMM yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
           </Text>
         </TouchableOpacity>
 
@@ -176,7 +192,7 @@ export default function CalendarScreen() {
                   isSelected ? 'text-white' : 'text-gray-400 dark:text-gray-500'
                 }`}
               >
-                {format(date, 'EEE')}
+                {format(date, 'EEE', { locale: i18n.language === 'ar' ? ar : enUS })}
               </Text>
               <Text
                 className={`text-lg font-bold ${
@@ -194,10 +210,10 @@ export default function CalendarScreen() {
       <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-4 rounded-xl shadow-sm">
         <View className="flex-row justify-between items-center mb-2">
           <Text className="text-gray-600 dark:text-gray-300 text-sm">
-            {format(selectedDate, 'EEEE, MMMM d')}
+            {format(selectedDate, 'EEEE, d MMMM', { locale: i18n.language === 'ar' ? ar : enUS })}
           </Text>
           <Text className="text-gray-600 dark:text-gray-300 text-sm">
-            {completedTasks}/{totalTasks} tasks
+            {completedTasks}/{totalTasks} {t('common.tasks')}
           </Text>
         </View>
         <View className="bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
@@ -225,9 +241,9 @@ export default function CalendarScreen() {
                 <View className="flex-row justify-between items-center mb-3">
                   <View>
                     <Text className="text-gray-900 dark:text-white font-bold text-lg">
-                      {PrayerTimeSlotLabels[slot]}
+                      {getSlotLabel(slot)}
                     </Text>
-                    <Text className="text-gray-400 dark:text-gray-500 text-sm">{slotTasks.length} tasks</Text>
+                    <Text className="text-gray-400 dark:text-gray-500 text-sm">{slotTasks.length} {t('common.tasks')}</Text>
                   </View>
                   <TouchableOpacity
                     className="bg-primary-500 dark:bg-primary-600 rounded-full w-8 h-8 items-center justify-center"
@@ -254,12 +270,12 @@ export default function CalendarScreen() {
         {!tasksLoading && tasks.length === 0 && (
           <View className="items-center justify-center py-20">
             <Ionicons name="calendar-outline" size={64} color={theme === 'dark' ? '#4b5563' : '#d1d5db'} />
-            <Text className="text-gray-400 dark:text-gray-500 text-lg mt-4">No tasks for this day</Text>
+            <Text className="text-gray-400 dark:text-gray-500 text-lg mt-4">{t('home.noTasks')}</Text>
             <TouchableOpacity
               className="bg-primary-500 dark:bg-primary-600 px-6 py-3 rounded-xl mt-6"
               onPress={() => handleOpenAddModal(PrayerTimeSlot.BeforeFajr)}
             >
-              <Text className="text-white font-semibold">Add Your First Task</Text>
+              <Text className="text-white font-semibold">{t('home.addTask')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -270,7 +286,7 @@ export default function CalendarScreen() {
 
       {/* Floating Add Button */}
       <TouchableOpacity
-        className="absolute bottom-28 right-6 bg-primary-500 dark:bg-primary-600 w-16 h-16 rounded-full items-center justify-center shadow-lg"
+        className="absolute bottom-28 end-6 bg-primary-500 dark:bg-primary-600 w-16 h-16 rounded-full items-center justify-center shadow-lg"
         onPress={() => handleOpenAddModal(PrayerTimeSlot.BeforeFajr)}
         activeOpacity={0.8}
       >

@@ -8,9 +8,12 @@ import {
   Alert,
   Platform,
   Switch,
+  I18nManager,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+import * as Updates from 'expo-updates'; // We might need to install this or handle it gracefully
 import { useAuth } from '../../src/contexts/AuthContext';
 import { authApi, handleApiError } from '../../src/services/api';
 import { CalculationMethod, CalculationMethodLabels, UserSettingsDto } from '../../src/types';
@@ -20,6 +23,7 @@ import { useTheme } from '../../src/contexts/ThemeContext';
 import { useNotifications } from '../../src/contexts/NotificationContext';
 
 export default function SettingsScreen() {
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isEnabled: notificationsEnabled, toggleNotifications } = useNotifications();
@@ -32,6 +36,36 @@ export default function SettingsScreen() {
   );
   const [showMethodPicker, setShowMethodPicker] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const toggleLanguage = async () => {
+    const currentLang = i18n.language;
+    const newLang = currentLang === 'en' ? 'ar' : 'en';
+    const isRTL = newLang === 'ar';
+
+    await i18n.changeLanguage(newLang);
+
+    if (I18nManager.isRTL !== isRTL) {
+      I18nManager.allowRTL(isRTL);
+      I18nManager.forceRTL(isRTL);
+
+      Alert.alert(
+        t('settings.language'),
+        t('common.restartApp'),
+        [
+          {
+            text: t('common.ok'),
+            onPress: async () => {
+              try {
+                await Updates.reloadAsync();
+              } catch (e) {
+                // Fallback if Updates not available
+              }
+            },
+          },
+        ]
+      );
+    }
+  };
 
   const handleSaveSettings = async () => {
     if (!defaultCity.trim() || !defaultCountry.trim()) {
@@ -125,7 +159,7 @@ export default function SettingsScreen() {
         {/* User Profile Section */}
         <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
           <View className="flex-row items-center mb-4">
-            <View className="w-16 h-16 bg-primary-500 rounded-full items-center justify-center mr-4">
+            <View className="w-16 h-16 bg-primary-500 rounded-full items-center justify-center me-4">
               <Text className="text-white text-2xl font-bold">
                 {user?.fullName?.charAt(0).toUpperCase() || 'U'}
               </Text>
@@ -144,7 +178,7 @@ export default function SettingsScreen() {
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
               <Ionicons name={theme === 'dark' ? 'moon' : 'sunny'} size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
-              <Text className="text-gray-900 dark:text-white font-medium ml-3">Dark Mode</Text>
+              <Text className="text-gray-900 dark:text-white font-medium ms-3">Dark Mode</Text>
             </View>
             <Switch
               value={theme === 'dark'}
@@ -155,13 +189,34 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* Language Section */}
+        <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">{t('settings.language')}</Text>
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center">
+              <Ionicons name="language" size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
+              <Text className="text-gray-900 dark:text-white font-medium ms-3">
+                {i18n.language === 'ar' ? 'العربية' : 'English'}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={toggleLanguage}
+              className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-lg"
+            >
+              <Text className="text-primary-600 dark:text-primary-400 font-medium">
+                {i18n.language === 'ar' ? 'Switch to English' : 'تغيير للعربية'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         {/* Notifications Section */}
         <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
           <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Notifications</Text>
           <View className="flex-row items-center justify-between">
-            <View className="flex-row items-center flex-1 mr-4">
+            <View className="flex-row items-center flex-1 me-4">
               <Ionicons name="notifications" size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
-              <View className="ml-3">
+              <View className="ms-3">
                 <Text className="text-gray-900 dark:text-white font-medium">Incomplete Tasks</Text>
                 <Text className="text-gray-500 dark:text-gray-400 text-xs mt-1">
                   Remind me when a prayer slot ends if I have unfinished tasks
@@ -187,7 +242,7 @@ export default function SettingsScreen() {
             <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
               <Ionicons name="location-outline" size={20} color="#9ca3af" />
               <TextInput
-                className="flex-1 ml-3 text-gray-900 dark:text-white"
+                className="flex-1 ms-3 text-gray-900 dark:text-white"
                 placeholder="Enter your city"
                 placeholderTextColor="#9ca3af"
                 value={defaultCity}

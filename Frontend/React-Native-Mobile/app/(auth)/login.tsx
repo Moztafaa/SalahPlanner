@@ -8,13 +8,16 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
 import Toast from 'react-native-toast-message';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -63,14 +66,16 @@ export default function LoginScreen() {
         <View className="flex-1 justify-center px-6 py-12">
           {/* Logo/Header */}
           <View className="items-center mb-12">
-            <View className="w-20 h-20 bg-primary-500 dark:bg-primary-600 rounded-full items-center justify-center mb-4">
-              <Ionicons name="calendar" size={40} color="white" />
-            </View>
+            <Image
+              source={require('../../assets/images/cropped_circle_image_without_text.png')}
+              className="w-32 h-32 mb-4"
+              resizeMode="contain"
+            />
             <Text className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               Salah Planner
             </Text>
             <Text className="text-gray-600 dark:text-gray-300 text-center">
-              Organize your tasks around prayer times
+              {t('auth.appSlogan')}
             </Text>
           </View>
 
@@ -78,12 +83,12 @@ export default function LoginScreen() {
           <View className="space-y-4">
             {/* Email Input */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Email</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.email')}</Text>
               <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="mail-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-gray-900 dark:text-white"
-                  placeholder="Enter your email"
+                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  placeholder={t('auth.email')}
                   placeholderTextColor="#9ca3af"
                   value={email}
                   onChangeText={setEmail}
@@ -97,12 +102,12 @@ export default function LoginScreen() {
 
             {/* Password Input */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Password</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.password')}</Text>
               <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
                 <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" />
                 <TextInput
-                  className="flex-1 ml-3 text-gray-900 dark:text-white"
-                  placeholder="Enter your password"
+                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  placeholder={t('auth.password')}
                   placeholderTextColor="#9ca3af"
                   value={password}
                   onChangeText={setPassword}
@@ -131,17 +136,17 @@ export default function LoginScreen() {
                 <ActivityIndicator color="white" />
               ) : (
                 <Text className="text-white text-center font-semibold text-lg">
-                  Sign In
+                  {t('auth.login')}
                 </Text>
               )}
             </TouchableOpacity>
 
             {/* Register Link */}
             <View className="flex-row justify-center items-center mt-6">
-              <Text className="text-gray-600 dark:text-gray-300">Don't have an account? </Text>
+              <Text className="text-gray-600 dark:text-gray-300">{t('auth.dontHaveAccount')} </Text>
               <Link href="/(auth)/register" asChild>
                 <TouchableOpacity disabled={loading}>
-                  <Text className="text-primary-500 dark:text-primary-400 font-semibold">Sign Up</Text>
+                  <Text className="text-primary-500 dark:text-primary-400 font-semibold">{t('auth.signup')}</Text>
                 </TouchableOpacity>
               </Link>
             </View>

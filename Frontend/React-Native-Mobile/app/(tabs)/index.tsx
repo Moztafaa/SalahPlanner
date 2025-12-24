@@ -16,10 +16,13 @@ import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
 import Toast from 'react-native-toast-message';
 import { format, differenceInSeconds } from 'date-fns';
+import { enUS, ar } from 'date-fns/locale';
 import { useSelectedDate } from '../../src/contexts/DateContext';
 import { useTheme } from '../../src/contexts/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardScreen() {
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const { selectedDate } = useSelectedDate();
   const { theme } = useTheme();
@@ -184,6 +187,19 @@ export default function DashboardScreen() {
     setShowAddModal(true);
   };
 
+  const getSlotLabel = (slot: PrayerTimeSlot) => {
+    switch (slot) {
+      case PrayerTimeSlot.BeforeFajr: return t('home.beforeFajr');
+      case PrayerTimeSlot.FajrToShurooq: return t('home.fajrToShurooq');
+      case PrayerTimeSlot.ShurooqToDhuhr: return t('home.shurooqToDhuhr');
+      case PrayerTimeSlot.DhuhrToAsr: return t('home.dhuhrToAsr');
+      case PrayerTimeSlot.AsrToMaghrib: return t('home.asrToMaghrib');
+      case PrayerTimeSlot.MaghribToIsha: return t('home.maghribToIsha');
+      case PrayerTimeSlot.AfterIsha: return t('home.afterIsha');
+      default: return '';
+    }
+  };
+
   const slotOptions = Object.values(PrayerTimeSlot).filter(
     (v) => typeof v === 'number'
   ) as PrayerTimeSlot[];
@@ -192,16 +208,16 @@ export default function DashboardScreen() {
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       {/* Header */}
       <View className="bg-primary-500 dark:bg-primary-600 px-6 py-4 rounded-b-3xl">
-        <Text className="text-white text-3xl font-bold">Salah Planner</Text>
+        <Text className="text-white text-3xl font-bold">{t('common.appName')}</Text>
         <Text className="text-white/90 text-sm mt-1">
-          {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+          {format(selectedDate, 'EEEE, d MMMM yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
         </Text>
 
         {/* Prayer Countdown */}
         {prayerTimes && (
           <View className="bg-white/20 rounded-xl px-4 py-3 mt-4">
             <Text className="text-white font-semibold text-center">
-              {countdown || 'Loading...'}
+              {countdown || t('common.loading')}
             </Text>
           </View>
         )}
@@ -230,10 +246,10 @@ export default function DashboardScreen() {
               <View className="flex-row justify-between items-center mb-3">
                 <View>
                   <Text className="text-gray-900 dark:text-white font-bold text-lg">
-                    {PrayerTimeSlotLabels[slot]}
+                    {getSlotLabel(slot)}
                   </Text>
                   <Text className="text-gray-500 dark:text-gray-400 text-sm">
-                    {groupedTasks[slot]?.length || 0} tasks
+                    {groupedTasks[slot]?.length || 0} {t('common.tasks')}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -258,7 +274,7 @@ export default function DashboardScreen() {
               ) : (
                 <View className="bg-white dark:bg-gray-800 rounded-xl p-6 items-center">
                   <Ionicons name="checkbox-outline" size={40} color={theme === 'dark' ? '#4b5563' : '#d1d5db'} />
-                  <Text className="text-gray-400 dark:text-gray-500 mt-2">No tasks yet</Text>
+                  <Text className="text-gray-400 dark:text-gray-500 mt-2">{t('home.noTasks')}</Text>
                 </View>
               )}
             </View>
@@ -271,7 +287,7 @@ export default function DashboardScreen() {
 
       {/* Floating Add Button */}
       <TouchableOpacity
-        className="absolute bottom-28 right-6 bg-primary-500 dark:bg-primary-600 w-16 h-16 rounded-full items-center justify-center shadow-lg"
+        className="absolute bottom-28 end-6 bg-primary-500 dark:bg-primary-600 w-16 h-16 rounded-full items-center justify-center shadow-lg"
         onPress={() => handleOpenAddModal(PrayerTimeSlot.BeforeFajr)}
         activeOpacity={0.8}
       >

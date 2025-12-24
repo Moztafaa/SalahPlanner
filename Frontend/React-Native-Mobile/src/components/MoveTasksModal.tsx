@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, ActivityIndicator, ScrollView, I18nManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { PrayerTimeSlot, PrayerTimeSlotLabels } from '../types';
+import { PrayerTimeSlot } from '../types';
 import { taskApi } from '../services/api';
 import { useQueryClient } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
+import { useTranslation } from 'react-i18next';
 
 interface MoveTasksModalProps {
   visible: boolean;
@@ -16,6 +17,7 @@ interface MoveTasksModalProps {
 export default function MoveTasksModal({ visible, onClose, taskIds, currentSlot }: MoveTasksModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   // Determine next slot
   const nextSlot = currentSlot < PrayerTimeSlot.AfterIsha ? currentSlot + 1 : PrayerTimeSlot.BeforeFajr;
@@ -33,8 +35,8 @@ export default function MoveTasksModal({ visible, onClose, taskIds, currentSlot 
 
       Toast.show({
         type: 'success',
-        text1: 'Tasks Moved',
-        text2: `Moved ${taskIds.length} tasks to ${PrayerTimeSlotLabels[slot]}`
+        text1: t('tasks.move_tasks_modal.success_title'),
+        text2: t('tasks.move_tasks_modal.success_message', { count: taskIds.length, slot: t(`prayer_slots.${slot}`) })
       });
 
       onClose();
@@ -42,8 +44,8 @@ export default function MoveTasksModal({ visible, onClose, taskIds, currentSlot 
       console.error(error);
       Toast.show({
         type: 'error',
-        text1: 'Error',
-        text2: 'Failed to move tasks'
+        text1: t('tasks.move_tasks_modal.error_title'),
+        text2: t('tasks.move_tasks_modal.error_message')
       });
     } finally {
       setIsSubmitting(false);
@@ -60,15 +62,14 @@ export default function MoveTasksModal({ visible, onClose, taskIds, currentSlot 
       <View className="flex-1 justify-end bg-black/50">
         <View className="bg-white rounded-t-3xl p-6 max-h-[80%]">
           <View className="flex-row justify-between items-center mb-6">
-            <Text className="text-xl font-bold text-gray-900">Unfinished Tasks</Text>
+            <Text className="text-xl font-bold text-gray-900 text-start">{t('tasks.move_tasks_modal.title')}</Text>
             <TouchableOpacity onPress={onClose}>
               <Ionicons name="close" size={24} color="#6B7280" />
             </TouchableOpacity>
           </View>
 
-          <Text className="text-gray-600 mb-6">
-            You have {taskIds.length} unfinished tasks in {PrayerTimeSlotLabels[currentSlot]}.
-            What would you like to do?
+          <Text className="text-gray-600 mb-6 text-start">
+            {t('tasks.move_tasks_modal.description', { count: taskIds.length, slot: t(`prayer_slots.${currentSlot}`) })}
           </Text>
 
           <TouchableOpacity
@@ -80,15 +81,15 @@ export default function MoveTasksModal({ visible, onClose, taskIds, currentSlot 
               <ActivityIndicator color="white" />
             ) : (
               <>
-                <Text className="text-white font-semibold text-lg mr-2">
-                  Move to {PrayerTimeSlotLabels[nextSlot]}
+                <Text className="text-white font-semibold text-lg me-2">
+                  {t('tasks.move_tasks_modal.move_to', { slot: t(`prayer_slots.${nextSlot}`) })}
                 </Text>
-                <Ionicons name="arrow-forward" size={20} color="white" />
+                <Ionicons name={I18nManager.isRTL ? "arrow-back" : "arrow-forward"} size={20} color="white" />
               </>
             )}
           </TouchableOpacity>
 
-          <Text className="text-center text-gray-500 my-2">or choose another slot</Text>
+          <Text className="text-center text-gray-500 my-2">{t('tasks.move_tasks_modal.or_choose')}</Text>
 
           <ScrollView className="max-h-60">
             <View className="flex-row flex-wrap justify-between pb-4">
@@ -103,7 +104,7 @@ export default function MoveTasksModal({ visible, onClose, taskIds, currentSlot 
                         disabled={isSubmitting}
                     >
                         <Text className="text-gray-700 text-sm text-center">
-                        {PrayerTimeSlotLabels[slot]}
+                        {t(`prayer_slots.${slot}`)}
                         </Text>
                     </TouchableOpacity>
                     );
