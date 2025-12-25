@@ -230,6 +230,35 @@ export default function DashboardScreen() {
     (v) => typeof v === 'number'
   ) as PrayerTimeSlot[];
 
+  // Helper to calculate slot duration
+  const getSlotDuration = (slot: PrayerTimeSlot, times: any): string | null => {
+    if (!times) return null;
+
+    const parseTime = (timeStr: string) => {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const calculate = (start: string, end: string) => {
+      let startMinutes = parseTime(start);
+      let endMinutes = parseTime(end);
+      if (endMinutes < startMinutes) endMinutes += 24 * 60;
+      const diff = endMinutes - startMinutes;
+      const h = Math.floor(diff / 60);
+      const m = diff % 60;
+      return h > 0 ? `${h}h ${m}m` : `${m}m`;
+    };
+
+    switch (slot) {
+      case PrayerTimeSlot.FajrToShurooq: return calculate(times.fajr, times.sunrise);
+      case PrayerTimeSlot.ShurooqToDhuhr: return calculate(times.sunrise, times.dhuhr);
+      case PrayerTimeSlot.DhuhrToAsr: return calculate(times.dhuhr, times.asr);
+      case PrayerTimeSlot.AsrToMaghrib: return calculate(times.asr, times.maghrib);
+      case PrayerTimeSlot.MaghribToIsha: return calculate(times.maghrib, times.isha);
+      default: return null;
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       {/* Header */}
@@ -285,9 +314,18 @@ export default function DashboardScreen() {
               {/* Slot Header */}
               <View className="flex-row justify-between items-center mb-3">
                 <View>
-                  <Text className="text-gray-900 dark:text-white font-bold text-lg">
-                    {getSlotLabel(slot)}
-                  </Text>
+                  <View className="flex-row items-center gap-2">
+                    <Text className="text-gray-900 dark:text-white font-bold text-lg">
+                      {getSlotLabel(slot)}
+                    </Text>
+                    {prayerTimes && getSlotDuration(slot, prayerTimes) && (
+                      <View className="bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full">
+                        <Text className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                          {getSlotDuration(slot, prayerTimes)}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                   <Text className="text-gray-500 dark:text-gray-400 text-sm">
                     {groupedTasks[slot]?.length || 0} {t('common.tasks')}
                   </Text>
