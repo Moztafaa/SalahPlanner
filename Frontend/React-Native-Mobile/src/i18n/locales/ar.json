@@ -14,7 +14,10 @@
     "tasks": "مهام",
     "completed": "مكتملة",
     "restartApp": "يحتاج التطبيق إلى إعادة التشغيل لتغيير اللغة.",
-    "ok": "حسناً"
+    "ok": "حسناً",
+    "validationError": "خطأ في التحقق",
+    "fillAllFields": "يرجى ملء جميع الحقول",
+    "success": "نجاح"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -46,6 +49,8 @@
     "asr": "العصر",
     "maghrib": "المغرب",
     "isha": "العشاء",
+    "shurooq": "الشروق",
+    "prayerTimes": "أوقات الصلاة",
     "noTasks": "لا توجد مهام لهذا الوقت",
     "addTask": "إضافة مهمة",
     "beforeFajr": "قبل صلاة الفجر",
@@ -54,20 +59,37 @@
     "dhuhrToAsr": "الظهر ← العصر",
     "asrToMaghrib": "العصر ← المغرب",
     "maghribToIsha": "المغرب ← العشاء",
-    "afterIsha": "بعد صلاة العشاء"
+    "afterIsha": "بعد صلاة العشاء",
+    "prayerIn": "{{prayer}} خلال {{time}}",
+    "allPrayersCompleted": "اكتملت جميع الصلوات لهذا اليوم"
   },
   "calendar": {
     "title": "التقويم"
   },
   "settings": {
     "title": "الإعدادات",
+    "appearance": "المظهر",
     "language": "اللغة",
     "theme": "المظهر",
     "darkMode": "الوضع الداكن",
+    "notifications": "الإشعارات",
+    "incompleteTasks": "مهام غير مكتملة",
+    "incompleteTasksDesc": "ذكرني عند انتهاء وقت الصلاة إذا كان لدي مهام غير مكتملة",
+    "locationSettings": "إعدادات الموقع",
+    "autoDetectLocation": "تحديد الموقع تلقائياً",
+    "defaultCity": "المدينة الافتراضية",
+    "enterCity": "أدخل مدينتك",
+    "defaultCountry": "الدولة الافتراضية",
+    "enterCountry": "أدخل دولتك",
+    "saveSettings": "حفظ الإعدادات",
+    "saving": "جاري الحفظ...",
+    "account": "الحساب",
+    "madeWithLove": "صنع بـ ❤️ للمسلمين",
     "logout": "تسجيل الخروج",
     "logoutConfirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
     "location": "الموقع",
-    "calculationMethod": "طريقة الحساب"
+    "calculationMethod": "طريقة الحساب",
+    "updateSuccess": "تم تحديث الإعدادات بنجاح!"
   },
   "tasks": {
     "addTaskTitle": "إضافة مهمة جديدة",

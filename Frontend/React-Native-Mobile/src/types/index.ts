@@ -91,6 +91,7 @@ export interface RegisterResponseDto {
 export interface UserSettingsDto {
   defaultCity: string;
   defaultCountry: string;
+  isAutoLocation?: boolean;
   calculationMethod: number;
 }
 

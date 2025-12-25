@@ -55,6 +55,7 @@ public class AccountService(UserManager<ApplicationUser> _userManager,
         // update user settings
         user.DefaultCity = settings.DefaultCity;
         user.DefaultCountry = settings.DefaultCountry;
+        user.IsAutoLocation = settings.IsAutoLocation;
         user.CalculationMethod = settings.CalculationMethod;
 
         return await _userManager.UpdateAsync(user);
@@ -77,6 +78,7 @@ public class AccountService(UserManager<ApplicationUser> _userManager,
         {
             DefaultCity = user.DefaultCity!,
             DefaultCountry = user.DefaultCountry!,
+            IsAutoLocation = user.IsAutoLocation,
             CalculationMethod = user.CalculationMethod!
         };
 

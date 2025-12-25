@@ -20,7 +20,7 @@ public class PrayerTimeService : IPrayerTimeService
         _httpClient.BaseAddress = new Uri(BaseUrl);
     }
 
-    public async Task<PrayerTimesDto> GetPrayerTimesAsync(string city, string country, int method, DateTime date, string? userId = null)
+    public async Task<PrayerTimesDto> GetPrayerTimesAsync(string city, string country, int method, DateTime date, string? userId = null, double? latitude = null, double? longitude = null)
     {
         try
         {
@@ -28,7 +28,15 @@ public class PrayerTimeService : IPrayerTimeService
             string dateString = date.ToString("dd-MM-yyyy");
 
             // Build the API URL
-            string url = $"/timingsByCity/{dateString}?city={Uri.EscapeDataString(city)}&country={Uri.EscapeDataString(country)}&method={method}";
+            string url;
+            if (latitude.HasValue && longitude.HasValue)
+            {
+                url = $"/timings/{dateString}?latitude={latitude.Value}&longitude={longitude.Value}&method={method}";
+            }
+            else
+            {
+                url = $"/timingsByCity/{dateString}?city={Uri.EscapeDataString(city)}&country={Uri.EscapeDataString(country)}&method={method}";
+            }
 
             // Get the User from cookie
 
@@ -57,7 +65,7 @@ public class PrayerTimeService : IPrayerTimeService
 
             // Read and deserialize the response
             string content = await response.Content.ReadAsStringAsync();
-            
+
             AlAdhanApiResponse? apiResponse;
             try
             {
@@ -70,7 +78,7 @@ public class PrayerTimeService : IPrayerTimeService
             {
                 // Log the actual response content for debugging
                 throw new PrayerTimeServiceException(
-                    $"Error deserializing AlAdhan API response. Content: {(content.Length > 500 ? content.Substring(0, 500) + "..." : content)}", 
+                    $"Error deserializing AlAdhan API response. Content: {(content.Length > 500 ? content.Substring(0, 500) + "..." : content)}",
                     jsonEx);
             }
 

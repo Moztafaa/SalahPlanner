@@ -240,10 +240,12 @@ export const prayerTimeApi = {
    * Get prayer times for specific date and location
    */
   getPrayerTimes: async (
-    date: Date,
     city: string,
     country: string,
-    calculationMethod: number
+    calculationMethod: number,
+    date: Date,
+    latitude?: number,
+    longitude?: number
   ): Promise<PrayerTimesDto> => {
     const dateStr = date.toISOString().split("T")[0];
     const { data } = await apiClient.get<PrayerTimesDto>("/PrayerTime", {
@@ -252,6 +254,8 @@ export const prayerTimeApi = {
         city,
         country,
         calculationMethod,
+        latitude,
+        longitude,
       },
     });
     return data;
@@ -263,13 +267,17 @@ export const prayerTimeApi = {
   getTodayPrayerTimes: async (
     city: string,
     country: string,
-    calculationMethod: number
+    calculationMethod: number,
+    latitude?: number,
+    longitude?: number
   ): Promise<PrayerTimesDto> => {
     const { data } = await apiClient.get<PrayerTimesDto>("/PrayerTime/today", {
       params: {
         city,
         country,
         calculationMethod,
+        latitude,
+        longitude,
       },
     });
     return data;

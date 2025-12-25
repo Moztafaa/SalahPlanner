@@ -6,6 +6,7 @@ public class UserSettingsDto
 {
     public string DefaultCity { get; set; } = string.Empty;
     public string DefaultCountry { get; set; } = string.Empty;
+    public bool IsAutoLocation { get; set; }
     public int CalculationMethod { get; set; }
 
 }

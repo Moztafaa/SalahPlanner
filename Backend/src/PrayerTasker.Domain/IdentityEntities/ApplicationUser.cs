@@ -9,6 +9,7 @@ public class ApplicationUser : IdentityUser<Guid>
     public required string FullName { get; set; }
     public string? DefaultCity { get; set; }
     public string? DefaultCountry { get; set; }
+    public bool IsAutoLocation { get; set; }
     public int CalculationMethod { get; set; }
     public ICollection<Taask>? Tasks { get; set; }
     public ICollection<DailyUserPrayerTime>? PrayerTimeCache { get; set; }
