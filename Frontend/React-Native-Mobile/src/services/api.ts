@@ -18,6 +18,7 @@ import {
   PrayerTimesDto,
   ApiError,
 } from "../types";
+import { format } from "date-fns";
 
 // API Base URL - Automatically select based on platform
 // - Android emulator: 10.0.2.2 (special alias to host machine)
@@ -181,7 +182,11 @@ export const taskApi = {
    * Create new task
    */
   createTask: async (task: CreateTaskDto): Promise<Task> => {
-    const { data } = await apiClient.post<Task>("/Task", task);
+    const payload = { ...task };
+    if (payload.taskDate && payload.taskDate instanceof Date) {
+      payload.taskDate = format(payload.taskDate, "yyyy-MM-dd");
+    }
+    const { data } = await apiClient.post<Task>("/Task", payload);
     return data;
   },
 
@@ -189,7 +194,7 @@ export const taskApi = {
    * Get tasks by date
    */
   getTasksByDate: async (date: Date): Promise<Task[]> => {
-    const dateStr = date.toISOString().split("T")[0];
+    const dateStr = format(date, "yyyy-MM-dd");
     const { data } = await apiClient.get<Task[]>(`/Task/by-date/${dateStr}`);
     return data;
   },
@@ -198,7 +203,7 @@ export const taskApi = {
    * Get incomplete tasks before a specific date
    */
   getIncompletePastTasks: async (date: Date): Promise<Task[]> => {
-    const dateStr = date.toISOString().split("T")[0];
+    const dateStr = format(date, "yyyy-MM-dd");
     const { data } = await apiClient.get<Task[]>(
       `/Task/incomplete-past/${dateStr}`
     );
@@ -217,7 +222,11 @@ export const taskApi = {
    * Update task
    */
   updateTask: async (id: string, updates: UpdateTaskDto): Promise<Task> => {
-    const { data } = await apiClient.put<Task>(`/Task/${id}`, updates);
+    const payload = { ...updates };
+    if (payload.taskDate && payload.taskDate instanceof Date) {
+      payload.taskDate = format(payload.taskDate, "yyyy-MM-dd");
+    }
+    const { data } = await apiClient.put<Task>(`/Task/${id}`, payload);
     return data;
   },
 
@@ -259,7 +268,7 @@ export const prayerTimeApi = {
     latitude?: number,
     longitude?: number
   ): Promise<PrayerTimesDto> => {
-    const dateStr = date.toISOString().split("T")[0];
+    const dateStr = format(date, "yyyy-MM-dd");
     const { data } = await apiClient.get<PrayerTimesDto>("/PrayerTime", {
       params: {
         date: dateStr,
