@@ -339,7 +339,7 @@ export default function SettingsScreen() {
 
             {showMethodPicker && (
               <View className="mt-2 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 overflow-hidden max-h-64">
-                <ScrollView>
+                <ScrollView nestedScrollEnabled={true}>
                   {calculationMethods.map((method) => (
                     <TouchableOpacity
                       key={method}
