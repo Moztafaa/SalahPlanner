@@ -198,7 +198,12 @@
             @for (group of taskGroups(); track group.slot) {
             <div class="task-slot-card">
               <div class="slot-header" (click)="openCreateTaskModal(group.slot)">
-                <p class="slot-title">{{ group.displayName }}</p>
+                <div class="slot-title-row">
+                  <p class="slot-title">{{ group.displayName }}</p>
+                  @if (group.duration) {
+                  <span class="slot-duration">{{ group.duration }}</span>
+                  }
+                </div>
                 <p class="slot-description">{{ getSlotDescription(group.slot) }}</p>
               </div>
               @if (group.tasks.length > 0) {

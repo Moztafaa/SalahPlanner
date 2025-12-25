@@ -12,6 +12,7 @@ export interface LocationSettings {
   latitude?: number;
   longitude?: number;
   isAuto: boolean;
+  timeFormat: '12h' | '24h';
 }
 
 interface PrayerTimesContextType {
@@ -19,6 +20,7 @@ interface PrayerTimesContextType {
   locationSettings: LocationSettings | null;
   isLoading: boolean;
   refreshPrayerTimes: () => Promise<void>;
+  formatTime: (time: string) => string;
 }
 
 const PrayerTimesContext = createContext<PrayerTimesContextType | undefined>(undefined);
@@ -42,6 +44,7 @@ export function PrayerTimesProvider({ children }: { children: ReactNode }) {
       const country = await SecureStore.getItemAsync('default_country') || "Egypt";
       const methodStr = await SecureStore.getItemAsync('calculation_method');
       const calculationMethod = methodStr ? parseInt(methodStr) : 5;
+      const timeFormat = (await SecureStore.getItemAsync('time_format') as '12h' | '24h') || '12h';
 
       let lat: number | undefined;
       let long: number | undefined;
@@ -61,7 +64,8 @@ export function PrayerTimesProvider({ children }: { children: ReactNode }) {
         calculationMethod,
         latitude: lat,
         longitude: long,
-        isAuto
+        isAuto,
+        timeFormat
       };
       setLocationSettings(settings);
 
@@ -84,8 +88,20 @@ export function PrayerTimesProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated]);
 
+  const formatTime = (time: string) => {
+    if (!time || !locationSettings) return time;
+    if (locationSettings.timeFormat === '24h') return time;
+
+    const [hours, minutes] = time.split(':');
+    let h = parseInt(hours);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    h = h ? h : 12; // the hour '0' should be '12'
+    return `${h}:${minutes} ${ampm}`;
+  };
+
   return (
-    <PrayerTimesContext.Provider value={{ todayPrayerTimes, locationSettings, isLoading, refreshPrayerTimes: fetchPrayerTimes }}>
+    <PrayerTimesContext.Provider value={{ todayPrayerTimes, locationSettings, isLoading, refreshPrayerTimes: fetchPrayerTimes, formatTime }}>
       {children}
     </PrayerTimesContext.Provider>
   );

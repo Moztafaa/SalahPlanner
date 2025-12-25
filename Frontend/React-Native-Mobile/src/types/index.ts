@@ -93,6 +93,7 @@ export interface UserSettingsDto {
   defaultCountry: string;
   isAutoLocation?: boolean;
   calculationMethod: number;
+  timeFormat?: "12h" | "24h";
 }
 
 // ============================================

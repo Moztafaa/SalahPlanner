@@ -20,6 +20,7 @@ interface TaskGroup {
   displayName: string;
   tasks: Task[];
   cssClass: string;
+  duration?: string;
 }
 
 interface NextSalahInfo {
@@ -63,6 +64,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Task groups organized by prayer time slots
   taskGroups = computed<TaskGroup[]>(() => {
     const allTasks = this.tasks();
+    const times = this.prayerTimes();
     const groups: TaskGroup[] = [];
 
     // Define all prayer time slots
@@ -77,11 +79,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ];
 
     slots.forEach(({ slot, cssClass }) => {
+      let duration = '';
+
+      if (times) {
+        switch (slot) {
+          case PrayerTimeSlot.FajrToShurooq:
+            duration = this.calculateDuration(times.fajr, times.sunrise);
+            break;
+          case PrayerTimeSlot.ShurooqToDhuhr:
+            duration = this.calculateDuration(times.sunrise, times.dhuhr);
+            break;
+          case PrayerTimeSlot.DhuhrToAsr:
+            duration = this.calculateDuration(times.dhuhr, times.asr);
+            break;
+          case PrayerTimeSlot.AsrToMaghrib:
+            duration = this.calculateDuration(times.asr, times.maghrib);
+            break;
+          case PrayerTimeSlot.MaghribToIsha:
+            duration = this.calculateDuration(times.maghrib, times.isha);
+            break;
+        }
+      }
+
       groups.push({
         slot,
         displayName: PrayerTimeSlotDisplay[slot],
         tasks: allTasks.filter((task) => task.slot === slot),
         cssClass,
+        duration,
       });
     });
 
@@ -132,6 +157,35 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     return this.formatTimeRemaining(next.timestamp, now);
   });
+
+  /**
+   * Calculate duration between two time strings (HH:mm)
+   */
+  private calculateDuration(start: string, end: string): string {
+    if (!start || !end) return '';
+
+    const parseTime = (timeStr: string) => {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    let startMinutes = parseTime(start);
+    let endMinutes = parseTime(end);
+
+    // Handle crossing midnight if necessary
+    if (endMinutes < startMinutes) {
+      endMinutes += 24 * 60;
+    }
+
+    const diffMinutes = endMinutes - startMinutes;
+    const hours = Math.floor(diffMinutes / 60);
+    const minutes = diffMinutes % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  }
 
   ngOnInit(): void {
     this.loadPrayerTimes();

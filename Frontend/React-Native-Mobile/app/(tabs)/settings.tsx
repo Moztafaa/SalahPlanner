@@ -28,7 +28,7 @@ export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { isEnabled: notificationsEnabled, toggleNotifications } = useNotifications();
+  const { isEnabled: notificationsEnabled, toggleNotifications, bufferMinutes, setBufferMinutes } = useNotifications();
   const { refreshPrayerTimes } = usePrayerTimes();
   const router = useRouter();
 
@@ -38,6 +38,7 @@ export default function SettingsScreen() {
   const [calculationMethod, setCalculationMethod] = useState<CalculationMethod>(
     CalculationMethod.EgyptianGeneralAuthorityOfSurvey
   );
+  const [timeFormat, setTimeFormat] = useState<'12h' | '24h'>('12h');
   const [showMethodPicker, setShowMethodPicker] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -51,11 +52,13 @@ export default function SettingsScreen() {
       const country = await SecureStore.getItemAsync('default_country');
       const method = await SecureStore.getItemAsync('calculation_method');
       const auto = await SecureStore.getItemAsync('is_auto_location');
+      const format = await SecureStore.getItemAsync('time_format');
 
       if (city) setDefaultCity(city);
       if (country) setDefaultCountry(country);
       if (method) setCalculationMethod(parseInt(method));
       if (auto) setIsAutoLocation(auto === 'true');
+      if (format) setTimeFormat(format as '12h' | '24h');
     } catch (e) {
       console.error("Failed to load settings", e);
     }
@@ -117,6 +120,7 @@ export default function SettingsScreen() {
       await SecureStore.setItemAsync('default_country', defaultCountry.trim());
       await SecureStore.setItemAsync('calculation_method', calculationMethod.toString());
       await SecureStore.setItemAsync('is_auto_location', String(isAutoLocation));
+      await SecureStore.setItemAsync('time_format', timeFormat);
 
       // Refresh prayer times with new settings
       await refreshPrayerTimes();
@@ -210,7 +214,7 @@ export default function SettingsScreen() {
         {/* Appearance Section */}
         <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
           <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">{t('settings.appearance')}</Text>
-          <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center justify-between mb-4">
             <View className="flex-row items-center">
               <Ionicons name={theme === 'dark' ? 'moon' : 'sunny'} size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
               <Text className="text-gray-900 dark:text-white font-medium ms-3">{t('settings.darkMode')}</Text>
@@ -218,6 +222,19 @@ export default function SettingsScreen() {
             <Switch
               value={theme === 'dark'}
               onValueChange={toggleTheme}
+              trackColor={{ false: '#d1d5db', true: '#22c55e' }}
+              thumbColor={Platform.OS === 'ios' ? '#fff' : '#fff'}
+            />
+          </View>
+
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center">
+              <Ionicons name="time" size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
+              <Text className="text-gray-900 dark:text-white font-medium ms-3">24-Hour Format</Text>
+            </View>
+            <Switch
+              value={timeFormat === '24h'}
+              onValueChange={(val) => setTimeFormat(val ? '24h' : '12h')}
               trackColor={{ false: '#d1d5db', true: '#22c55e' }}
               thumbColor={Platform.OS === 'ios' ? '#fff' : '#fff'}
             />
@@ -265,6 +282,36 @@ export default function SettingsScreen() {
               thumbColor={Platform.OS === 'ios' ? '#fff' : '#fff'}
             />
           </View>
+
+          {notificationsEnabled && (
+            <View className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+              <View className="flex-row items-center justify-between">
+                <View className="flex-1 me-4">
+                  <Text className="text-gray-900 dark:text-white font-medium">{t('settings.bufferTime')}</Text>
+                  <Text className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+                    {t('settings.bufferTimeDesc')}
+                  </Text>
+                </View>
+                <View className="flex-row items-center bg-gray-100 dark:bg-gray-700 rounded-lg">
+                  <TouchableOpacity
+                    onPress={() => setBufferMinutes(Math.max(5, bufferMinutes - 5))}
+                    className="p-2"
+                  >
+                    <Ionicons name="remove" size={20} color={theme === 'dark' ? '#fff' : '#000'} />
+                  </TouchableOpacity>
+                  <Text className="text-gray-900 dark:text-white font-bold mx-2 w-8 text-center">
+                    {bufferMinutes}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setBufferMinutes(Math.min(60, bufferMinutes + 5))}
+                    className="p-2"
+                  >
+                    <Ionicons name="add" size={20} color={theme === 'dark' ? '#fff' : '#000'} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Location Settings */}

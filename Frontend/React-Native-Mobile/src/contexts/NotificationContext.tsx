@@ -26,16 +26,20 @@ try {
 }
 
 const NOTIFICATION_SETTINGS_KEY = 'notification_settings_enabled';
+const NOTIFICATION_BUFFER_KEY = 'notification_buffer_minutes';
 
 interface NotificationContextType {
   isEnabled: boolean;
   toggleNotifications: () => Promise<void>;
+  bufferMinutes: number;
+  setBufferMinutes: (minutes: number) => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [isEnabled, setIsEnabled] = useState(false);
+  const [bufferMinutes, setBufferMinutesState] = useState(15);
   const { todayPrayerTimes } = usePrayerTimes();
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
@@ -87,9 +91,18 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       if (stored) {
         setIsEnabled(JSON.parse(stored));
       }
+      const buffer = await SecureStore.getItemAsync(NOTIFICATION_BUFFER_KEY);
+      if (buffer) {
+        setBufferMinutesState(parseInt(buffer, 10));
+      }
     } catch (error) {
       console.error('Error loading notification settings:', error);
     }
+  };
+
+  const setBufferMinutes = async (minutes: number) => {
+    setBufferMinutesState(minutes);
+    await SecureStore.setItemAsync(NOTIFICATION_BUFFER_KEY, minutes.toString());
   };
 
   // Schedule/Cancel notifications when dependencies change
@@ -99,7 +112,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     } else if (!isEnabled) {
       cancelAllNotifications();
     }
-  }, [isEnabled, todayPrayerTimes, tasks]);
+  }, [isEnabled, todayPrayerTimes, tasks, bufferMinutes]);
 
   const parseTime = (timeStr: string): Date => {
     const [hours, minutes] = timeStr.split(':').map(Number);
@@ -112,6 +125,42 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     await cancelAllNotifications();
 
     if (!todayPrayerTimes) return;
+
+    // Schedule Buffer Notifications (Wrap-Up)
+    const prayers = [
+      { name: t('home.fajr'), time: todayPrayerTimes.fajr },
+      { name: t('home.dhuhr'), time: todayPrayerTimes.dhuhr },
+      { name: t('home.asr'), time: todayPrayerTimes.asr },
+      { name: t('home.maghrib'), time: todayPrayerTimes.maghrib },
+      { name: t('home.isha'), time: todayPrayerTimes.isha },
+    ];
+
+    for (const prayer of prayers) {
+      const pTime = parseTime(prayer.time);
+      const triggerDate = new Date(pTime.getTime() - bufferMinutes * 60 * 1000);
+      const now = new Date();
+
+      if (triggerDate > now) {
+        const seconds = Math.max(1, Math.floor((triggerDate.getTime() - now.getTime()) / 1000));
+
+        try {
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: t('notifications.wrap_up_title', { prayer: prayer.name }),
+              body: t('notifications.wrap_up_body', { minutes: bufferMinutes }),
+              data: { type: 'buffer', prayer: prayer.name },
+            },
+            trigger: {
+              type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+              seconds,
+              repeats: false,
+            },
+          });
+        } catch (error) {
+          console.warn('Failed to schedule buffer notification:', error);
+        }
+      }
+    }
 
     // Define slot end times (start of next prayer)
     // Slot 0: Before Fajr -> Ends at Fajr
@@ -182,7 +231,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <NotificationContext.Provider value={{ isEnabled, toggleNotifications }}>
+    <NotificationContext.Provider value={{ isEnabled, toggleNotifications, bufferMinutes, setBufferMinutes }}>
       {children}
       <MoveTasksModal
         visible={modalVisible}
