@@ -37,6 +37,8 @@ interface NotificationContextType {
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
+import { format } from 'date-fns';
+
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [isEnabled, setIsEnabled] = useState(false);
   const [bufferMinutes, setBufferMinutesState] = useState(15);
@@ -50,7 +52,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   // Fetch today's tasks to check for incomplete ones
   const { data: tasks } = useQuery({
-    queryKey: ['tasks', new Date().toISOString().split('T')[0]],
+    queryKey: ['tasks', format(new Date(), 'yyyy-MM-dd')],
     queryFn: () => taskApi.getTasksByDate(new Date()),
     enabled: isAuthenticated && isEnabled,
     refetchInterval: 60000, // Check every minute? Or rely on invalidation.

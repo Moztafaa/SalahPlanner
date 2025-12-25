@@ -39,7 +39,7 @@ export interface CreateTaskDto {
   title: string;
   description?: string;
   slot: PrayerTimeSlot;
-  taskDate?: Date;
+  taskDate?: Date | string;
 }
 
 export interface UpdateTaskDto {
@@ -47,7 +47,7 @@ export interface UpdateTaskDto {
   description?: string;
   slot?: PrayerTimeSlot;
   isCompleted?: boolean;
-  taskDate?: Date | null;
+  taskDate?: Date | string | null;
 }
 
 export interface UpdateTaskSlotDto {
