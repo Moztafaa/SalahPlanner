@@ -47,6 +47,12 @@ public class TaskService(ITaskRepository taskRepository, IMapper mapper, IHttpCo
         List<Taask> tasks = await taskRepository.GetByDateForUserAsync(date, userId);
         return mapper.Map<List<TaskDto>>(tasks);
     }
+    public async Task<List<TaskDto>> GetIncompletePastTasksAsync(DateTime date)
+    {
+        string? userId = GetUserId();
+        List<Taask> tasks = await taskRepository.GetIncompleteTasksBeforeDateAsync(date, userId);
+        return mapper.Map<List<TaskDto>>(tasks);
+    }
     public async Task UpdateTasksSlotAsync(UpdateTaskSlotDto dto)
     {
         string? userId = GetUserId();

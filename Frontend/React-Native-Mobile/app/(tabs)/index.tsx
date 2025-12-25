@@ -15,6 +15,7 @@ import { PrayerTimeSlot, PrayerTimeSlotLabels, Task, CreateTaskDto, UpdateTaskDt
 import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
 import PrayerTimesModal from '../../src/components/PrayerTimesModal';
+import DailyReviewModal from '../../src/components/DailyReviewModal';
 import Toast from 'react-native-toast-message';
 import { format, differenceInSeconds } from 'date-fns';
 import { enUS, ar } from 'date-fns/locale';
@@ -35,6 +36,22 @@ export default function DashboardScreen() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
   const [countdown, setCountdown] = useState('');
+  const [showDailyReview, setShowDailyReview] = useState(false);
+  const [incompleteTasks, setIncompleteTasks] = useState<Task[]>([]);
+
+  // Check for incomplete tasks
+  const { data: pastTasks } = useQuery({
+    queryKey: ['incompleteTasks'],
+    queryFn: () => taskApi.getIncompletePastTasks(new Date()),
+    staleTime: Infinity, // Only fetch once on mount
+  });
+
+  useEffect(() => {
+    if (pastTasks && pastTasks.length > 0) {
+      setIncompleteTasks(pastTasks);
+      setShowDailyReview(true);
+    }
+  }, [pastTasks]);
 
   // Fetch tasks for selected date
   const {
@@ -390,6 +407,12 @@ export default function DashboardScreen() {
         onClose={() => setShowPrayerTimesModal(false)}
         prayerTimes={prayerTimes}
         date={selectedDate}
+      />
+
+      <DailyReviewModal
+        visible={showDailyReview}
+        tasks={incompleteTasks}
+        onClose={() => setShowDailyReview(false)}
       />
     </SafeAreaView>
   );

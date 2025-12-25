@@ -27,6 +27,15 @@ public class TaskRepository(AppDbContext _context) : ITaskRepository
                         && t.TaskDate.Value.Date == date.Date)
             .ToListAsync();
     }
+    public async Task<List<Taask>> GetIncompleteTasksBeforeDateAsync(DateTime date, string userId)
+    {
+        return await _context.Tasks
+            .Where(t => t.ApplicationUserId.ToString() == userId
+                        && !t.IsCompleted
+                        && t.TaskDate.HasValue
+                        && t.TaskDate.Value.Date < date.Date)
+            .ToListAsync();
+    }
     public Task<Taask?> GetByIdForUserAsync(Guid id, string userId)
     {
         return _context.Tasks
