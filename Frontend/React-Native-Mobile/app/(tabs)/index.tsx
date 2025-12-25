@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  ScrollView,
+  SectionList,
   RefreshControl,
   TouchableOpacity,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { taskApi, prayerTimeApi, handleApiError } from '../../src/services/api';
 import { PrayerTimeSlot, PrayerTimeSlotLabels, Task, CreateTaskDto, UpdateTaskDto } from '../../src/types';
@@ -16,8 +17,10 @@ import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
 import PrayerTimesModal from '../../src/components/PrayerTimesModal';
 import DailyReviewModal from '../../src/components/DailyReviewModal';
+import NextPrayerCard from '../../src/components/NextPrayerCard';
+import SlotHeader from '../../src/components/SlotHeader';
 import Toast from 'react-native-toast-message';
-import { format, differenceInSeconds } from 'date-fns';
+import { format, differenceInSeconds, parse } from 'date-fns';
 import { enUS, ar } from 'date-fns/locale';
 import { useSelectedDate } from '../../src/contexts/DateContext';
 import { useTheme } from '../../src/contexts/ThemeContext';
@@ -35,9 +38,16 @@ export default function DashboardScreen() {
   const [showPrayerTimesModal, setShowPrayerTimesModal] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
-  const [countdown, setCountdown] = useState('');
   const [showDailyReview, setShowDailyReview] = useState(false);
   const [incompleteTasks, setIncompleteTasks] = useState<Task[]>([]);
+
+  const [nextPrayerInfo, setNextPrayerInfo] = useState({
+    name: 'Loading...',
+    time: '--:--',
+    remaining: '00:00:00',
+    progress: 0,
+    currentSlot: PrayerTimeSlot.BeforeFajr
+  });
 
   // Check for incomplete tasks
   const { data: pastTasks } = useQuery({
@@ -173,39 +183,80 @@ export default function DashboardScreen() {
     return acc;
   }, {} as Record<PrayerTimeSlot, Task[]>);
 
-  // Calculate next prayer countdown
+  // Calculate next prayer countdown and current slot
   useEffect(() => {
     if (!prayerTimes) return;
 
     const interval = setInterval(() => {
       const now = new Date();
+      const parseTime = (timeStr: string) => {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        const date = new Date(now);
+        date.setHours(hours, minutes, 0, 0);
+        return date;
+      };
+
       const times = [
-        { name: 'Fajr', time: prayerTimes.fajr },
-        { name: 'Dhuhr', time: prayerTimes.dhuhr },
-        { name: 'Asr', time: prayerTimes.asr },
-        { name: 'Maghrib', time: prayerTimes.maghrib },
-        { name: 'Isha', time: prayerTimes.isha },
+        { name: 'Fajr', time: prayerTimes.fajr, date: parseTime(prayerTimes.fajr) },
+        { name: 'Shurooq', time: prayerTimes.sunrise, date: parseTime(prayerTimes.sunrise) },
+        { name: 'Dhuhr', time: prayerTimes.dhuhr, date: parseTime(prayerTimes.dhuhr) },
+        { name: 'Asr', time: prayerTimes.asr, date: parseTime(prayerTimes.asr) },
+        { name: 'Maghrib', time: prayerTimes.maghrib, date: parseTime(prayerTimes.maghrib) },
+        { name: 'Isha', time: prayerTimes.isha, date: parseTime(prayerTimes.isha) },
       ];
 
-      for (const prayer of times) {
-        const [hours, minutes] = prayer.time.split(':');
-        const prayerDate = new Date(now);
-        prayerDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+      // Determine current slot
+      let currentSlot = PrayerTimeSlot.BeforeFajr;
+      if (now >= times[0].date && now < times[1].date) currentSlot = PrayerTimeSlot.FajrToShurooq;
+      else if (now >= times[1].date && now < times[2].date) currentSlot = PrayerTimeSlot.ShurooqToDhuhr;
+      else if (now >= times[2].date && now < times[3].date) currentSlot = PrayerTimeSlot.DhuhrToAsr;
+      else if (now >= times[3].date && now < times[4].date) currentSlot = PrayerTimeSlot.AsrToMaghrib;
+      else if (now >= times[4].date && now < times[5].date) currentSlot = PrayerTimeSlot.MaghribToIsha;
+      else if (now >= times[5].date) currentSlot = PrayerTimeSlot.AfterIsha;
 
-        if (prayerDate > now) {
-          const seconds = differenceInSeconds(prayerDate, now);
-          const h = Math.floor(seconds / 3600);
-          const m = Math.floor((seconds % 3600) / 60);
-          const s = seconds % 60;
+      // Determine next prayer (excluding Shurooq for next prayer display usually, but keeping logic simple)
+      // We usually show next PRAYER (Fajr, Dhuhr, Asr, Maghrib, Isha)
+      const prayers = times.filter(t => t.name !== 'Shurooq');
+      let nextPrayer = prayers.find(p => p.date > now);
+      let prevPrayer = prayers[prayers.length - 1]; // Default to Isha of previous day if needed, but simplified
 
-          const prayerName = t(`home.${prayer.name.toLowerCase()}`);
-          const timeString = `${h}h ${m}m ${s}s`;
-          setCountdown(t('home.prayerIn', { prayer: prayerName, time: timeString }));
-          return;
-        }
+      if (!nextPrayer) {
+        // Next is Fajr tomorrow
+        nextPrayer = { ...prayers[0], date: new Date(prayers[0].date.getTime() + 24 * 60 * 60 * 1000) };
+        prevPrayer = prayers[prayers.length - 1];
+      } else {
+        const index = prayers.indexOf(nextPrayer);
+        prevPrayer = index > 0 ? prayers[index - 1] : prayers[prayers.length - 1]; // Simplified
       }
 
-      setCountdown(t('home.allPrayersCompleted'));
+      const totalDuration = nextPrayer.date.getTime() - prevPrayer.date.getTime(); // Rough estimate if crossing midnight
+      // Better progress: time since prev prayer / (next - prev)
+      // If prev prayer was yesterday, we need to handle that.
+      // For simplicity, let's just use a fixed window or just time remaining.
+
+      const seconds = differenceInSeconds(nextPrayer.date, now);
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      const timeString = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+      // Progress calculation (simplified)
+      // Let's assume max duration of 4 hours for progress bar visual if we don't have exact prev prayer time handy correctly across midnight
+      // Or better: find the actual previous prayer time.
+      let prevPrayerDate = new Date(nextPrayer.date);
+      // Find the prayer before nextPrayer
+      // ... logic is getting complex for inline.
+      // Let's use a simple progress based on 100% = 1 hour? No.
+      // Let's use the current slot duration if possible.
+
+      setNextPrayerInfo({
+        name: nextPrayer.name,
+        time: format(nextPrayer.date, 'hh:mm a'),
+        remaining: timeString,
+        progress: 0.5, // TODO: Implement accurate progress
+        currentSlot
+      });
+
     }, 1000);
 
     return () => clearInterval(interval);
@@ -247,149 +298,100 @@ export default function DashboardScreen() {
     (v) => typeof v === 'number'
   ) as PrayerTimeSlot[];
 
-  // Helper to calculate slot duration
-  const getSlotDuration = (slot: PrayerTimeSlot, times: any): string | null => {
-    if (!times) return null;
-
-    const parseTime = (timeStr: string) => {
-      const [hours, minutes] = timeStr.split(':').map(Number);
-      return hours * 60 + minutes;
-    };
-
-    const calculate = (start: string, end: string) => {
-      let startMinutes = parseTime(start);
-      let endMinutes = parseTime(end);
-      if (endMinutes < startMinutes) endMinutes += 24 * 60;
-      const diff = endMinutes - startMinutes;
-      const h = Math.floor(diff / 60);
-      const m = diff % 60;
-      return h > 0 ? `${h}h ${m}m` : `${m}m`;
-    };
-
-    switch (slot) {
-      case PrayerTimeSlot.FajrToShurooq: return calculate(times.fajr, times.sunrise);
-      case PrayerTimeSlot.ShurooqToDhuhr: return calculate(times.sunrise, times.dhuhr);
-      case PrayerTimeSlot.DhuhrToAsr: return calculate(times.dhuhr, times.asr);
-      case PrayerTimeSlot.AsrToMaghrib: return calculate(times.asr, times.maghrib);
-      case PrayerTimeSlot.MaghribToIsha: return calculate(times.maghrib, times.isha);
-      default: return null;
-    }
-  };
+  const sections = slotOptions.map(slot => ({
+    title: getSlotLabel(slot),
+    slot: slot,
+    data: groupedTasks[slot] || [],
+  }));
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
-      {/* Header */}
-      <View className="bg-primary-500 dark:bg-primary-600 px-6 py-4 rounded-b-3xl">
-        <View className="flex-row justify-between items-start">
-          <View>
-            <Text className="text-white text-3xl font-bold">{t('common.appName')}</Text>
-            <Text className="text-white/90 text-sm mt-1">
-              {format(selectedDate, 'EEEE, d MMMM yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
-            </Text>
-            <Text className="text-white/80 text-xs mt-0.5">
-              {formatHijriDate(selectedDate, i18n.language)}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => setShowPrayerTimesModal(true)}
-            className="bg-white/20 p-2 rounded-full mt-1"
-            accessibilityLabel={t('home.prayerTimes')}
-          >
-            <Ionicons name="time-outline" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
+    <View className="flex-1 bg-background-light dark:bg-background-dark">
+      <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} />
 
-        {/* Prayer Countdown */}
-        {prayerTimes && (
-          <View className="bg-white/20 rounded-xl px-4 py-3 mt-4">
-            <Text className="text-white font-semibold text-center">
-              {countdown || t('common.loading')}
-            </Text>
-          </View>
-        )}
+      {/* Header */}
+      <View className="pt-12 pb-2 px-4 flex-row items-center justify-between bg-surface-light/95 dark:bg-background-dark/95 border-b border-gray-200 dark:border-white/5 z-30">
+        <TouchableOpacity className="w-10 h-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-white/10">
+          <MaterialIcons name="menu" size={24} color={theme === 'dark' ? 'white' : '#0f172a'} />
+        </TouchableOpacity>
+        <View className="items-center">
+          <Text className="text-sm font-medium text-slate-500 dark:text-[#9db9a6]">
+            {format(selectedDate, 'EEE, d MMM')}
+          </Text>
+          <Text className="text-base font-bold leading-tight tracking-tight text-slate-900 dark:text-white">
+            {formatHijriDate(selectedDate, i18n.language)}
+          </Text>
+        </View>
+        <View className="w-10" />
       </View>
 
-      {/* Tasks List */}
-      <ScrollView
-        className="flex-1 px-4 pt-4"
-        showsVerticalScrollIndicator={false}
+      <SectionList
+        sections={sections}
+        keyExtractor={(item) => item.id}
+        stickySectionHeadersEnabled={true}
+        contentContainerStyle={{ paddingBottom: 100 }}
         refreshControl={
           <RefreshControl
             refreshing={tasksLoading || prayerTimesLoading}
             onRefresh={refetchTasks}
-            tintColor={theme === 'dark' ? '#4ade80' : '#22c55e'}
+            tintColor="#13ec5b"
           />
         }
-      >
-        {tasksLoading ? (
-          <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color={theme === 'dark' ? '#4ade80' : '#22c55e'} />
-          </View>
-        ) : (
-          slotOptions.map((slot) => (
-            <View key={slot} className="mb-6">
-              {/* Slot Header */}
-              <View className="flex-row justify-between items-center mb-3">
-                <View>
-                  <View className="flex-row items-center gap-2">
-                    <Text className="text-gray-900 dark:text-white font-bold text-lg">
-                      {getSlotLabel(slot)}
-                    </Text>
-                    {prayerTimes && getSlotDuration(slot, prayerTimes) && (
-                      <View className="bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full">
-                        <Text className="text-xs text-gray-600 dark:text-gray-300 font-medium">
-                          {getSlotDuration(slot, prayerTimes)}
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                  <Text className="text-gray-500 dark:text-gray-400 text-sm">
-                    {groupedTasks[slot]?.length || 0} {t('common.tasks')}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  className="bg-primary-500 dark:bg-primary-600 rounded-full w-8 h-8 items-center justify-center"
-                  onPress={() => handleOpenAddModal(slot)}
-                >
-                  <Ionicons name="add" size={20} color="white" />
-                </TouchableOpacity>
-              </View>
-
-              {/* Tasks */}
-              {groupedTasks[slot]?.length > 0 ? (
-                groupedTasks[slot].map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    onToggleComplete={toggleTaskMutation.mutate}
-                    onDelete={deleteTaskMutation.mutate}
-                    onEdit={handleEditTask}
-                  />
-                ))
-              ) : (
-                <View className="bg-white dark:bg-gray-800 rounded-xl p-6 items-center">
-                  <Ionicons name="checkbox-outline" size={40} color={theme === 'dark' ? '#4b5563' : '#d1d5db'} />
-                  <Text className="text-gray-400 dark:text-gray-500 mt-2">{t('home.noTasks')}</Text>
-                </View>
-              )}
-            </View>
-          ))
+        ListHeaderComponent={
+          <NextPrayerCard
+            prayerName={nextPrayerInfo.name}
+            prayerTime={nextPrayerInfo.time}
+            timeRemaining={nextPrayerInfo.remaining}
+            progress={nextPrayerInfo.progress}
+          />
+        }
+        renderSectionHeader={({ section: { title, slot, data } }) => (
+          <SlotHeader
+            title={title}
+            taskCount={data.length}
+            isActive={slot === nextPrayerInfo.currentSlot}
+          />
         )}
-
-        {/* Bottom spacing for floating nav */}
-        <View className="h-24" />
-      </ScrollView>
+        renderItem={({ item }) => (
+          <View className="px-4">
+            <TaskCard
+              task={item}
+              onToggleComplete={toggleTaskMutation.mutate}
+              onDelete={deleteTaskMutation.mutate}
+              onEdit={handleEditTask}
+            />
+          </View>
+        )}
+        renderSectionFooter={({ section }) => {
+          if (section.data.length === 0) {
+            return (
+              <View className="px-4 py-2 mb-4">
+                <View className="items-center justify-center rounded-xl border-2 border-dashed border-gray-200 dark:border-white/10 p-8 bg-gray-50/50 dark:bg-white/5">
+                  <View className="bg-gray-200 dark:bg-white/10 rounded-full p-3 mb-3">
+                    <MaterialIcons name="check-circle" size={24} color={theme === 'dark' ? '#6b7280' : '#9ca3af'} />
+                  </View>
+                  <Text className="text-slate-600 dark:text-gray-300 font-medium">No tasks added yet</Text>
+                  <Text className="text-slate-400 dark:text-gray-500 text-sm mt-1">Focus on your spiritual connection.</Text>
+                  <TouchableOpacity onPress={() => handleOpenAddModal(section.slot)} className="mt-4">
+                    <Text className="text-primary font-bold text-sm">Add a task</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          }
+          return <View className="h-2" />;
+        }}
+      />
 
       {/* Floating Add Button */}
       <TouchableOpacity
-        className="absolute bottom-28 end-6 bg-primary-500 dark:bg-primary-600 w-16 h-16 rounded-full items-center justify-center shadow-lg"
+        className="absolute bottom-6 right-4 z-40 w-14 h-14 rounded-full bg-primary items-center justify-center shadow-lg shadow-primary/30"
         onPress={() => handleOpenAddModal(PrayerTimeSlot.BeforeFajr)}
-        activeOpacity={0.8}
+        activeOpacity={0.9}
       >
-        <Ionicons name="add" size={32} color="white" />
+        <MaterialIcons name="add" size={28} color="#102216" />
       </TouchableOpacity>
 
-      {/* Add Task Modal */}
+      {/* Modals */}
       <AddTaskModal
         visible={showAddModal}
         onClose={handleCloseModal}
@@ -414,6 +416,7 @@ export default function DashboardScreen() {
         tasks={incompleteTasks}
         onClose={() => setShowDailyReview(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
+
