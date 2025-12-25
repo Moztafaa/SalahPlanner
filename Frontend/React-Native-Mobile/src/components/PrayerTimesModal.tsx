@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { enUS, ar } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
+import { usePrayerTimes } from '../contexts/PrayerTimesContext';
 
 interface PrayerTimesModalProps {
   visible: boolean;
@@ -29,18 +30,19 @@ export default function PrayerTimesModal({
 }: PrayerTimesModalProps) {
   const { t, i18n } = useTranslation();
   const { theme } = useTheme();
+  const { formatTime } = usePrayerTimes();
   const isRTL = i18n.language === 'ar';
   const isDark = theme === 'dark';
 
   if (!prayerTimes) return null;
 
   const prayers = [
-    { key: 'fajr', label: t('home.fajr'), time: prayerTimes.fajr, icon: 'moon-outline' },
-    { key: 'sunrise', label: t('home.shurooq'), time: prayerTimes.sunrise, icon: 'sunny-outline' },
-    { key: 'dhuhr', label: t('home.dhuhr'), time: prayerTimes.dhuhr, icon: 'sunny' },
-    { key: 'asr', label: t('home.asr'), time: prayerTimes.asr, icon: 'partly-sunny-outline' },
-    { key: 'maghrib', label: t('home.maghrib'), time: prayerTimes.maghrib, icon: 'cloud-sunset-outline' },
-    { key: 'isha', label: t('home.isha'), time: prayerTimes.isha, icon: 'moon' },
+    { key: 'fajr', label: t('home.fajr'), time: formatTime(prayerTimes.fajr), icon: 'moon-outline' },
+    { key: 'sunrise', label: t('home.shurooq'), time: formatTime(prayerTimes.sunrise), icon: 'sunny-outline' },
+    { key: 'dhuhr', label: t('home.dhuhr'), time: formatTime(prayerTimes.dhuhr), icon: 'sunny' },
+    { key: 'asr', label: t('home.asr'), time: formatTime(prayerTimes.asr), icon: 'partly-sunny-outline' },
+    { key: 'maghrib', label: t('home.maghrib'), time: formatTime(prayerTimes.maghrib), icon: 'cloud-sunset-outline' },
+    { key: 'isha', label: t('home.isha'), time: formatTime(prayerTimes.isha), icon: 'moon' },
   ];
 
   return (
