@@ -63,7 +63,9 @@ public class PrayerTimeController : ControllerBase
         [FromQuery] string? city,
         [FromQuery] string? country,
         [FromQuery] int? method = null,
-        [FromQuery] string? date = null)
+        [FromQuery] string? date = null,
+        [FromQuery] double? latitude = null,
+        [FromQuery] double? longitude = null)
     {
         try
         {
@@ -75,22 +77,21 @@ public class PrayerTimeController : ControllerBase
                 UserSettingsDto? userSettings = await _accountService.GetUserSettingsAsync(userId);
                 if (userSettings != null)
                 {
-                    //  Override city, country, method if user settings are available
-                    city = userSettings.DefaultCity ?? city;
-                    country = userSettings.DefaultCountry ?? country;
+                    //  Override city, country, method if user settings are available AND coordinates are not provided
+                    if (!latitude.HasValue || !longitude.HasValue)
+                    {
+                        city = userSettings.DefaultCity ?? city;
+                        country = userSettings.DefaultCountry ?? country;
+                    }
                     method ??= userSettings.CalculationMethod != 0 ? userSettings.CalculationMethod : null;
                 }
             }
             // Validate required parameters (after attempting to load from user settings)
-            if (string.IsNullOrWhiteSpace(city))
+            if ((!latitude.HasValue || !longitude.HasValue) && (string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(country)))
             {
-                return BadRequest(new { error = "City parameter is required. Please provide a city or set your default city in user settings." });
+                return BadRequest(new { error = "Either (Latitude and Longitude) OR (City and Country) are required. Please provide location details or set your default city in user settings." });
             }
 
-            if (string.IsNullOrWhiteSpace(country))
-            {
-                return BadRequest(new { error = "Country parameter is required. Please provide a country or set your default country in user settings." });
-            }
             int calcMethod = method ?? 5; // Default to 8 (Gulf Region) if not provided
             // Parse date or use today
             DateTime requestDate;
@@ -109,7 +110,7 @@ public class PrayerTimeController : ControllerBase
             // Get UserId from authenticated user if Available
             // string? userId = User?.Identity?.IsAuthenticated == true ? User.Identity.Name : null;
             // Get prayer times
-            PrayerTimesDto prayerTimes = await _prayerTimeService.GetPrayerTimesAsync(city, country, calcMethod, requestDate, userId);
+            PrayerTimesDto prayerTimes = await _prayerTimeService.GetPrayerTimesAsync(city ?? "", country ?? "", calcMethod, requestDate, userId, latitude, longitude);
 
             return Ok(prayerTimes);
         }
@@ -125,10 +126,12 @@ public class PrayerTimeController : ControllerBase
     /// </summary>
     [HttpGet("today")]
     public async Task<ActionResult<PrayerTimesDto>> GetTodayPrayerTimes(
-        [FromQuery] string city,
-        [FromQuery] string country,
-        [FromQuery] int method = 8)
+        [FromQuery] string? city,
+        [FromQuery] string? country,
+        [FromQuery] int method = 8,
+        [FromQuery] double? latitude = null,
+        [FromQuery] double? longitude = null)
     {
-        return await GetPrayerTimes(city, country, method);
+        return await GetPrayerTimes(city, country, method, null, latitude, longitude);
     }
 }

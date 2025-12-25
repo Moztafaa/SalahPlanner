@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as Updates from 'expo-updates'; // We might need to install this or handle it gracefully
+import * as SecureStore from 'expo-secure-store';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { authApi, handleApiError } from '../../src/services/api';
 import { CalculationMethod, CalculationMethodLabels, UserSettingsDto } from '../../src/types';
@@ -21,21 +22,44 @@ import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../src/contexts/ThemeContext';
 import { useNotifications } from '../../src/contexts/NotificationContext';
+import { usePrayerTimes } from '../../src/contexts/PrayerTimesContext';
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isEnabled: notificationsEnabled, toggleNotifications } = useNotifications();
+  const { refreshPrayerTimes } = usePrayerTimes();
   const router = useRouter();
 
   const [defaultCity, setDefaultCity] = useState('Cairo');
   const [defaultCountry, setDefaultCountry] = useState('Egypt');
+  const [isAutoLocation, setIsAutoLocation] = useState(false);
   const [calculationMethod, setCalculationMethod] = useState<CalculationMethod>(
     CalculationMethod.EgyptianGeneralAuthorityOfSurvey
   );
   const [showMethodPicker, setShowMethodPicker] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const city = await SecureStore.getItemAsync('default_city');
+      const country = await SecureStore.getItemAsync('default_country');
+      const method = await SecureStore.getItemAsync('calculation_method');
+      const auto = await SecureStore.getItemAsync('is_auto_location');
+
+      if (city) setDefaultCity(city);
+      if (country) setDefaultCountry(country);
+      if (method) setCalculationMethod(parseInt(method));
+      if (auto) setIsAutoLocation(auto === 'true');
+    } catch (e) {
+      console.error("Failed to load settings", e);
+    }
+  };
 
   const toggleLanguage = async () => {
     const currentLang = i18n.language;
@@ -68,7 +92,7 @@ export default function SettingsScreen() {
   };
 
   const handleSaveSettings = async () => {
-    if (!defaultCity.trim() || !defaultCountry.trim()) {
+    if (!isAutoLocation && (!defaultCity.trim() || !defaultCountry.trim())) {
       Toast.show({
         type: 'error',
         text1: 'Validation Error',
@@ -83,9 +107,20 @@ export default function SettingsScreen() {
         defaultCity: defaultCity.trim(),
         defaultCountry: defaultCountry.trim(),
         calculationMethod,
+        isAutoLocation,
       };
 
       await authApi.updateSettings(settings);
+
+      // Save to SecureStore
+      await SecureStore.setItemAsync('default_city', defaultCity.trim());
+      await SecureStore.setItemAsync('default_country', defaultCountry.trim());
+      await SecureStore.setItemAsync('calculation_method', calculationMethod.toString());
+      await SecureStore.setItemAsync('is_auto_location', String(isAutoLocation));
+
+      // Refresh prayer times with new settings
+      await refreshPrayerTimes();
+
       Toast.show({
         type: 'success',
         text1: 'Success',
@@ -236,35 +271,53 @@ export default function SettingsScreen() {
         <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
           <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Location Settings</Text>
 
-          {/* Default City */}
-          <View className="mb-4">
-            <Text className="text-gray-900 dark:text-white font-medium mb-2">Default City</Text>
-            <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
-              <Ionicons name="location-outline" size={20} color="#9ca3af" />
-              <TextInput
-                className="flex-1 ms-3 text-gray-900 dark:text-white"
-                placeholder="Enter your city"
-                placeholderTextColor="#9ca3af"
-                value={defaultCity}
-                onChangeText={setDefaultCity}
-              />
+          {/* Auto-detect Location */}
+          <View className="flex-row items-center justify-between mb-4">
+            <View className="flex-row items-center">
+              <Ionicons name="navigate" size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
+              <Text className="text-gray-900 dark:text-white font-medium ms-3">Auto-detect Location</Text>
             </View>
+            <Switch
+              value={isAutoLocation}
+              onValueChange={setIsAutoLocation}
+              trackColor={{ false: '#d1d5db', true: '#22c55e' }}
+              thumbColor={Platform.OS === 'ios' ? '#fff' : '#fff'}
+            />
           </View>
 
-          {/* Default Country */}
-          <View className="mb-4">
-            <Text className="text-gray-900 dark:text-white font-medium mb-2">Default Country</Text>
-            <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
-              <Ionicons name="globe-outline" size={20} color="#9ca3af" />
-              <TextInput
-                className="flex-1 ml-3 text-gray-900 dark:text-white"
-                placeholder="Enter your country"
-                placeholderTextColor="#9ca3af"
-                value={defaultCountry}
-                onChangeText={setDefaultCountry}
-              />
+          {/* Default City */}
+          {!isAutoLocation && (
+            <View className="mb-4">
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">Default City</Text>
+              <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
+                <Ionicons name="location-outline" size={20} color="#9ca3af" />
+                <TextInput
+                  className="flex-1 ms-3 text-gray-900 dark:text-white"
+                  placeholder="Enter your city"
+                  placeholderTextColor="#9ca3af"
+                  value={defaultCity}
+                  onChangeText={setDefaultCity}
+                />
+              </View>
             </View>
-          </View>
+          )}
+
+          {/* Default Country */}
+          {!isAutoLocation && (
+            <View className="mb-4">
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">Default Country</Text>
+              <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
+                <Ionicons name="globe-outline" size={20} color="#9ca3af" />
+                <TextInput
+                  className="flex-1 ml-3 text-gray-900 dark:text-white"
+                  placeholder="Enter your country"
+                  placeholderTextColor="#9ca3af"
+                  value={defaultCountry}
+                  onChangeText={setDefaultCountry}
+                />
+              </View>
+            </View>
+          )}
 
           {/* Calculation Method */}
           <View className="mb-4">

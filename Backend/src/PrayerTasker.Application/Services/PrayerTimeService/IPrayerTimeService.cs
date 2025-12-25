@@ -5,5 +5,5 @@ namespace PrayerTasker.Application.Services.PrayerTimeService;
 
 public interface IPrayerTimeService
 {
-    Task<PrayerTimesDto> GetPrayerTimesAsync(string city, string country, int method, DateTime date, string? userId = null);
+    Task<PrayerTimesDto> GetPrayerTimesAsync(string city, string country, int method, DateTime date, string? userId = null, double? latitude = null, double? longitude = null);
 }

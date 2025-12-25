@@ -21,12 +21,14 @@ import { useSelectedDate } from '../../src/contexts/DateContext';
 import { useTheme } from '../../src/contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { formatHijriDate } from '../../src/utils/date';
+import { usePrayerTimes } from '../../src/contexts/PrayerTimesContext';
 
 export default function DashboardScreen() {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const { selectedDate } = useSelectedDate();
   const { theme } = useTheme();
+  const { locationSettings, todayPrayerTimes } = usePrayerTimes();
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
@@ -42,11 +44,29 @@ export default function DashboardScreen() {
     queryFn: () => taskApi.getTasksByDate(selectedDate),
   });
 
-  // Fetch prayer times (using default settings for now)
+  // Fetch prayer times
   const { data: prayerTimes, isLoading: prayerTimesLoading } = useQuery({
-    queryKey: ['prayerTimes', format(selectedDate, 'yyyy-MM-dd')],
-    queryFn: () =>
-      prayerTimeApi.getTodayPrayerTimes('Cairo', 'Egypt', 5), // TODO: Get from user settings
+    queryKey: ['prayerTimes', format(selectedDate, 'yyyy-MM-dd'), locationSettings],
+    queryFn: async () => {
+      if (!locationSettings) return null;
+
+      // If selected date is today, use the context data to avoid extra API call
+      const isToday = format(selectedDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
+      if (isToday && todayPrayerTimes) {
+        return todayPrayerTimes;
+      }
+
+      // Otherwise fetch for the specific date
+      return prayerTimeApi.getPrayerTimes(
+        locationSettings.city,
+        locationSettings.country,
+        locationSettings.calculationMethod,
+        selectedDate,
+        locationSettings.latitude,
+        locationSettings.longitude
+      );
+    },
+    enabled: !!locationSettings,
   });
 
   // Create task mutation
