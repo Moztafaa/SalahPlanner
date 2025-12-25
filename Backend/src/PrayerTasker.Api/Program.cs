@@ -1,4 +1,5 @@
 using PrayerTasker.Api.DI;
+using PrayerTasker.Api.Middleware;
 using PrayerTasker.Application.DI;
 using PrayerTasker.Infrastructure.DI;
 
@@ -37,6 +38,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

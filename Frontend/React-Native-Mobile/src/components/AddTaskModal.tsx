@@ -43,9 +43,10 @@ export default function AddTaskModal({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showSlotPicker, setShowSlotPicker] = useState(false);
   const [loading, setLoading] = useState(false);
+  const wasVisible = React.useRef(false);
 
   useEffect(() => {
-    if (visible) {
+    if (visible && !wasVisible.current) {
       if (taskToEdit) {
         setTitle(taskToEdit.title);
         setDescription(taskToEdit.description || '');
@@ -60,7 +61,8 @@ export default function AddTaskModal({
         }
       }
     }
-  }, [visible, defaultSlot, defaultDate, taskToEdit]);
+    wasVisible.current = visible;
+  }, [visible, taskToEdit, defaultSlot, defaultDate]);
 
   const handleSubmit = async () => {
     if (!title.trim()) {

@@ -10,6 +10,10 @@ import { PrayerTimesProvider } from '@/src/contexts/PrayerTimesContext';
 import { NotificationProvider } from '@/src/contexts/NotificationContext';
 import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { LogBox } from 'react-native';
+
+// Ignore deprecated SafeAreaView warning from dependencies
+LogBox.ignoreLogs(['SafeAreaView has been deprecated']);
 
 // Create QueryClient instance
 const queryClient = new QueryClient({

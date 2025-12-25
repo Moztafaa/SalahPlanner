@@ -88,6 +88,7 @@ apiClient.interceptors.response.use(
       status: error.response?.status,
       message: error.message,
       code: error.code,
+      data: error.response?.data, // Log the server response data
     });
 
     // Handle 401 Unauthorized - Token expired
