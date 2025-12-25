@@ -95,8 +95,8 @@ export default function SettingsScreen() {
     if (!isAutoLocation && (!defaultCity.trim() || !defaultCountry.trim())) {
       Toast.show({
         type: 'error',
-        text1: 'Validation Error',
-        text2: 'Please fill in all fields',
+        text1: t('common.validationError'),
+        text2: t('common.fillAllFields'),
       });
       return;
     }
@@ -123,13 +123,13 @@ export default function SettingsScreen() {
 
       Toast.show({
         type: 'success',
-        text1: 'Success',
-        text2: 'Settings updated successfully!',
+        text1: t('common.success'),
+        text2: t('settings.updateSuccess'),
       });
     } catch (error) {
       Toast.show({
         type: 'error',
-        text1: 'Error',
+        text1: t('common.error'),
         text2: handleApiError(error),
       });
     } finally {
@@ -140,12 +140,12 @@ export default function SettingsScreen() {
   const handleLogout = () => {
     if (Platform.OS === 'ios') {
       Alert.alert(
-        'Logout',
-        'Are you sure you want to logout?',
+        t('settings.logout'),
+        t('settings.logoutConfirm'),
         [
-          { text: 'Cancel', style: 'cancel' },
+          { text: t('common.cancel'), style: 'cancel' },
           {
-            text: 'Logout',
+            text: t('settings.logout'),
             style: 'destructive',
             onPress: async () => {
               await logout();
@@ -155,12 +155,12 @@ export default function SettingsScreen() {
       );
     } else {
       Alert.alert(
-        'Logout',
-        'Are you sure you want to logout?',
+        t('settings.logout'),
+        t('settings.logoutConfirm'),
         [
-          { text: 'Cancel', style: 'cancel' },
+          { text: t('common.cancel'), style: 'cancel' },
           {
-            text: 'Logout',
+            text: t('settings.logout'),
             onPress: async () => {
               await logout();
             },
@@ -187,7 +187,7 @@ export default function SettingsScreen() {
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       {/* Header */}
       <View className="bg-white dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-        <Text className="text-gray-900 dark:text-white text-2xl font-bold">Settings</Text>
+        <Text className="text-gray-900 dark:text-white text-2xl font-bold">{t('settings.title')}</Text>
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -209,11 +209,11 @@ export default function SettingsScreen() {
 
         {/* Appearance Section */}
         <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
-          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Appearance</Text>
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">{t('settings.appearance')}</Text>
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
               <Ionicons name={theme === 'dark' ? 'moon' : 'sunny'} size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
-              <Text className="text-gray-900 dark:text-white font-medium ms-3">Dark Mode</Text>
+              <Text className="text-gray-900 dark:text-white font-medium ms-3">{t('settings.darkMode')}</Text>
             </View>
             <Switch
               value={theme === 'dark'}
@@ -247,14 +247,14 @@ export default function SettingsScreen() {
 
         {/* Notifications Section */}
         <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
-          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Notifications</Text>
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">{t('settings.notifications')}</Text>
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center flex-1 me-4">
               <Ionicons name="notifications" size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
               <View className="ms-3">
-                <Text className="text-gray-900 dark:text-white font-medium">Incomplete Tasks</Text>
+                <Text className="text-gray-900 dark:text-white font-medium">{t('settings.incompleteTasks')}</Text>
                 <Text className="text-gray-500 dark:text-gray-400 text-xs mt-1">
-                  Remind me when a prayer slot ends if I have unfinished tasks
+                  {t('settings.incompleteTasksDesc')}
                 </Text>
               </View>
             </View>
@@ -269,13 +269,13 @@ export default function SettingsScreen() {
 
         {/* Location Settings */}
         <View className="bg-white dark:bg-gray-800 mx-4 mt-4 p-6 rounded-xl shadow-sm">
-          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Location Settings</Text>
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">{t('settings.locationSettings')}</Text>
 
           {/* Auto-detect Location */}
           <View className="flex-row items-center justify-between mb-4">
             <View className="flex-row items-center">
               <Ionicons name="navigate" size={24} color={theme === 'dark' ? '#a78bfa' : '#f59e0b'} />
-              <Text className="text-gray-900 dark:text-white font-medium ms-3">Auto-detect Location</Text>
+              <Text className="text-gray-900 dark:text-white font-medium ms-3">{t('settings.autoDetectLocation')}</Text>
             </View>
             <Switch
               value={isAutoLocation}
@@ -288,12 +288,12 @@ export default function SettingsScreen() {
           {/* Default City */}
           {!isAutoLocation && (
             <View className="mb-4">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Default City</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('settings.defaultCity')}</Text>
               <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
                 <Ionicons name="location-outline" size={20} color="#9ca3af" />
                 <TextInput
                   className="flex-1 ms-3 text-gray-900 dark:text-white"
-                  placeholder="Enter your city"
+                  placeholder={t('settings.enterCity')}
                   placeholderTextColor="#9ca3af"
                   value={defaultCity}
                   onChangeText={setDefaultCity}
@@ -305,12 +305,12 @@ export default function SettingsScreen() {
           {/* Default Country */}
           {!isAutoLocation && (
             <View className="mb-4">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">Default Country</Text>
+              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('settings.defaultCountry')}</Text>
               <View className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
                 <Ionicons name="globe-outline" size={20} color="#9ca3af" />
                 <TextInput
                   className="flex-1 ml-3 text-gray-900 dark:text-white"
-                  placeholder="Enter your country"
+                  placeholder={t('settings.enterCountry')}
                   placeholderTextColor="#9ca3af"
                   value={defaultCountry}
                   onChangeText={setDefaultCountry}
@@ -321,7 +321,7 @@ export default function SettingsScreen() {
 
           {/* Calculation Method */}
           <View className="mb-4">
-            <Text className="text-gray-900 dark:text-white font-medium mb-2">Calculation Method</Text>
+            <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('settings.calculationMethod')}</Text>
             <TouchableOpacity
               className="flex-row items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3"
               onPress={() => setShowMethodPicker(!showMethodPicker)}
@@ -375,14 +375,14 @@ export default function SettingsScreen() {
             activeOpacity={0.8}
           >
             <Text className="text-white text-center font-semibold">
-              {saving ? 'Saving...' : 'Save Settings'}
+              {saving ? t('settings.saving') : t('settings.saveSettings')}
             </Text>
           </TouchableOpacity>
         </View>
 
         {/* Account Actions */}
         <View className="bg-white dark:bg-gray-800 mx-4 mt-4 mb-4 p-6 rounded-xl shadow-sm">
-          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">Account</Text>
+          <Text className="text-gray-900 dark:text-white font-bold text-lg mb-4">{t('settings.account')}</Text>
 
           {/* Logout Button */}
           <TouchableOpacity
@@ -391,14 +391,14 @@ export default function SettingsScreen() {
             activeOpacity={0.7}
           >
             <Ionicons name="log-out-outline" size={20} color="#ef4444" />
-            <Text className="text-red-500 dark:text-red-400 font-semibold ml-2">Logout</Text>
+            <Text className="text-red-500 dark:text-red-400 font-semibold ml-2">{t('settings.logout')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* App Info */}
         <View className="items-center py-6">
-          <Text className="text-gray-400 dark:text-gray-500 text-sm">Salah Planner v1.0.0</Text>
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mt-1">Made with ❤️ for Muslims</Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm">{t('common.appName')} v1.0.0</Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-xs mt-1">{t('settings.madeWithLove')}</Text>
         </View>
 
         {/* Bottom spacing for floating nav */}

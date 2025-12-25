@@ -14,7 +14,10 @@
     "tasks": "tasks",
     "completed": "Completed",
     "restartApp": "The app needs to restart to change the language.",
-    "ok": "OK"
+    "ok": "OK",
+    "validationError": "Validation Error",
+    "fillAllFields": "Please fill in all fields",
+    "success": "Success"
   },
   "auth": {
     "login": "Login",
@@ -46,6 +49,8 @@
     "asr": "Asr",
     "maghrib": "Maghrib",
     "isha": "Isha",
+    "shurooq": "Sunrise",
+    "prayerTimes": "Prayer Times",
     "noTasks": "No tasks for this prayer time",
     "addTask": "Add Task",
     "beforeFajr": "Before Fajr Salah",
@@ -54,20 +59,37 @@
     "dhuhrToAsr": "Dhuhr → Asr",
     "asrToMaghrib": "Asr → Maghrib",
     "maghribToIsha": "Maghrib → Isha",
-    "afterIsha": "After Isha Salah"
+    "afterIsha": "After Isha Salah",
+    "prayerIn": "{{prayer}} in {{time}}",
+    "allPrayersCompleted": "All prayers completed for today"
   },
   "calendar": {
     "title": "Calendar"
   },
   "settings": {
     "title": "Settings",
+    "appearance": "Appearance",
     "language": "Language",
     "theme": "Theme",
     "darkMode": "Dark Mode",
+    "notifications": "Notifications",
+    "incompleteTasks": "Incomplete Tasks",
+    "incompleteTasksDesc": "Remind me when a prayer slot ends if I have unfinished tasks",
+    "locationSettings": "Location Settings",
+    "autoDetectLocation": "Auto-detect Location",
+    "defaultCity": "Default City",
+    "enterCity": "Enter your city",
+    "defaultCountry": "Default Country",
+    "enterCountry": "Enter your country",
+    "saveSettings": "Save Settings",
+    "saving": "Saving...",
+    "account": "Account",
+    "madeWithLove": "Made with ❤️ for Muslims",
     "logout": "Logout",
     "logoutConfirm": "Are you sure you want to logout?",
     "location": "Location",
-    "calculationMethod": "Calculation Method"
+    "calculationMethod": "Calculation Method",
+    "updateSuccess": "Settings updated successfully!"
   },
   "tasks": {
     "addTaskTitle": "Add New Task",

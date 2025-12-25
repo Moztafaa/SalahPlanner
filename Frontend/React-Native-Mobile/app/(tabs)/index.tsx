@@ -14,6 +14,7 @@ import { taskApi, prayerTimeApi, handleApiError } from '../../src/services/api';
 import { PrayerTimeSlot, PrayerTimeSlotLabels, Task, CreateTaskDto, UpdateTaskDto } from '../../src/types';
 import TaskCard from '../../src/components/TaskCard';
 import AddTaskModal from '../../src/components/AddTaskModal';
+import PrayerTimesModal from '../../src/components/PrayerTimesModal';
 import Toast from 'react-native-toast-message';
 import { format, differenceInSeconds } from 'date-fns';
 import { enUS, ar } from 'date-fns/locale';
@@ -30,6 +31,7 @@ export default function DashboardScreen() {
   const { theme } = useTheme();
   const { locationSettings, todayPrayerTimes } = usePrayerTimes();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showPrayerTimesModal, setShowPrayerTimesModal] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [defaultSlot, setDefaultSlot] = useState<PrayerTimeSlot>(PrayerTimeSlot.BeforeFajr);
   const [countdown, setCountdown] = useState('');
@@ -178,12 +180,15 @@ export default function DashboardScreen() {
           const h = Math.floor(seconds / 3600);
           const m = Math.floor((seconds % 3600) / 60);
           const s = seconds % 60;
-          setCountdown(`${prayer.name} in ${h}h ${m}m ${s}s`);
+
+          const prayerName = t(`home.${prayer.name.toLowerCase()}`);
+          const timeString = `${h}h ${m}m ${s}s`;
+          setCountdown(t('home.prayerIn', { prayer: prayerName, time: timeString }));
           return;
         }
       }
 
-      setCountdown('All prayers completed for today');
+      setCountdown(t('home.allPrayersCompleted'));
     }, 1000);
 
     return () => clearInterval(interval);
@@ -229,13 +234,24 @@ export default function DashboardScreen() {
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       {/* Header */}
       <View className="bg-primary-500 dark:bg-primary-600 px-6 py-4 rounded-b-3xl">
-        <Text className="text-white text-3xl font-bold">{t('common.appName')}</Text>
-        <Text className="text-white/90 text-sm mt-1">
-          {format(selectedDate, 'EEEE, d MMMM yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
-        </Text>
-        <Text className="text-white/80 text-xs mt-0.5">
-          {formatHijriDate(selectedDate, i18n.language)}
-        </Text>
+        <View className="flex-row justify-between items-start">
+          <View>
+            <Text className="text-white text-3xl font-bold">{t('common.appName')}</Text>
+            <Text className="text-white/90 text-sm mt-1">
+              {format(selectedDate, 'EEEE, d MMMM yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
+            </Text>
+            <Text className="text-white/80 text-xs mt-0.5">
+              {formatHijriDate(selectedDate, i18n.language)}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowPrayerTimesModal(true)}
+            className="bg-white/20 p-2 rounded-full mt-1"
+            accessibilityLabel={t('home.prayerTimes')}
+          >
+            <Ionicons name="time-outline" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
 
         {/* Prayer Countdown */}
         {prayerTimes && (
@@ -329,6 +345,13 @@ export default function DashboardScreen() {
         taskToEdit={editingTask}
         defaultSlot={defaultSlot}
         defaultDate={selectedDate}
+      />
+
+      <PrayerTimesModal
+        visible={showPrayerTimesModal}
+        onClose={() => setShowPrayerTimesModal(false)}
+        prayerTimes={prayerTimes}
+        date={selectedDate}
       />
     </SafeAreaView>
   );
