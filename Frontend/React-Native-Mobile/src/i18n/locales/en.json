@@ -75,6 +75,8 @@
     "notifications": "Notifications",
     "incompleteTasks": "Incomplete Tasks",
     "incompleteTasksDesc": "Remind me when a prayer slot ends if I have unfinished tasks",
+    "bufferTime": "Wrap-Up Buffer",
+    "bufferTimeDesc": "Notify me before prayer time starts",
     "locationSettings": "Location Settings",
     "autoDetectLocation": "Auto-detect Location",
     "defaultCity": "Default City",
@@ -120,7 +122,9 @@
   },
   "notifications": {
     "unfinished_title": "Unfinished Tasks",
-    "unfinished_body": "You have {{count}} unfinished tasks for {{slot}}. Tap to move them."
+    "unfinished_body": "You have {{count}} unfinished tasks for {{slot}}. Tap to move them.",
+    "wrap_up_title": "Wrap Up for {{prayer}}",
+    "wrap_up_body": "{{minutes}} minutes until prayer time. Time to switch to spiritual mode."
   },
   "prayer_slots": {
     "0": "Before Fajr Salah",
