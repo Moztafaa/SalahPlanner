@@ -49,6 +49,17 @@ export class TaskService {
   }
 
   /**
+   * Get incomplete tasks before a specific date
+   * @param date The reference date (usually today)
+   */
+  getIncompletePastTasks(date: Date): Observable<Task[]> {
+    const dateStr = this.formatDateLocal(date);
+    return this.http
+      .get<any[]>(`${this.apiUrl}/incomplete-past/${dateStr}`)
+      .pipe(map((tasks) => tasks.map((task) => this.transformTaskResponse(task))));
+  }
+
+  /**
    * Get a single task by ID
    */
   getTaskById(id: string): Observable<Task> {

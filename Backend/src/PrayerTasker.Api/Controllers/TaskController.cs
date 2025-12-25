@@ -30,6 +30,14 @@ public class TaskController(ITaskService taskService) : ControllerBase
 
         return Ok(tasks);
     }
+
+    [HttpGet("incomplete-past/{date}")]
+    public async Task<IActionResult> GetIncompletePastTasks(DateTime date)
+    {
+        List<TaskDto> tasks = await taskService.GetIncompletePastTasksAsync(date);
+        return Ok(tasks);
+    }
+
     // get task by id async
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetTaskById(Guid id)

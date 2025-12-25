@@ -13,6 +13,7 @@ import { PrayerTimes, Task, PrayerTimeSlot, PrayerTimeSlotDisplay } from '../../
 import { TaskFormComponent } from '../task-form/task-form.component';
 import { SettingsFormComponent } from '../settings-form/settings-form.component';
 import { CalendarModalComponent } from '../calendar-modal/calendar-modal.component';
+import { DailyReviewModalComponent } from '../daily-review-modal/daily-review-modal.component';
 import moment from 'moment-hijri';
 
 interface TaskGroup {
@@ -41,6 +42,7 @@ interface NextSalahInfo {
     TaskFormComponent,
     SettingsFormComponent,
     CalendarModalComponent,
+    DailyReviewModalComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -48,6 +50,8 @@ interface NextSalahInfo {
 export class DashboardComponent implements OnInit, OnDestroy {
   // State management using signals
   prayerTimes = signal<PrayerTimes | null>(null);
+  incompleteTasks = signal<Task[]>([]);
+  showDailyReview = signal(false);
   tasks = signal<Task[]>([]);
   isLoadingPrayer = signal(true);
   isLoadingTasks = signal(true);
@@ -190,6 +194,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadPrayerTimes();
     this.loadTasks();
+    this.checkIncompleteTasks();
 
     // Update time every second for countdown timer
     this.countdownInterval = setInterval(() => {
@@ -252,6 +257,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
         console.error('Error loading tasks:', error);
       },
     });
+  }
+
+  checkIncompleteTasks() {
+    const today = new Date();
+    this.taskService.getIncompletePastTasks(today).subscribe({
+      next: (tasks) => {
+        if (tasks.length > 0) {
+          this.incompleteTasks.set(tasks);
+          this.showDailyReview.set(true);
+        }
+      },
+      error: (err) => console.error('Failed to check incomplete tasks', err),
+    });
+  }
+
+  onDailyReviewClosed() {
+    this.showDailyReview.set(false);
+    this.loadTasks(); // Reload tasks to reflect changes
   }
 
   /**

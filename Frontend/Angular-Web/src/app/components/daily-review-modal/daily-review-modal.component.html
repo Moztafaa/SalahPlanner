@@ -1,0 +1,53 @@
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Daily Review</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="close.emit()"></button>
+      </div>
+      <div class="modal-body">
+        <p class="lead">You have {{ tasks.length }} incomplete tasks from previous days.</p>
+        <div class="list-group">
+          <div
+            *ngFor="let task of tasks"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            <div>
+              <h6 class="mb-0">{{ task.title }}</h6>
+              <small class="text-muted"
+                >{{ task.taskDate | date : 'mediumDate' }} - {{ PrayerTimeSlot[task.slot] }}</small
+              >
+            </div>
+            <div class="btn-group">
+              <button
+                class="btn btn-sm btn-outline-success"
+                (click)="moveToToday(task)"
+                title="Move to Today"
+              >
+                <i class="bi bi-calendar-check"></i> Today
+              </button>
+              <button
+                class="btn btn-sm btn-outline-secondary"
+                (click)="moveToBacklog(task)"
+                title="Move to Backlog"
+              >
+                <i class="bi bi-archive"></i> Backlog
+              </button>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                (click)="deleteTask(task)"
+                title="Delete"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close.emit()">Review Later</button>
+      </div>
+    </div>
+  </div>
+</div>

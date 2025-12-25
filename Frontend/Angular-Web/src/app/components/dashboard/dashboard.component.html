@@ -325,3 +325,13 @@
 >
 </app-calendar-modal>
 }
+
+<!-- Daily Review Modal -->
+@if (showDailyReview()) {
+<app-daily-review-modal
+  [tasks]="incompleteTasks()"
+  (taskUpdated)="checkIncompleteTasks()"
+  (close)="onDailyReviewClosed()"
+>
+</app-daily-review-modal>
+}

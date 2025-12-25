@@ -6,6 +6,7 @@ public interface ITaskService
 {
     Task<TaskDto> CreateTaskAsync(CreateTaskDto dto);
     Task<List<TaskDto>> GetTasksByDateAsync(DateTime date);
+    Task<List<TaskDto>> GetIncompletePastTasksAsync(DateTime date);
     Task<TaskDto?> GetTaskByIdAsync(Guid taskId);
     Task<TaskDto> UpdateTaskAsync(Guid taskId, UpdateTaskDto dto);
     Task UpdateTasksSlotAsync(UpdateTaskSlotDto dto);

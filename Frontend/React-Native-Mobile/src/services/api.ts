@@ -195,6 +195,17 @@ export const taskApi = {
   },
 
   /**
+   * Get incomplete tasks before a specific date
+   */
+  getIncompletePastTasks: async (date: Date): Promise<Task[]> => {
+    const dateStr = date.toISOString().split("T")[0];
+    const { data } = await apiClient.get<Task[]>(
+      `/Task/incomplete-past/${dateStr}`
+    );
+    return data;
+  },
+
+  /**
    * Get task by ID
    */
   getTaskById: async (id: string): Promise<Task> => {
