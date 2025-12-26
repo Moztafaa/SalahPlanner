@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { useColorScheme } from 'nativewind';
 import * as SecureStore from 'expo-secure-store';
-import { View } from 'react-native';
 
 type Theme = 'light' | 'dark';
 
@@ -15,7 +14,6 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { colorScheme, setColorScheme } = useColorScheme();
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const loadTheme = async () => {
@@ -28,8 +26,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
       } catch (error) {
         console.error('Failed to load theme', error);
-      } finally {
-        setIsLoaded(true);
       }
     };
     loadTheme();
@@ -46,10 +42,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     SecureStore.setItemAsync('user-theme', theme);
   };
 
-  if (!isLoaded) {
-    return <View />; // Or a splash screen
-  }
-
+  // Always render children to preserve navigation context
+  // The theme will update once loaded
   return (
     <ThemeContext.Provider value={{ theme: colorScheme as Theme || 'light', toggleTheme, setTheme }}>
       {children}

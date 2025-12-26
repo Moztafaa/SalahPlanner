@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform, I18nManager } from 'react-native';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
@@ -28,10 +28,10 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
   };
 
   const renderRightActions = () => (
-    <View className="flex-row">
+    <View className="flex-row h-full items-center mb-3">
       {onEdit && (
         <TouchableOpacity
-          className="bg-blue-500 justify-center items-center px-6 rounded-r-xl ml-2"
+          className="bg-blue-500 justify-center items-center w-16 h-full"
           onPress={() => onEdit(task)}
           activeOpacity={0.7}
         >
@@ -39,7 +39,7 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
         </TouchableOpacity>
       )}
       <TouchableOpacity
-        className="bg-red-500 justify-center items-center px-6 rounded-r-xl ml-2"
+        className="bg-red-500 justify-center items-center w-16 h-full rounded-r-xl"
         onPress={handleDelete}
         activeOpacity={0.7}
       >
@@ -50,53 +50,41 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
 
   return (
     <Swipeable renderRightActions={renderRightActions} overshootRight={false}>
-      <View className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-3 flex-row items-center shadow-sm">
+      <View className={`flex-row items-center gap-4 p-4 rounded-xl bg-white dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-white/5 mb-3 ${task.isCompleted ? 'opacity-70 bg-gray-50 dark:bg-surface-dark/40' : ''}`}>
         {/* Checkbox */}
         <TouchableOpacity
           onPress={handleToggle}
-          className={`w-6 h-6 rounded-full border-2 items-center justify-center me-3 ${
+          className={`w-6 h-6 rounded-full border-2 items-center justify-center ${
             task.isCompleted
-              ? 'bg-primary-500 dark:bg-primary-600 border-primary-500 dark:border-primary-600'
-              : 'border-gray-300 dark:border-gray-600'
+              ? 'bg-primary border-primary'
+              : 'border-gray-300 dark:border-[#3b5443] bg-transparent'
           }`}
           activeOpacity={0.7}
         >
-          {task.isCompleted && <Ionicons name="checkmark" size={16} color="white" />}
+          {task.isCompleted && <Ionicons name="checkmark" size={14} color="#102216" />}
         </TouchableOpacity>
 
         {/* Task Content */}
         <TouchableOpacity
-          className="flex-1 flex-row items-center"
+          className="flex-1 flex-col"
           onPress={() => onEdit && onEdit(task)}
           disabled={!onEdit}
           activeOpacity={0.7}
         >
-          <View className="flex-1">
-            <Text
-              className={`text-base font-medium ${
-                task.isCompleted
-                  ? 'text-gray-400 dark:text-gray-500 line-through'
-                  : 'text-gray-900 dark:text-white'
-              }`}
-            >
-              {task.title}
+          <Text
+            className={`text-base font-medium leading-normal ${
+              task.isCompleted
+                ? 'text-slate-500 dark:text-gray-400 line-through decoration-slate-400 dark:decoration-gray-500'
+                : 'text-slate-900 dark:text-white'
+            }`}
+          >
+            {task.title}
+          </Text>
+          {task.description && (
+            <Text className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+              {task.description}
             </Text>
-            {task.description && (
-              <Text
-                className={`text-sm mt-1 ${
-                  task.isCompleted
-                    ? 'text-gray-300 dark:text-gray-600'
-                    : 'text-gray-600 dark:text-gray-300'
-                }`}
-                numberOfLines={2}
-              >
-                {task.description}
-              </Text>
-            )}
-          </View>
-
-          {/* Arrow Indicator */}
-          <Ionicons name={I18nManager.isRTL ? "chevron-forward" : "chevron-back"} size={20} color="#d1d5db" />
+          )}
         </TouchableOpacity>
       </View>
     </Swipeable>

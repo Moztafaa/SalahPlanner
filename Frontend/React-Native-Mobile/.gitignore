@@ -5,6 +5,7 @@
 expo-env.d.ts
 # @end expo-cli
 
+# new_design/
 .expo/
 dist/
 web-build/

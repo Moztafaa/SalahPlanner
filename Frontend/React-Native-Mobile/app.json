@@ -12,7 +12,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses your location to calculate accurate prayer times."
-      }
+      },
+      "bundleIdentifier": "com.moztafaa.salahplannermobile"
     },
     "android": {
       "permissions": [
