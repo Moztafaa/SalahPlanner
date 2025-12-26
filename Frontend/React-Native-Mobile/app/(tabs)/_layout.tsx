@@ -21,27 +21,20 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#22c55e',
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarActiveTintColor: '#13ec5b',
+        tabBarInactiveTintColor: isDark ? '#6b7280' : '#9ca3af',
         tabBarStyle: {
           position: 'absolute',
-          bottom: 25,
-          left: 20,
-          right: 20,
+          bottom: 0,
+          left: 0,
+          right: 0,
           elevation: 0,
-          backgroundColor: Platform.OS === 'ios' ? 'transparent' : (isDark ? '#1f2937' : '#f3f4f6'),
-          borderRadius: 25,
-          height: 70,
-          paddingBottom: 10,
+          backgroundColor: isDark ? '#151d18' : '#ffffff',
+          borderTopWidth: 1,
+          borderTopColor: isDark ? 'rgba(255,255,255,0.05)' : '#e5e7eb',
+          height: 85,
+          paddingBottom: 25,
           paddingTop: 10,
-          borderTopWidth: 0,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 10,
-          },
-          shadowOpacity: 0.12,
-          shadowRadius: 15,
         },
         tabBarBackground: () => (
           Platform.OS === 'ios' ? (
@@ -54,17 +47,16 @@ export default function TabLayout() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                borderRadius: 25,
-                overflow: 'hidden',
-                backgroundColor: isDark ? 'rgba(31, 41, 55, 0.8)' : 'rgba(243, 244, 246, 0.8)',
+                backgroundColor: isDark ? 'rgba(21, 29, 24, 0.95)' : 'rgba(255, 255, 255, 0.95)',
               }}
             />
           ) : null
         ),
         tabBarShowLabel: true,
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '600',
+          fontSize: 10,
+          fontWeight: '500',
+          marginTop: 2,
         },
       }}
     >
@@ -73,7 +65,7 @@ export default function TabLayout() {
         options={{
           title: t('tabs.home'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+            <Ionicons name="home" size={24} color={color} />
           ),
         }}
         listeners={{
@@ -85,7 +77,7 @@ export default function TabLayout() {
         options={{
           title: t('tabs.calendar'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={size} color={color} />
+            <Ionicons name="calendar-clear" size={24} color={color} />
           ),
         }}
         listeners={{
@@ -97,7 +89,7 @@ export default function TabLayout() {
         options={{
           title: t('tabs.settings'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
+            <Ionicons name="settings-sharp" size={24} color={color} />
           ),
         }}
         listeners={{

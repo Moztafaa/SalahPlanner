@@ -54,28 +54,28 @@ export default function PrayerTimesModal({
       statusBarTranslucent
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <View className="flex-1 justify-center items-center bg-black/50 px-4">
+        <View className="flex-1 justify-center items-center bg-black/60 px-4">
           <TouchableWithoutFeedback>
-            <View className="bg-white dark:bg-gray-800 w-full max-w-sm rounded-2xl p-5 shadow-xl">
+            <View className="bg-surface-light dark:bg-surface-dark w-full max-w-sm rounded-2xl p-5 shadow-xl border border-white/10">
               {/* Header */}
-              <View className="flex-row justify-between items-center mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">
+              <View className="flex-row justify-between items-center mb-4 border-b border-gray-200 dark:border-white/10 pb-3">
                 <View>
-                  <Text className="text-xl font-bold text-gray-900 dark:text-white">
+                  <Text className="text-xl font-bold text-slate-900 dark:text-white">
                     {t('home.prayerTimes')}
                   </Text>
-                  <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  <Text className="text-sm text-slate-500 dark:text-[#9db9a6] mt-1">
                     {format(date, 'EEEE, d MMMM', { locale: isRTL ? ar : enUS })}
                   </Text>
                 </View>
                 <TouchableOpacity
                   onPress={onClose}
-                  className="bg-gray-100 dark:bg-gray-700 p-2 rounded-full"
+                  className="bg-gray-100 dark:bg-white/10 p-2 rounded-full"
                   accessibilityLabel={t('common.close')}
                 >
                   <Ionicons
                     name="close"
                     size={20}
-                    color={isDark ? '#9ca3af' : '#4b5563'}
+                    color={isDark ? 'white' : '#0f172a'}
                   />
                 </TouchableOpacity>
               </View>
@@ -87,23 +87,23 @@ export default function PrayerTimesModal({
                     key={prayer.key}
                     className={`flex-row items-center justify-between p-3 rounded-xl ${
                       index % 2 === 0
-                        ? 'bg-gray-50 dark:bg-gray-700/50'
+                        ? 'bg-gray-50 dark:bg-white/5'
                         : 'bg-transparent'
                     }`}
                   >
                     <View className="flex-row items-center gap-3">
-                      <View className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 items-center justify-center">
+                      <View className="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 items-center justify-center">
                         <Ionicons
                           name={prayer.icon as any}
                           size={16}
-                          color={isDark ? '#fbbf24' : '#d97706'} // Amber-500/600ish
+                          color={isDark ? '#13ec5b' : '#15803d'}
                         />
                       </View>
-                      <Text className="font-medium text-gray-700 dark:text-gray-200 text-base">
+                      <Text className="font-medium text-slate-700 dark:text-gray-300 text-base">
                         {prayer.label}
                       </Text>
                     </View>
-                    <Text className="font-bold text-gray-900 dark:text-white text-lg font-mono">
+                    <Text className="font-bold text-slate-900 dark:text-white text-lg font-mono">
                       {prayer.time}
                     </Text>
                   </View>

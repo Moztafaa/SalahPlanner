@@ -298,6 +298,35 @@ export default function DashboardScreen() {
     (v) => typeof v === 'number'
   ) as PrayerTimeSlot[];
 
+  // Helper to calculate slot duration
+  const getSlotDuration = (slot: PrayerTimeSlot, times: any): string | null => {
+    if (!times) return null;
+
+    const parseTime = (timeStr: string) => {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    const calculate = (start: string, end: string) => {
+      let startMinutes = parseTime(start);
+      let endMinutes = parseTime(end);
+      if (endMinutes < startMinutes) endMinutes += 24 * 60;
+      const diff = endMinutes - startMinutes;
+      const h = Math.floor(diff / 60);
+      const m = diff % 60;
+      return h > 0 ? `${h}h ${m}m` : `${m}m`;
+    };
+
+    switch (slot) {
+      case PrayerTimeSlot.FajrToShurooq: return calculate(times.fajr, times.sunrise);
+      case PrayerTimeSlot.ShurooqToDhuhr: return calculate(times.sunrise, times.dhuhr);
+      case PrayerTimeSlot.DhuhrToAsr: return calculate(times.dhuhr, times.asr);
+      case PrayerTimeSlot.AsrToMaghrib: return calculate(times.asr, times.maghrib);
+      case PrayerTimeSlot.MaghribToIsha: return calculate(times.maghrib, times.isha);
+      default: return null;
+    }
+  };
+
   const sections = slotOptions.map(slot => ({
     title: getSlotLabel(slot),
     slot: slot,
@@ -321,7 +350,12 @@ export default function DashboardScreen() {
             {formatHijriDate(selectedDate, i18n.language)}
           </Text>
         </View>
-        <View className="w-10" />
+        <TouchableOpacity
+          className="w-10 h-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-white/10"
+          onPress={() => setShowPrayerTimesModal(true)}
+        >
+          <MaterialIcons name="schedule" size={24} color={theme === 'dark' ? 'white' : '#0f172a'} />
+        </TouchableOpacity>
       </View>
 
       <SectionList
@@ -349,6 +383,7 @@ export default function DashboardScreen() {
             title={title}
             taskCount={data.length}
             isActive={slot === nextPrayerInfo.currentSlot}
+            duration={prayerTimes ? getSlotDuration(slot, prayerTimes) : null}
           />
         )}
         renderItem={({ item }) => (
@@ -378,7 +413,17 @@ export default function DashboardScreen() {
               </View>
             );
           }
-          return <View className="h-2" />;
+          return (
+            <View className="px-4 py-2 mb-4">
+               <TouchableOpacity
+                  onPress={() => handleOpenAddModal(section.slot)}
+                  className="flex-row items-center justify-center py-3 rounded-xl border border-dashed border-gray-300 dark:border-white/10 bg-gray-50/50 dark:bg-white/5 active:bg-gray-100 dark:active:bg-white/10"
+               >
+                  <MaterialIcons name="add" size={20} color={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
+                  <Text className="ml-2 text-sm font-medium text-slate-500 dark:text-gray-400">Add task to this slot</Text>
+               </TouchableOpacity>
+            </View>
+          );
         }}
       />
 
