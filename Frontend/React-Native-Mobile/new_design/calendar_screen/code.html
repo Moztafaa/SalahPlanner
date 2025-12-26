@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calendar Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-dark": "#162b1e",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for the horizontal date strip */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-white font-display overflow-x-hidden">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-xl overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-20 bg-background-light dark:bg-background-dark border-b border-gray-200 dark:border-white/5">
+<div class="flex items-center p-4 pb-2 justify-between">
+<h2 class="text-xl font-bold leading-tight tracking-tight flex-1">Schedule</h2>
+<button class="flex items-center justify-end active:opacity-70 transition-opacity">
+<p class="text-primary text-sm font-bold leading-normal tracking-wide uppercase">Today</p>
+</button>
+</div>
+<!-- Compact Week Strip Picker -->
+<div class="flex flex-col gap-2 pb-4">
+<div class="flex items-center justify-between px-4 text-gray-500 dark:text-[#9db9a6]">
+<span class="text-sm font-medium">October 2023</span>
+<button class="text-gray-400 dark:text-gray-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">calendar_month</span>
+</button>
+</div>
+<div class="flex overflow-x-auto no-scrollbar gap-3 px-4 pb-2 snap-x">
+<!-- Past Date -->
+<button class="flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 snap-start shrink-0">
+<span class="text-xs font-medium text-gray-500 dark:text-[#9db9a6]">Mon</span>
+<span class="text-lg font-bold mt-1">23</span>
+</button>
+<!-- Selected Date (Today) -->
+<button class="flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-2xl bg-primary shadow-[0_4px_12px_rgba(19,236,91,0.3)] snap-start shrink-0 transform scale-105 transition-transform">
+<span class="text-xs font-bold text-background-dark">Tue</span>
+<span class="text-lg font-bold text-background-dark mt-1">24</span>
+</button>
+<!-- Future Dates -->
+<button class="flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 snap-start shrink-0 hover:border-primary/50 transition-colors">
+<span class="text-xs font-medium text-gray-500 dark:text-[#9db9a6]">Wed</span>
+<span class="text-lg font-bold mt-1">25</span>
+</button>
+<button class="flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 snap-start shrink-0 hover:border-primary/50 transition-colors">
+<span class="text-xs font-medium text-gray-500 dark:text-[#9db9a6]">Thu</span>
+<span class="text-lg font-bold mt-1">26</span>
+</button>
+<button class="flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 snap-start shrink-0 hover:border-primary/50 transition-colors">
+<span class="text-xs font-medium text-gray-500 dark:text-[#9db9a6]">Fri</span>
+<span class="text-lg font-bold mt-1">27</span>
+</button>
+<button class="flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 snap-start shrink-0 hover:border-primary/50 transition-colors">
+<span class="text-xs font-medium text-gray-500 dark:text-[#9db9a6]">Sat</span>
+<span class="text-lg font-bold mt-1">28</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Task Content -->
+<main class="flex-1 overflow-y-auto pb-24 relative">
+<!-- Timeline Line Decoration -->
+<div class="absolute left-8 top-0 bottom-0 w-px bg-gray-200 dark:bg-white/10 z-0 hidden sm:block"></div>
+<!-- Fajr Section -->
+<section class="relative z-10">
+<div class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-white/5 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#9db9a6]" style="font-size: 20px;">wb_twilight</span>
+<h3 class="text-base font-bold text-white leading-tight">Fajr</h3>
+</div>
+<span class="text-sm font-medium text-[#9db9a6] font-mono">05:12 AM</span>
+</div>
+<div class="mt-2 mb-4">
+<!-- List Item: Read Quran -->
+<div class="group relative flex items-center gap-4 px-4 py-3 hover:bg-white/5 transition-colors cursor-pointer">
+<!-- Task Card Content -->
+<div class="flex flex-1 items-center gap-4 bg-white dark:bg-surface-dark p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
+<div class="flex items-center justify-center rounded-lg bg-emerald-900/40 text-emerald-400 shrink-0 size-10">
+<span class="material-symbols-outlined" style="font-size: 20px;">menu_book</span>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<p class="text-slate-900 dark:text-white text-base font-medium leading-normal line-clamp-1">Read Quran</p>
+<p class="text-gray-500 dark:text-[#9db9a6] text-xs font-normal leading-normal">20m • Morning Adhkar</p>
+</div>
+<div class="shrink-0 flex items-center">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3b5443] text-primary focus:ring-offset-background-dark focus:ring-primary bg-transparent" type="checkbox"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sunrise / Duha Section (Optional visual separator) -->
+<div class="px-4 py-2 flex items-center gap-4 opacity-50">
+<div class="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent w-full"></div>
+<span class="material-symbols-outlined text-yellow-500 text-sm">wb_sunny</span>
+<div class="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent w-full"></div>
+</div>
+<!-- Dhuhr Section -->
+<section class="relative z-10">
+<div class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-white/5 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-yellow-400" style="font-size: 20px;">light_mode</span>
+<h3 class="text-base font-bold text-white leading-tight">Dhuhr</h3>
+</div>
+<span class="text-sm font-medium text-[#9db9a6] font-mono">12:30 PM</span>
+</div>
+<!-- Current Time Indicator -->
+<div class="flex items-center gap-2 px-4 py-2">
+<div class="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>
+<div class="h-px flex-1 bg-red-500/50"></div>
+<span class="text-xs font-bold text-red-500 uppercase tracking-wider">Now</span>
+</div>
+<div class="flex flex-col gap-2 mb-4 mt-1">
+<!-- List Item: Team Meeting -->
+<div class="group relative flex items-center gap-4 px-4 py-1 cursor-pointer">
+<div class="flex flex-1 items-center gap-4 bg-white dark:bg-surface-dark p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm border-l-4 border-l-primary/50">
+<div class="flex items-center justify-center rounded-lg bg-blue-900/40 text-blue-400 shrink-0 size-10">
+<span class="material-symbols-outlined" style="font-size: 20px;">groups</span>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<p class="text-slate-900 dark:text-white text-base font-medium leading-normal">Team Sync</p>
+<p class="text-gray-500 dark:text-[#9db9a6] text-xs font-normal">1h • Zoom</p>
+</div>
+<div class="shrink-0 flex items-center">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3b5443] text-primary focus:ring-offset-background-dark focus:ring-primary bg-transparent" type="checkbox"/>
+</div>
+</div>
+</div>
+<!-- List Item: Grocery Run -->
+<div class="group relative flex items-center gap-4 px-4 py-1 cursor-pointer">
+<div class="flex flex-1 items-center gap-4 bg-white dark:bg-surface-dark p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
+<div class="flex items-center justify-center rounded-lg bg-orange-900/40 text-orange-400 shrink-0 size-10">
+<span class="material-symbols-outlined" style="font-size: 20px;">shopping_cart</span>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<p class="text-slate-900 dark:text-white text-base font-medium leading-normal">Grocery Run</p>
+<p class="text-gray-500 dark:text-[#9db9a6] text-xs font-normal">45m • Buy fruits</p>
+</div>
+<div class="shrink-0 flex items-center">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3b5443] text-primary focus:ring-offset-background-dark focus:ring-primary bg-transparent" type="checkbox"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Asr Section (Empty State) -->
+<section class="relative z-10">
+<div class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-white/5 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-orange-300" style="font-size: 20px;">wb_twilight</span>
+<h3 class="text-base font-bold text-white leading-tight">Asr</h3>
+</div>
+<span class="text-sm font-medium text-[#9db9a6] font-mono">03:45 PM</span>
+</div>
+<div class="px-4 py-8 flex flex-col items-center justify-center opacity-40">
+<span class="material-symbols-outlined text-4xl mb-2">event_available</span>
+<p class="text-sm font-medium">Free time until Maghrib</p>
+</div>
+</section>
+<!-- Maghrib Section -->
+<section class="relative z-10">
+<div class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-white/5 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-purple-400" style="font-size: 20px;">nights_stay</span>
+<h3 class="text-base font-bold text-white leading-tight">Maghrib</h3>
+</div>
+<span class="text-sm font-medium text-[#9db9a6] font-mono">06:15 PM</span>
+</div>
+<div class="mt-2 mb-4">
+<!-- List Item: Family Dinner -->
+<div class="group relative flex items-center gap-4 px-4 py-3 cursor-pointer">
+<div class="flex flex-1 items-center gap-4 bg-white dark:bg-surface-dark p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
+<div class="flex items-center justify-center rounded-lg bg-pink-900/40 text-pink-400 shrink-0 size-10">
+<span class="material-symbols-outlined" style="font-size: 20px;">restaurant</span>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<p class="text-slate-900 dark:text-white text-base font-medium leading-normal">Family Dinner</p>
+<p class="text-gray-500 dark:text-[#9db9a6] text-xs font-normal">1h 30m</p>
+</div>
+<div class="shrink-0 flex items-center">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3b5443] text-primary focus:ring-offset-background-dark focus:ring-primary bg-transparent" type="checkbox"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Isha Section -->
+<section class="relative z-10">
+<div class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-white/5 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-indigo-400" style="font-size: 20px;">bedtime</span>
+<h3 class="text-base font-bold text-white leading-tight">Isha</h3>
+</div>
+<span class="text-sm font-medium text-[#9db9a6] font-mono">07:45 PM</span>
+</div>
+<div class="mt-2 mb-10">
+<!-- List Item: Read Quran -->
+<div class="group relative flex items-center gap-4 px-4 py-3 cursor-pointer">
+<div class="flex flex-1 items-center gap-4 bg-white dark:bg-surface-dark p-3 rounded-xl border border-gray-100 dark:border-white/5 shadow-sm">
+<div class="flex items-center justify-center rounded-lg bg-emerald-900/40 text-emerald-400 shrink-0 size-10">
+<span class="material-symbols-outlined" style="font-size: 20px;">menu_book</span>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<p class="text-slate-900 dark:text-white text-base font-medium leading-normal">Read Quran</p>
+<p class="text-gray-500 dark:text-[#9db9a6] text-xs font-normal">15m • Surah Al-Mulk</p>
+</div>
+<div class="shrink-0 flex items-center">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3b5443] text-primary focus:ring-offset-background-dark focus:ring-primary bg-transparent" type="checkbox"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<div class="absolute bottom-6 right-6 z-50">
+<button class="flex items-center justify-center w-14 h-14 rounded-full bg-primary text-background-dark shadow-[0_4px_20px_rgba(19,236,91,0.4)] hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-size: 28px;">add</span>
+</button>
+</div>
+</div>
+</body></html>

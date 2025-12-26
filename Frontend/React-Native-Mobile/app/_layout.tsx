@@ -10,12 +10,12 @@ import { PrayerTimesProvider } from '@/src/contexts/PrayerTimesContext';
 import { NotificationProvider } from '@/src/contexts/NotificationContext';
 import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { LogBox } from 'react-native';
+import { LogBox, View } from 'react-native';
 
 // Ignore deprecated SafeAreaView warning from dependencies
 LogBox.ignoreLogs(['SafeAreaView has been deprecated']);
 
-// Create QueryClient instance
+// Create QueryClient instance outside component to prevent recreation
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -25,7 +25,8 @@ const queryClient = new QueryClient({
   },
 });
 
-function RootLayoutNav() {
+// Inner component that handles auth navigation - must be inside Stack
+function AuthRedirectHandler() {
   const { isAuthenticated, isLoading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
@@ -36,19 +37,24 @@ function RootLayoutNav() {
     const inAuthGroup = segments[0] === '(auth)';
 
     if (!isAuthenticated && !inAuthGroup) {
-      // Redirect to login if not authenticated
       router.replace('/(auth)/login');
     } else if (isAuthenticated && inAuthGroup) {
-      // Redirect to tabs if authenticated
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, isLoading, segments]);
 
+  return null;
+}
+
+function RootLayoutNav() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <View style={{ flex: 1 }}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+      <AuthRedirectHandler />
+    </View>
   );
 }
 
