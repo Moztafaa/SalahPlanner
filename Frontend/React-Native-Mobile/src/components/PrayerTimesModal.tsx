@@ -41,7 +41,7 @@ export default function PrayerTimesModal({
     { key: 'sunrise', label: t('home.shurooq'), time: formatTime(prayerTimes.sunrise), icon: 'sunny-outline' },
     { key: 'dhuhr', label: t('home.dhuhr'), time: formatTime(prayerTimes.dhuhr), icon: 'sunny' },
     { key: 'asr', label: t('home.asr'), time: formatTime(prayerTimes.asr), icon: 'partly-sunny-outline' },
-    { key: 'maghrib', label: t('home.maghrib'), time: formatTime(prayerTimes.maghrib), icon: 'cloud-sunset-outline' },
+    { key: 'maghrib', label: t('home.maghrib'), time: formatTime(prayerTimes.maghrib), icon: 'cloudy-night-outline' },
     { key: 'isha', label: t('home.isha'), time: formatTime(prayerTimes.isha), icon: 'moon' },
   ];
 

@@ -17,7 +17,8 @@
     "ok": "حسناً",
     "validationError": "خطأ في التحقق",
     "fillAllFields": "يرجى ملء جميع الحقول",
-    "success": "نجاح"
+    "success": "نجاح",
+    "done": "تم"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -73,8 +74,10 @@
     "theme": "المظهر",
     "darkMode": "الوضع الداكن",
     "notifications": "الإشعارات",
-    "incompleteTasks": "مهام غير مكتملة",
+    "incompleteTasks": "تذكير المهام",
     "incompleteTasksDesc": "ذكرني عند انتهاء وقت الصلاة إذا كان لدي مهام غير مكتملة",
+    "bufferTime": "وقت التذكير",
+    "bufferTimeDesc": "كم من الوقت قبل موعد الصلاة لتذكيرك",
     "locationSettings": "إعدادات الموقع",
     "autoDetectLocation": "تحديد الموقع تلقائياً",
     "defaultCity": "المدينة الافتراضية",
@@ -89,7 +92,12 @@
     "logoutConfirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
     "location": "الموقع",
     "calculationMethod": "طريقة الحساب",
-    "updateSuccess": "تم تحديث الإعدادات بنجاح!"
+    "updateSuccess": "تم تحديث الإعدادات بنجاح!",
+    "preferences": "التفضيلات",
+    "prayerSettings": "إعدادات الصلاة",
+    "timeFormat24h": "نظام 24 ساعة",
+    "minutesBefore": "دقيقة قبل الصلاة",
+    "minutes": "دقيقة"
   },
   "tasks": {
     "addTaskTitle": "إضافة مهمة جديدة",

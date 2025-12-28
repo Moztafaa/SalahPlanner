@@ -17,7 +17,8 @@
     "ok": "OK",
     "validationError": "Validation Error",
     "fillAllFields": "Please fill in all fields",
-    "success": "Success"
+    "success": "Success",
+    "done": "Done"
   },
   "auth": {
     "login": "Login",
@@ -73,10 +74,10 @@
     "theme": "Theme",
     "darkMode": "Dark Mode",
     "notifications": "Notifications",
-    "incompleteTasks": "Incomplete Tasks",
+    "incompleteTasks": "Task Reminders",
     "incompleteTasksDesc": "Remind me when a prayer slot ends if I have unfinished tasks",
-    "bufferTime": "Wrap-Up Buffer",
-    "bufferTimeDesc": "Notify me before prayer time starts",
+    "bufferTime": "Reminder Time",
+    "bufferTimeDesc": "How early to remind you before prayer time",
     "locationSettings": "Location Settings",
     "autoDetectLocation": "Auto-detect Location",
     "defaultCity": "Default City",
@@ -87,11 +88,16 @@
     "saving": "Saving...",
     "account": "Account",
     "madeWithLove": "Made with ❤️ for Muslims",
-    "logout": "Logout",
-    "logoutConfirm": "Are you sure you want to logout?",
+    "logout": "Sign Out",
+    "logoutConfirm": "Are you sure you want to sign out?",
     "location": "Location",
     "calculationMethod": "Calculation Method",
-    "updateSuccess": "Settings updated successfully!"
+    "updateSuccess": "Settings updated successfully!",
+    "preferences": "Preferences",
+    "prayerSettings": "Prayer Settings",
+    "timeFormat24h": "24-Hour Format",
+    "minutesBefore": "min before prayer",
+    "minutes": "minutes"
   },
   "tasks": {
     "addTaskTitle": "Add New Task",
