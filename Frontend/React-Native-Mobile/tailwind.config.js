@@ -26,7 +26,8 @@ module.exports = {
         },
         surface: {
           light: "#ffffff",
-          dark: "#1c271f",
+          dark: "#16281e",
+          highlight: "#1f3629",
         },
         text: {
           primary: "#111827",

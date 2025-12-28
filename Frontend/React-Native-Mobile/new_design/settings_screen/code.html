@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings Screen</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec5b",
+              "primary-dark": "#0ea641",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102216",
+              "surface-light": "#ffffff",
+              "surface-dark": "#16281e", // Slightly lighter than background-dark
+              "surface-highlight": "#1f3629", // For hover/active states
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom scrollbar hide for clean mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Smooth switch transition */
+        .switch-knob {
+            transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased text-slate-900 dark:text-white bg-background-light dark:bg-background-dark font-display selection:bg-primary selection:text-black">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-2 border-b border-gray-200 dark:border-white/5">
+<button class="text-slate-900 dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back_ios_new</span>
+</button>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Settings</h2>
+</header>
+<main class="flex-1 p-4 flex flex-col gap-6">
+<!-- Preferences Section -->
+<section>
+<div class="px-1 pb-2">
+<h3 class="text-slate-500 dark:text-gray-400 text-xs font-bold leading-tight tracking-wider uppercase">Preferences</h3>
+</div>
+<div class="overflow-hidden rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm border border-gray-200 dark:border-white/5 divide-y divide-gray-100 dark:divide-white/5">
+<!-- Language Segmented Control -->
+<div class="p-4 flex flex-col gap-3">
+<div class="flex items-center gap-3 mb-1">
+<div class="text-white flex items-center justify-center rounded-lg bg-emerald-900/50 dark:bg-emerald-900/30 text-primary shrink-0 size-8">
+<span class="material-symbols-outlined" style="font-size: 20px;">translate</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-medium flex-1">App Language</p>
+</div>
+<div class="flex h-10 w-full items-center justify-center rounded-lg bg-gray-100 dark:bg-black/20 p-1 relative">
+<!-- English Option -->
+<label class="flex-1 cursor-pointer h-full relative z-10">
+<input checked="" class="peer invisible absolute w-0" name="language_toggle" type="radio" value="English"/>
+<div class="flex h-full w-full items-center justify-center rounded-md text-sm font-medium transition-all duration-200 text-gray-500 dark:text-gray-400 peer-checked:bg-white dark:peer-checked:bg-surface-highlight peer-checked:text-slate-900 dark:peer-checked:text-white peer-checked:shadow-sm">
+                                    English
+                                </div>
+</label>
+<!-- Arabic Option -->
+<label class="flex-1 cursor-pointer h-full relative z-10">
+<input class="peer invisible absolute w-0" name="language_toggle" type="radio" value="Arabic"/>
+<div class="flex h-full w-full items-center justify-center rounded-md text-sm font-medium transition-all duration-200 text-gray-500 dark:text-gray-400 peer-checked:bg-white dark:peer-checked:bg-surface-highlight peer-checked:text-slate-900 dark:peer-checked:text-white peer-checked:shadow-sm">
+                                    العربية
+                                </div>
+</label>
+</div>
+</div>
+<!-- Dark Mode Item -->
+<div class="flex items-center gap-4 px-4 py-3.5 justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="text-white flex items-center justify-center rounded-lg bg-emerald-900/50 dark:bg-emerald-900/30 text-primary shrink-0 size-8">
+<span class="material-symbols-outlined" style="font-size: 20px;">dark_mode</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-medium flex-1">Dark Mode</p>
+</div>
+<div class="shrink-0">
+<label class="relative flex h-[30px] w-[50px] cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-gray-200 dark:bg-surface-highlight has-[:checked]:bg-primary">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<span class="switch-knob pointer-events-none inline-block size-[26px] translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out peer-checked:translate-x-5"></span>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section>
+<div class="px-1 pb-2">
+<h3 class="text-slate-500 dark:text-gray-400 text-xs font-bold leading-tight tracking-wider uppercase">Notifications</h3>
+</div>
+<div class="overflow-hidden rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm border border-gray-200 dark:border-white/5 divide-y divide-gray-100 dark:divide-white/5">
+<!-- Prayer Alerts -->
+<div class="flex items-center gap-4 px-4 py-3.5 justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="text-white flex items-center justify-center rounded-lg bg-emerald-900/50 dark:bg-emerald-900/30 text-primary shrink-0 size-8">
+<span class="material-symbols-outlined" style="font-size: 20px;">mosque</span>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-900 dark:text-white text-base font-medium">Prayer Alerts</p>
+<span class="text-xs text-slate-500 dark:text-gray-400">Notify at Athan times</span>
+</div>
+</div>
+<div class="shrink-0">
+<label class="relative flex h-[30px] w-[50px] cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-gray-200 dark:bg-surface-highlight has-[:checked]:bg-primary">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<span class="switch-knob pointer-events-none inline-block size-[26px] translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out peer-checked:translate-x-5"></span>
+</label>
+</div>
+</div>
+<!-- Task Reminders -->
+<div class="flex items-center gap-4 px-4 py-3.5 justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="text-white flex items-center justify-center rounded-lg bg-emerald-900/50 dark:bg-emerald-900/30 text-primary shrink-0 size-8">
+<span class="material-symbols-outlined" style="font-size: 20px;">notifications_active</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-medium flex-1">Task Reminders</p>
+</div>
+<div class="shrink-0">
+<label class="relative flex h-[30px] w-[50px] cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-gray-200 dark:bg-surface-highlight has-[:checked]:bg-primary">
+<input class="peer sr-only" type="checkbox"/>
+<span class="switch-knob pointer-events-none inline-block size-[26px] translate-x-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out peer-checked:translate-x-5"></span>
+</label>
+</div>
+</div>
+<!-- Calculation Method (Navigation) -->
+<div class="flex items-center gap-4 px-4 py-3.5 justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="text-white flex items-center justify-center rounded-lg bg-emerald-900/50 dark:bg-emerald-900/30 text-primary shrink-0 size-8">
+<span class="material-symbols-outlined" style="font-size: 20px;">calculate</span>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-900 dark:text-white text-base font-medium">Calculation Method</p>
+<span class="text-xs text-slate-500 dark:text-gray-400">ISNA (North America)</span>
+</div>
+</div>
+<div class="shrink-0 text-gray-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Section -->
+<section>
+<div class="px-1 pb-2">
+<h3 class="text-slate-500 dark:text-gray-400 text-xs font-bold leading-tight tracking-wider uppercase">Account</h3>
+</div>
+<div class="overflow-hidden rounded-2xl bg-surface-light dark:bg-surface-dark shadow-sm border border-gray-200 dark:border-white/5 divide-y divide-gray-100 dark:divide-white/5">
+<!-- Edit Profile -->
+<div class="flex items-center gap-4 px-4 py-3.5 justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="text-white flex items-center justify-center rounded-lg bg-emerald-900/50 dark:bg-emerald-900/30 text-primary shrink-0 size-8">
+<span class="material-symbols-outlined" style="font-size: 20px;">person</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-medium flex-1">Edit Profile</p>
+</div>
+<div class="shrink-0 text-gray-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">chevron_right</span>
+</div>
+</div>
+<!-- Sync Data -->
+<div class="flex items-center gap-4 px-4 py-3.5 justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="text-white flex items-center justify-center rounded-lg bg-emerald-900/50 dark:bg-emerald-900/30 text-primary shrink-0 size-8">
+<span class="material-symbols-outlined" style="font-size: 20px;">sync</span>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-900 dark:text-white text-base font-medium">Sync Tasks</p>
+<span class="text-xs text-slate-500 dark:text-gray-400">Last synced: 2m ago</span>
+</div>
+</div>
+<div class="shrink-0 text-gray-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Section -->
+<div class="flex flex-col items-center gap-4 mt-4 pb-8">
+<button class="w-full rounded-2xl bg-red-50 dark:bg-red-900/10 p-4 text-red-600 dark:text-red-400 text-base font-semibold hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 20px;">logout</span>
+                    Sign Out
+                </button>
+<div class="text-center">
+<p class="text-xs text-slate-400 dark:text-gray-600 font-medium">TaskMuslim v1.0.2</p>
+<p class="text-[10px] text-slate-300 dark:text-gray-700 mt-1">Made with peace</p>
+</div>
+</div>
+</main>
+</div>
+</body></html>
