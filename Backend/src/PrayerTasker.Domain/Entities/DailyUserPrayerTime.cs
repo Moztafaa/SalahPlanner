@@ -14,6 +14,10 @@ public class DailyUserPrayerTime
     public string? Maghrib { get; set; }
     public string? Isha { get; set; }
     public int Method { get; set; }
+    public string? City { get; set; }
+    public string? Country { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
     public Guid? ApplicationUserId { get; set; }
     public ApplicationUser? ApplicationUser { get; set; }
 }

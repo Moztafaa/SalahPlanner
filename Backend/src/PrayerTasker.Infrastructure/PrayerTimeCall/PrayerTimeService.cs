@@ -41,7 +41,9 @@ public class PrayerTimeService : IPrayerTimeService
             // Get the User from cookie
 
             // Check the cache from DailyUserPrayerTime table before making the API call
-            DailyUserPrayerTime? cachedPrayerTime = await _dailyUserPrayerTimeRepository.GetCachedPrayerTimeAsync(date, method, userId);
+            // Now includes city, country, and coordinates in the cache lookup
+            DailyUserPrayerTime? cachedPrayerTime = await _dailyUserPrayerTimeRepository.GetCachedPrayerTimeAsync(
+                date, method, userId, city, country, latitude, longitude);
 
             if (cachedPrayerTime != null)
             {
@@ -86,7 +88,7 @@ public class PrayerTimeService : IPrayerTimeService
             {
                 throw new PrayerTimeServiceException($"Failed to fetch prayer times. API returned code: {apiResponse?.Code}");
             }
-            // Save to cache
+            // Save to cache with location information
             var newPrayerTime = new DailyUserPrayerTime
             {
                 Id = Guid.NewGuid(),
@@ -98,6 +100,10 @@ public class PrayerTimeService : IPrayerTimeService
                 Maghrib = apiResponse.Data.Timings.Maghrib,
                 Isha = apiResponse.Data.Timings.Isha,
                 Method = method,
+                City = city,
+                Country = country,
+                Latitude = latitude,
+                Longitude = longitude,
                 ApplicationUserId = userId!.ToString() != null ? Guid.Parse(userId) : null
             };
             await _dailyUserPrayerTimeRepository.AddPrayerTimeAsync(newPrayerTime);
