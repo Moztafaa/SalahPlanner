@@ -384,6 +384,7 @@ export default function DashboardScreen() {
             taskCount={data.length}
             isActive={slot === nextPrayerInfo.currentSlot}
             duration={prayerTimes ? getSlotDuration(slot, prayerTimes) : null}
+            slot={slot}
           />
         )}
         renderItem={({ item }) => (
