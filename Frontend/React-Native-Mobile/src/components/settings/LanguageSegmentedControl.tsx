@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 
 interface LanguageSegmentedControlProps {
   value: 'en' | 'ar';
@@ -15,16 +15,16 @@ export default function LanguageSegmentedControl({
   onChange,
 }: LanguageSegmentedControlProps) {
   const handlePress = (lang: 'en' | 'ar') => {
-    if (lang !== value) {
+    if (lang !== value && onChange) {
       onChange(lang);
     }
   };
 
   return (
     <View className="flex-row bg-gray-100 dark:bg-surface-highlight rounded-xl p-1">
-      <TouchableOpacity
+      <Pressable
         onPress={() => handlePress('en')}
-        activeOpacity={0.7}
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         className={`flex-1 py-2 px-4 rounded-lg items-center justify-center ${
           value === 'en' ? 'bg-white dark:bg-surface-dark shadow-sm' : ''
         }`}
@@ -38,10 +38,10 @@ export default function LanguageSegmentedControl({
         >
           English
         </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
+      </Pressable>
+      <Pressable
         onPress={() => handlePress('ar')}
-        activeOpacity={0.7}
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         className={`flex-1 py-2 px-4 rounded-lg items-center justify-center ${
           value === 'ar' ? 'bg-white dark:bg-surface-dark shadow-sm' : ''
         }`}
@@ -55,7 +55,7 @@ export default function LanguageSegmentedControl({
         >
           العربية
         </Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Focus &amp; Pray - Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216", // Deep dark green-black
+                        "surface-dark": "#1c2e21", // Slightly lighter for inputs
+                        "border-dark": "#2a4030", // Border color
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-white">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden">
+<!-- Background decoration -->
+<div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none"></div>
+<!-- Safe Area / Top Bar for Mobile context -->
+<div class="flex items-center p-4 pt-12 pb-2 justify-between z-10">
+<button class="text-slate-900 dark:text-white flex size-12 shrink-0 items-center justify-center rounded-full active:bg-slate-200 dark:active:bg-surface-dark transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+</button>
+<div class="w-12"></div> <!-- Spacer for alignment -->
+</div>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col justify-center px-6 pb-10 max-w-md mx-auto w-full z-10">
+<!-- Logo / Icon -->
+<div class="flex justify-center mb-8">
+<div class="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/30 shadow-[0_0_30px_rgba(19,236,91,0.15)]">
+<span class="material-symbols-outlined text-primary" style="font-size: 32px;">mosque</span>
+</div>
+</div>
+<!-- Headline Text -->
+<div class="text-center mb-8">
+<h1 class="text-slate-900 dark:text-white tracking-tight text-[32px] font-bold leading-tight mb-2">Welcome Back</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">Sign in to manage your prayers and tasks.</p>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-5">
+<!-- Email Field -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-900 dark:text-white text-sm font-medium leading-normal ml-1" for="email">Email</label>
+<div class="relative">
+<input class="form-input flex w-full min-w-0 resize-none overflow-hidden rounded-xl text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark h-14 placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 py-3 text-base font-normal leading-normal transition-all" id="email" placeholder="name@example.com" type="email" value=""/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none opacity-0 peer-valid:opacity-100">
+<!-- Visual indicator for valid input if needed -->
+</div>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-900 dark:text-white text-sm font-medium leading-normal ml-1" for="password">Password</label>
+<div class="relative group">
+<input class="form-input flex w-full min-w-0 resize-none overflow-hidden rounded-xl text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark h-14 placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 py-3 text-base font-normal leading-normal transition-all pr-12" id="password" placeholder="Enter your password" type="password" value=""/>
+<button class="absolute right-0 top-0 h-full px-4 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none" type="button">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility_off</span>
+</button>
+</div>
+<div class="flex justify-end mt-1">
+<a class="text-sm font-medium text-primary hover:text-primary/80 transition-colors" href="#">Forgot Password?</a>
+</div>
+</div>
+<!-- Login Button -->
+<button class="mt-4 w-full h-14 bg-primary hover:bg-primary/90 active:scale-[0.98] transition-all rounded-xl flex items-center justify-center shadow-[0_4px_20px_rgba(19,236,91,0.2)]" type="button">
+<span class="text-background-dark text-base font-bold leading-normal">Log In</span>
+</button>
+</form>
+<!-- Footer -->
+<div class="mt-8 text-center">
+<p class="text-slate-500 dark:text-slate-400 text-sm">
+                    Don't have an account? 
+                    <a class="font-bold text-primary hover:text-primary/80 ml-1 transition-colors" href="#">Sign up</a>
+</p>
+</div>
+</div>
+<!-- Bottom Safe Area Spacer -->
+<div class="h-8 w-full bg-transparent"></div>
+</div>
+</body></html>

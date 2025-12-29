@@ -38,7 +38,7 @@ export default function SlotHeader({ title, taskCount, isActive, duration, slot 
   const iconInfo = getSlotIcon(slot);
 
   return (
-    <View className="bg-background-light dark:bg-background-dark px-4 py-3 flex-row items-center justify-between border-b border-gray-100 dark:border-white/5">
+    <View className="bg-background-light dark:bg-background-dark px-4 py-4 flex-row items-center justify-between border-b border-gray-100 dark:border-white/5">
       <View className="flex-row items-center gap-3">
         <View className="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 items-center justify-center">
           <Ionicons name={iconInfo.name} size={16} color={iconInfo.color} />

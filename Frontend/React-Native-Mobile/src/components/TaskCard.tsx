@@ -28,22 +28,22 @@ export default function TaskCard({ task, onToggleComplete, onDelete, onEdit }: T
   };
 
   const renderRightActions = () => (
-    <View className="flex-row h-full items-center mb-3">
+    <View className="flex-row items-center mb-3 ml-2">
       {onEdit && (
         <TouchableOpacity
-          className="bg-blue-500 justify-center items-center w-16 h-full"
+          className="bg-gray-200 dark:bg-gray-700 justify-center items-center w-12 h-12 rounded-full mr-2"
           onPress={() => onEdit(task)}
           activeOpacity={0.7}
         >
-          <Ionicons name="pencil" size={24} color="white" />
+          <Ionicons name="pencil" size={20} color="#4b5563" />
         </TouchableOpacity>
       )}
       <TouchableOpacity
-        className="bg-red-500 justify-center items-center w-16 h-full rounded-r-xl"
+        className="bg-red-100 dark:bg-red-900/30 justify-center items-center w-12 h-12 rounded-full"
         onPress={handleDelete}
         activeOpacity={0.7}
       >
-        <Ionicons name="trash" size={24} color="white" />
+        <Ionicons name="trash-outline" size={20} color="#ef4444" />
       </TouchableOpacity>
     </View>
   );

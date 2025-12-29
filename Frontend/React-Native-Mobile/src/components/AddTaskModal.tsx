@@ -8,13 +8,17 @@ import {
   ScrollView,
   Platform,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Dimensions,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { PrayerTimeSlot, PrayerTimeSlotLabels, CreateTaskDto, Task, UpdateTaskDto } from '../types';
+import { PrayerTimeSlot, CreateTaskDto, Task, UpdateTaskDto } from '../types';
 import { format } from 'date-fns';
 import { enUS, ar } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
+import { GestureHandlerRootView, GestureDetector, Gesture } from 'react-native-gesture-handler';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming } from 'react-native-reanimated';
 
 interface AddTaskModalProps {
   visible: boolean;
@@ -25,6 +29,8 @@ interface AddTaskModalProps {
   defaultSlot?: PrayerTimeSlot;
   defaultDate?: Date;
 }
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default function AddTaskModal({
   visible,
@@ -41,9 +47,38 @@ export default function AddTaskModal({
   const [slot, setSlot] = useState<PrayerTimeSlot>(defaultSlot);
   const [taskDate, setTaskDate] = useState<Date>(defaultDate || new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showSlotPicker, setShowSlotPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const wasVisible = React.useRef(false);
+
+  const translateY = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      translateY.value = 0;
+    }
+  }, [visible]);
+
+  const pan = Gesture.Pan()
+    .onChange((event) => {
+      if (event.translationY > 0) {
+        translateY.value = event.translationY;
+      }
+    })
+    .onEnd((event) => {
+      if (event.translationY > 100 || event.velocityY > 500) {
+        translateY.value = withTiming(SCREEN_HEIGHT, {}, () => {
+          runOnJS(onClose)();
+        });
+      } else {
+        translateY.value = withSpring(0);
+      }
+    });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: translateY.value }],
+    };
+  });
 
   useEffect(() => {
     if (visible && !wasVisible.current) {
@@ -153,170 +188,205 @@ export default function AddTaskModal({
       transparent
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-end bg-black/50">
-        <View className="bg-[#f3f4f6] dark:bg-gray-900 rounded-t-3xl p-6 max-h-[90%]">
-          {/* Header */}
-          <View className="flex-row justify-between items-center mb-6">
-            <Text className="text-2xl font-bold text-gray-900 dark:text-white">
-              {taskToEdit ? t('tasks.editTaskTitle') : t('tasks.addTaskTitle')}
-            </Text>
-            <TouchableOpacity onPress={onClose} disabled={loading}>
-              <Ionicons name="close" size={28} color="#6b7280" />
-            </TouchableOpacity>
-          </View>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          className="flex-1 justify-end bg-black/50"
+        >
+          <Animated.View
+            style={[animatedStyle]}
+            className="h-[90%] w-full bg-background-light dark:bg-background-dark rounded-t-[40px] overflow-hidden shadow-2xl border-t-8 border-transparent"
+          >
+            <GestureDetector gesture={pan}>
+              <View>
+                {/* Bottom Sheet Handle */}
+                <View className="flex w-full flex-col items-center justify-center pt-3 pb-1 bg-background-light dark:bg-background-dark z-10">
+                  <View className="h-1.5 w-12 rounded-full bg-gray-300 dark:bg-[#3b5443]" />
+                </View>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {/* Title Input */}
-            <View className="mb-4">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('tasks.taskName')} *</Text>
-              <TextInput
-                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-start"
-                placeholder={t('tasks.taskName')}
-                placeholderTextColor="#9ca3af"
-                value={title}
-                onChangeText={setTitle}
-                editable={!loading}
-                maxLength={100}
-              />
-            </View>
+                {/* Header */}
+                <View className="flex-row items-center justify-between bg-background-light dark:bg-background-dark px-5 py-3 z-10">
+                  <View className="w-10" />
+                  <Text className="flex-1 text-center text-lg font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
+                    {taskToEdit ? t('tasks.editTaskTitle') : t('tasks.addTaskTitle')}
+                  </Text>
+                  <View className="flex w-10 items-center justify-end">
+                    <TouchableOpacity
+                      onPress={onClose}
+                      disabled={loading}
+                      className="flex h-10 w-10 items-center justify-center rounded-full bg-transparent hover:bg-gray-200 dark:hover:bg-white/10"
+                    >
+                      <MaterialIcons name="close" size={24} color={loading ? '#9ca3af' : '#6b7280'} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </GestureDetector>
 
-            {/* Suggested Tasks */}
-            {suggestedTasks.length > 0 && (
-              <View className="mb-4">
-                <Text className="text-xs text-green-600 dark:text-green-400 font-medium mb-2 uppercase tracking-wider">
-                  {t('tasks.quickAdd')}
+            {/* Scrollable Content */}
+            <ScrollView
+              className="flex-1 px-5"
+              contentContainerStyle={{ paddingBottom: 120 }}
+              showsVerticalScrollIndicator={false}
+            >
+              {/* Task Title Input */}
+              <View className="mt-4 flex flex-col gap-2">
+                <Text className="text-base font-semibold leading-normal text-gray-800 dark:text-white">
+                  {t('tasks.taskName')}
                 </Text>
-                <View className="flex-row flex-wrap gap-2">
+                <TextInput
+                  className="h-14 w-full rounded-xl border-none bg-surface-light dark:bg-surface-dark px-4 text-base font-normal text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#9db9a6] shadow-sm"
+                  placeholder={t('tasks.taskName')}
+                  placeholderTextColor="#9ca3af"
+                  value={title}
+                  onChangeText={setTitle}
+                  editable={!loading}
+                  maxLength={100}
+                />
+              </View>
+
+              {/* Suggested Tasks */}
+              {suggestedTasks.length > 0 && (
+                <View className="mt-3 flex-row flex-wrap gap-2">
                   {suggestedTasks.map((task) => (
                     <TouchableOpacity
                       key={task}
-                      className="bg-green-900/10 dark:bg-green-900/30 border border-green-800/20 dark:border-green-400/20 rounded-full px-3 py-1 flex-row items-center"
+                      className="bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30 rounded-full px-3 py-1.5 flex-row items-center"
                       onPress={() => setTitle(task)}
                     >
-                      <Text className="text-green-800 dark:text-green-100 text-sm">
+                      <Text className="text-primary-700 dark:text-primary-300 text-xs font-medium">
                         + {task}
                       </Text>
                     </TouchableOpacity>
                   ))}
                 </View>
-              </View>
-            )}
-
-            {/* Description Input */}
-            <View className="mb-4">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('tasks.description')}</Text>
-              <TextInput
-                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-start"
-                placeholder={t('tasks.description')}
-                placeholderTextColor="#9ca3af"
-                value={description}
-                onChangeText={setDescription}
-                multiline
-                numberOfLines={3}
-                textAlignVertical="top"
-                editable={!loading}
-                maxLength={500}
-              />
-            </View>
-
-            {/* Date Picker */}
-            <View className="mb-4">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('tasks.date')}</Text>
-              <TouchableOpacity
-                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 flex-row items-center"
-                onPress={() => setShowDatePicker(true)}
-                disabled={loading}
-              >
-                <Ionicons name="calendar-outline" size={20} color="#9ca3af" />
-                <Text className="ms-3 text-gray-900 dark:text-white flex-1">
-                  {format(taskDate, 'MMMM d, yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
-                </Text>
-                <Ionicons name="chevron-down" size={20} color="#9ca3af" />
-              </TouchableOpacity>
-
-              {showDatePicker && (
-                <DateTimePicker
-                  value={taskDate}
-                  mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  onChange={(event, selectedDate) => {
-                    setShowDatePicker(Platform.OS === 'ios');
-                    if (selectedDate) {
-                      setTaskDate(selectedDate);
-                    }
-                  }}
-                />
               )}
-            </View>
 
-            {/* Prayer Time Slot Picker */}
-            <View className="mb-6">
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('tasks.prayerTime')} *</Text>
-              <TouchableOpacity
-                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 flex-row items-center"
-                onPress={() => setShowSlotPicker(!showSlotPicker)}
-                disabled={loading}
-              >
-                <Ionicons name="time-outline" size={20} color="#9ca3af" />
-                <Text className="ms-3 text-gray-900 dark:text-white flex-1">
-                  {getSlotLabel(slot)}
+              {/* Notes Input */}
+              <View className="mt-6 flex flex-col gap-2">
+                <Text className="text-base font-semibold leading-normal text-gray-800 dark:text-white">
+                  {t('tasks.description')}
                 </Text>
-                <Ionicons
-                  name={showSlotPicker ? 'chevron-up' : 'chevron-down'}
-                  size={20}
-                  color="#9ca3af"
+                <TextInput
+                  className="min-h-[140px] w-full rounded-xl border-none bg-surface-light dark:bg-surface-dark px-4 py-4 text-base font-normal text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#9db9a6] shadow-sm"
+                  placeholder={t('tasks.description')}
+                  placeholderTextColor="#9ca3af"
+                  value={description}
+                  onChangeText={setDescription}
+                  multiline
+                  textAlignVertical="top"
+                  editable={!loading}
+                  maxLength={500}
                 />
-              </TouchableOpacity>
+              </View>
 
-              {showSlotPicker && (
-                <View className="mt-2 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                  {slotOptions.map((slotOption) => (
-                    <TouchableOpacity
-                      key={slotOption}
-                      className={`px-4 py-3 border-b border-gray-200 dark:border-gray-700 ${
-                        slot === slotOption ? 'bg-primary-50 dark:bg-primary-900/20' : ''
-                      }`}
-                      onPress={() => {
-                        setSlot(slotOption);
-                        setShowSlotPicker(false);
-                      }}
-                      disabled={loading}
-                    >
-                      <Text
-                        className={`${
-                          slot === slotOption
-                            ? 'text-primary-600 dark:text-primary-400 font-semibold'
-                            : 'text-gray-900 dark:text-white'
+              {/* Date Picker */}
+              <View className="mt-6 flex flex-col gap-2">
+                <Text className="text-base font-semibold leading-normal text-gray-800 dark:text-white">
+                  {t('tasks.date')}
+                </Text>
+                <TouchableOpacity
+                  className="h-14 w-full rounded-xl border-none bg-surface-light dark:bg-surface-dark px-4 flex-row items-center shadow-sm"
+                  onPress={() => setShowDatePicker(true)}
+                  disabled={loading}
+                >
+                  <Ionicons name="calendar-outline" size={20} color="#9ca3af" />
+                  <Text className="ms-3 text-base font-normal text-gray-900 dark:text-white flex-1">
+                    {format(taskDate, 'MMMM d, yyyy', { locale: i18n.language === 'ar' ? ar : enUS })}
+                  </Text>
+                  <Ionicons name="chevron-down" size={20} color="#9ca3af" />
+                </TouchableOpacity>
+
+                {showDatePicker && (
+                  <DateTimePicker
+                    value={taskDate}
+                    mode="date"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={(event, selectedDate) => {
+                      setShowDatePicker(Platform.OS === 'ios');
+                      if (selectedDate) {
+                        setTaskDate(selectedDate);
+                      }
+                    }}
+                  />
+                )}
+              </View>
+
+              {/* Prayer Slot Selector */}
+              <View className="mt-8 flex flex-col gap-3">
+                <Text className="text-base font-semibold leading-normal text-gray-800 dark:text-white">
+                  {t('tasks.prayerTime')}
+                </Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  className="-mx-5 px-5 py-1"
+                  contentContainerStyle={{ paddingRight: 20 }}
+                >
+                  {slotOptions.map((slotOption) => {
+                    const isSelected = slot === slotOption;
+                    return (
+                      <TouchableOpacity
+                        key={slotOption}
+                        onPress={() => setSlot(slotOption)}
+                        disabled={loading}
+                        className={`mr-3 rounded-full px-5 py-2.5 border shadow-sm transition-all ${
+                          isSelected
+                            ? 'bg-primary border-primary shadow-primary/20'
+                            : 'bg-white dark:bg-surface-dark border-gray-200 dark:border-white/10'
                         }`}
                       >
-                        {getSlotLabel(slotOption)}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              )}
-            </View>
-
-            {/* Submit Button */}
-            <TouchableOpacity
-              className={`bg-primary-500 dark:bg-primary-600 rounded-xl py-4 mb-4 ${
-                !title.trim() || loading ? 'opacity-50' : ''
-              }`}
-              onPress={handleSubmit}
-              disabled={!title.trim() || loading}
-              activeOpacity={0.8}
-            >
-              {loading ? (
-                <ActivityIndicator color="white" />
-              ) : (
-                <Text className="text-white text-center font-semibold text-lg">
-                  {taskToEdit ? t('common.save') : t('common.add')}
+                        <Text
+                          className={`text-sm ${
+                            isSelected
+                              ? 'font-bold text-background-dark'
+                              : 'font-medium text-gray-600 dark:text-gray-300'
+                          }`}
+                        >
+                          {getSlotLabel(slotOption)}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+                <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {t('tasks.prayerTimeHint', { slot: getSlotLabel(slot) })}
                 </Text>
-              )}
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
-      </View>
+              </View>
+            </ScrollView>
+
+            {/* Action Bar / Footer */}
+            <View className="absolute bottom-0 left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm p-5 border-t border-gray-200 dark:border-white/5 pb-8">
+              <View className="flex-row gap-4">
+                <TouchableOpacity
+                  onPress={onClose}
+                  disabled={loading}
+                  className="flex-1 rounded-xl bg-transparent py-3.5 items-center justify-center hover:bg-gray-100 dark:hover:bg-white/5"
+                >
+                  <Text className="text-base font-semibold text-gray-600 dark:text-gray-400">
+                    {t('common.cancel')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  disabled={!title.trim() || loading}
+                  className={`flex-[2] rounded-xl bg-primary py-3.5 items-center justify-center shadow-lg shadow-primary/25 ${
+                    !title.trim() || loading ? 'opacity-70' : ''
+                  }`}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#102216" />
+                  ) : (
+                    <Text className="text-base font-bold text-background-dark">
+                      {taskToEdit ? t('common.save') : t('common.add')}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Animated.View>
+        </KeyboardAvoidingView>
+      </GestureHandlerRootView>
     </Modal>
   );
 }

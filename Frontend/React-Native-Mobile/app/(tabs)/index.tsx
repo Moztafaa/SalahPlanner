@@ -362,7 +362,7 @@ export default function DashboardScreen() {
         sections={sections}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={true}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 200 }}
         refreshControl={
           <RefreshControl
             refreshing={tasksLoading || prayerTimesLoading}
@@ -387,8 +387,8 @@ export default function DashboardScreen() {
             slot={slot}
           />
         )}
-        renderItem={({ item }) => (
-          <View className="px-4">
+        renderItem={({ item, index }) => (
+          <View className={`px-4 ${index === 0 ? 'mt-3' : ''}`}>
             <TaskCard
               task={item}
               onToggleComplete={toggleTaskMutation.mutate}
@@ -430,8 +430,15 @@ export default function DashboardScreen() {
 
       {/* Floating Add Button */}
       <TouchableOpacity
-        className="absolute bottom-6 right-4 z-40 w-14 h-14 rounded-full bg-primary items-center justify-center shadow-lg shadow-primary/30"
-        onPress={() => handleOpenAddModal(PrayerTimeSlot.BeforeFajr)}
+        className="absolute bottom-32 right-4 z-40 w-14 h-14 rounded-full bg-primary items-center justify-center"
+        style={{
+          shadowColor: '#13ec5b',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.6,
+          shadowRadius: 16,
+          elevation: 12,
+        }}
+        onPress={() => handleOpenAddModal(nextPrayerInfo.currentSlot || PrayerTimeSlot.BeforeFajr)}
         activeOpacity={0.9}
       >
         <MaterialIcons name="add" size={28} color="#102216" />

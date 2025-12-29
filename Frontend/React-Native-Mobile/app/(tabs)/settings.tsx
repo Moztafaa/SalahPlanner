@@ -82,33 +82,20 @@ export default function SettingsScreen() {
     // Change language first
     await i18n.changeLanguage(lang);
 
-    // If RTL state needs to change, show restart alert
+    // If RTL state needs to change, restart automatically
     if (needsRestart) {
+      // Apply RTL changes just before reload
       I18nManager.allowRTL(isRTL);
       I18nManager.forceRTL(isRTL);
 
       // Use setTimeout to ensure we're not in a render cycle
-      setTimeout(() => {
-        Alert.alert(
-          t('settings.language'),
-          t('common.restartApp'),
-          [
-            {
-              text: t('common.ok'),
-              onPress: () => {
-                // Wrap in try-catch and use setTimeout
-                setTimeout(async () => {
-                  try {
-                    await Updates.reloadAsync();
-                  } catch (e) {
-                    // Fallback if Updates not available
-                    console.log('Could not reload app:', e);
-                  }
-                }, 100);
-              },
-            },
-          ]
-        );
+      setTimeout(async () => {
+        try {
+          await Updates.reloadAsync();
+        } catch (e) {
+          // Fallback if Updates not available
+          console.log('Could not reload app:', e);
+        }
       }, 100);
     }
   };

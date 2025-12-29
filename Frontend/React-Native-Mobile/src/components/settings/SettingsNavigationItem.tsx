@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, Pressable, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -33,9 +33,9 @@ export default function SettingsNavigationItem({
   };
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={handlePress}
-      activeOpacity={0.7}
+      style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
       className={`flex-row items-center justify-between px-4 py-3.5 ${
         showBorder ? 'border-b border-gray-100 dark:border-surface-highlight' : ''
       }`}
@@ -65,6 +65,6 @@ export default function SettingsNavigationItem({
         size={20}
         color={theme === 'dark' ? '#6b7280' : '#9ca3af'}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 }

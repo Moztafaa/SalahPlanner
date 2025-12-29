@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add Task Modal</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-dark": "#1a2c23", // Slightly lighter than background-dark for inputs
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", 
+                        "lg": "0.5rem", 
+                        "xl": "0.75rem", 
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black font-display antialiased">
+<!-- Mobile Screen Wrapper -->
+<div class="relative mx-auto flex h-screen max-h-[900px] w-full max-w-md flex-col overflow-hidden bg-background-light dark:bg-background-dark shadow-2xl md:my-8 md:rounded-[40px] md:border-8 md:border-gray-900">
+<!-- Status Bar Area (Visual only) -->
+<div class="h-6 w-full shrink-0 bg-background-light dark:bg-background-dark"></div>
+<!-- Bottom Sheet Handle -->
+<div class="flex w-full flex-col items-center justify-center pt-2 pb-1 bg-background-light dark:bg-background-dark z-10">
+<div class="h-1.5 w-12 rounded-full bg-gray-300 dark:bg-[#3b5443]"></div>
+</div>
+<!-- Header -->
+<div class="flex items-center justify-between bg-background-light dark:bg-background-dark px-5 py-3 z-10">
+<div class="w-10"></div> <!-- Spacer for centering title -->
+<h2 class="flex-1 text-center text-lg font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
+                Add New Task
+            </h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-5 pb-32">
+<!-- Task Title Input -->
+<div class="mt-4 flex flex-col gap-2">
+<label class="text-base font-semibold leading-normal text-gray-800 dark:text-white">
+                    What needs to be done?
+                </label>
+<input class="h-14 w-full rounded-xl border-none bg-surface-light dark:bg-surface-dark px-4 text-base font-normal text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#9db9a6] focus:ring-2 focus:ring-primary/50 shadow-sm" placeholder="e.g., Read Surah Kahf" type="text"/>
+</div>
+<!-- Notes Input -->
+<div class="mt-6 flex flex-col gap-2">
+<label class="text-base font-semibold leading-normal text-gray-800 dark:text-white">
+                    Notes
+                </label>
+<textarea class="min-h-[140px] w-full resize-none rounded-xl border-none bg-surface-light dark:bg-surface-dark px-4 py-4 text-base font-normal text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#9db9a6] focus:ring-2 focus:ring-primary/50 shadow-sm" placeholder="Add details..."></textarea>
+</div>
+<!-- Prayer Slot Selector -->
+<div class="mt-8 flex flex-col gap-3">
+<label class="text-base font-semibold leading-normal text-gray-800 dark:text-white">
+                    Assign to Prayer Window
+                </label>
+<div class="no-scrollbar -mx-5 flex snap-x gap-3 overflow-x-auto px-5 py-1">
+<!-- Fajr (Unselected) -->
+<button class="snap-start shrink-0 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-all hover:border-primary/50 dark:border-white/10 dark:bg-surface-dark dark:text-gray-300 dark:hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/50">
+                        Fajr
+                    </button>
+<!-- Dhuhr (Selected) -->
+<button class="snap-start shrink-0 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-background-dark shadow-md shadow-primary/20 transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-dark">
+                        Dhuhr
+                    </button>
+<!-- Asr (Unselected) -->
+<button class="snap-start shrink-0 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-all hover:border-primary/50 dark:border-white/10 dark:bg-surface-dark dark:text-gray-300 dark:hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/50">
+                        Asr
+                    </button>
+<!-- Maghrib (Unselected) -->
+<button class="snap-start shrink-0 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-all hover:border-primary/50 dark:border-white/10 dark:bg-surface-dark dark:text-gray-300 dark:hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/50">
+                        Maghrib
+                    </button>
+<!-- Isha (Unselected) -->
+<button class="snap-start shrink-0 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-all hover:border-primary/50 dark:border-white/10 dark:bg-surface-dark dark:text-gray-300 dark:hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/50">
+                        Isha
+                    </button>
+</div>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Task will be scheduled during the Dhuhr window (12:30 PM - 3:45 PM)
+                </p>
+</div>
+</div>
+<!-- Action Bar / Footer -->
+<div class="absolute bottom-0 left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm p-5 border-t border-gray-200 dark:border-white/5 pb-8">
+<div class="flex gap-4">
+<button class="flex-1 rounded-xl bg-transparent py-3.5 text-base font-semibold text-gray-600 dark:text-gray-400 transition-colors hover:bg-gray-100 dark:hover:bg-white/5">
+                    Cancel
+                </button>
+<button class="flex-[2] rounded-xl bg-primary py-3.5 text-base font-bold text-background-dark shadow-lg shadow-primary/25 transition-transform active:scale-[0.98] hover:brightness-105">
+                    Save Task
+                </button>
+</div>
+</div>
+</div>
+</body></html>
