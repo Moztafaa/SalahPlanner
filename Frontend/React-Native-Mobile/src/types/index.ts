@@ -70,6 +70,8 @@ export interface LoginResponseDto {
   fullName: string;
   token: string;
   expiration: Date;
+  refreshToken?: string; // Optional for backward compatibility
+  refreshTokenExpiration?: Date; // Optional for backward compatibility
   message: string;
 }
 
@@ -94,6 +96,10 @@ export interface UserSettingsDto {
   isAutoLocation?: boolean;
   calculationMethod: number;
   timeFormat?: "12h" | "24h";
+}
+
+export interface RefreshTokenRequestDto {
+  refreshToken: string;
 }
 
 // ============================================

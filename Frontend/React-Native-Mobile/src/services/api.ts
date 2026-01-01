@@ -17,6 +17,7 @@ import {
   UpdateTaskSlotDto,
   PrayerTimesDto,
   ApiError,
+  RefreshTokenRequestDto,
 } from "../types";
 import { format } from "date-fns";
 
@@ -46,7 +47,21 @@ console.log("Using API URL:", API_BASE_URL);
 
 // Secure token storage keys
 const TOKEN_KEY = "auth_token";
+const REFRESH_TOKEN_KEY = "refresh_token";
 const USER_KEY = "current_user";
+
+// Flag to prevent multiple refresh attempts
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const subscribeTokenRefresh = (cb: (token: string) => void) => {
+  refreshSubscribers.push(cb);
+};
+
+const onRefreshed = (token: string) => {
+  refreshSubscribers.forEach((cb) => cb(token));
+  refreshSubscribers = [];
+};
 
 // ============================================
 // Axios Instance Configuration
@@ -80,11 +95,15 @@ apiClient.interceptors.request.use(
 );
 
 // ============================================
-// Response Interceptor - Handle Errors
+// Response Interceptor - Handle Errors & Token Refresh
 // ============================================
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<ApiError>) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
     // Debug logging for network errors
     console.log("API Error:", {
       url: error.config?.url,
@@ -92,15 +111,64 @@ apiClient.interceptors.response.use(
       status: error.response?.status,
       message: error.message,
       code: error.code,
-      data: error.response?.data, // Log the server response data
+      data: error.response?.data,
     });
 
-    // Handle 401 Unauthorized - Token expired
-    if (error.response?.status === 401) {
-      await SecureStore.deleteItemAsync(TOKEN_KEY);
-      await SecureStore.deleteItemAsync(USER_KEY);
-      // You can trigger navigation to login here if needed
+    // Handle 401 Unauthorized - Try to refresh token
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Wait for the ongoing refresh to complete
+        return new Promise((resolve) => {
+          subscribeTokenRefresh((token: string) => {
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+            }
+            resolve(apiClient(originalRequest));
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+
+        if (!refreshToken) {
+          // No refresh token, logout user
+          await authApi.logout();
+          return Promise.reject(error);
+        }
+
+        // Call refresh endpoint
+        const { data } = await axios.post<LoginResponseDto>(
+          `${API_BASE_URL}/Account/refresh`,
+          { refreshToken }
+        );
+
+        // Store new tokens
+        await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+        if (data.refreshToken) {
+          await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, data.refreshToken);
+        }
+        await SecureStore.setItemAsync(USER_KEY, JSON.stringify(data));
+
+        isRefreshing = false;
+        onRefreshed(data.token);
+
+        // Retry original request with new token
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${data.token}`;
+        }
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        isRefreshing = false;
+        // Refresh failed, logout user
+        await authApi.logout();
+        return Promise.reject(refreshError);
+      }
     }
+
     return Promise.reject(error);
   }
 );
@@ -119,6 +187,12 @@ export const authApi = {
     );
     // Store token and user data securely
     await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+
+    // Store refresh token if available (backward compatibility)
+    if (data.refreshToken) {
+      await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, data.refreshToken);
+    }
+
     await SecureStore.setItemAsync(USER_KEY, JSON.stringify(data));
     return data;
   },
@@ -139,6 +213,7 @@ export const authApi = {
    */
   logout: async (): Promise<void> => {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
+    await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
     await SecureStore.deleteItemAsync(USER_KEY);
   },
 
@@ -167,6 +242,35 @@ export const authApi = {
       console.error("Error reading token from secure store:", error);
       return null;
     }
+  },
+
+  /**
+   * Get refresh token from secure storage
+   */
+  getRefreshToken: async (): Promise<string | null> => {
+    try {
+      return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+    } catch (error) {
+      console.error("Error reading refresh token from secure store:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Manually refresh access token
+   */
+  refreshToken: async (refreshToken: string): Promise<LoginResponseDto> => {
+    const { data } = await apiClient.post<LoginResponseDto>(
+      "/Account/refresh",
+      { refreshToken } as RefreshTokenRequestDto
+    );
+    // Update stored tokens
+    await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+    if (data.refreshToken) {
+      await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, data.refreshToken);
+    }
+    await SecureStore.setItemAsync(USER_KEY, JSON.stringify(data));
+    return data;
   },
 
   /**

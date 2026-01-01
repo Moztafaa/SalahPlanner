@@ -22,20 +22,69 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuthStatus();
   }, []);
 
+  // Auto-refresh token every 3 days (or when approaching expiry)
+  useEffect(() => {
+    if (!user || !user.refreshTokenExpiration) return; // Skip if no refresh token support
+
+    const checkAndRefreshToken = async () => {
+      try {
+        const refreshToken = await authApi.getRefreshToken();
+        if (!refreshToken) {
+          return; // No refresh token, skip auto-refresh
+        }
+
+        // Check if refresh token is approaching expiration (refresh 1 hour before)
+        const refreshExpiration = new Date(user.refreshTokenExpiration);
+        const now = new Date();
+        const hourBeforeExpiry = new Date(refreshExpiration.getTime() - 60 * 60 * 1000);
+
+        if (now >= hourBeforeExpiry) {
+          console.log('Refresh token approaching expiration, refreshing...');
+          const newAuthData = await authApi.refreshToken(refreshToken);
+          setUser(newAuthData);
+        }
+      } catch (error) {
+        console.error('Error checking/refreshing token:', error);
+        // Don't logout on refresh error, just log it
+      }
+    };
+
+    // Check token status immediately
+    checkAndRefreshToken();
+
+    // Set up interval to check every hour
+    const interval = setInterval(checkAndRefreshToken, 60 * 60 * 1000); // Check every hour
+
+    return () => clearInterval(interval);
+  }, [user]);
+
   const checkAuthStatus = async () => {
     try {
       const currentUser = await authApi.getCurrentUser();
       const token = await authApi.getToken();
+      const refreshToken = await authApi.getRefreshToken();
 
       if (currentUser && token) {
-        // Check if token is still valid
-        const expiration = new Date(currentUser.expiration);
-        if (expiration > new Date()) {
-          setUser(currentUser);
+        // Check if refresh token is available and valid
+        if (refreshToken && currentUser.refreshTokenExpiration) {
+          const refreshExpiration = new Date(currentUser.refreshTokenExpiration);
+          if (refreshExpiration > new Date()) {
+            setUser(currentUser);
+          } else {
+            // Refresh token expired, logout
+            await authApi.logout();
+            setUser(null);
+          }
         } else {
-          // Token expired, clear storage
-          await authApi.logout();
-          setUser(null);
+          // Old backend without refresh tokens - check access token
+          const expiration = new Date(currentUser.expiration);
+          if (expiration > new Date()) {
+            setUser(currentUser);
+          } else {
+            // Token expired, logout
+            await authApi.logout();
+            setUser(null);
+          }
         }
       }
     } catch (error) {
