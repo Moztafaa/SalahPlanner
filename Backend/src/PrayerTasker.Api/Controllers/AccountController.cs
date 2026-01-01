@@ -108,4 +108,43 @@ public class AccountController(IAccountService _accountService) : ControllerBase
         return Ok(new { Message = "Logout successful" });
     }
 
+    /// <summary>
+    /// Refresh access token using refresh token
+    /// </summary>
+    [HttpPost("refresh")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            LoginResponseDto response = await _accountService.RefreshTokenAsync(request.RefreshToken);
+            return Ok(response);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { Message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Revoke all refresh tokens for the current user
+    /// </summary>
+    [HttpPost("revoke")]
+    [Authorize]
+    public async Task<IActionResult> RevokeToken()
+    {
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new { Message = "User ID not found in token" });
+        }
+
+        await _accountService.RevokeRefreshTokenAsync(userId);
+        return Ok(new { Message = "Tokens revoked successfully" });
+    }
+
 }

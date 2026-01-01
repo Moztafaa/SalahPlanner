@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PrayerTasker.Application.DTOs.Account;
@@ -37,11 +38,29 @@ public class JwtService(IConfiguration configuration) : IJwtService
         );
         var tokenHandler = new JwtSecurityTokenHandler();
         string tokenString = tokenHandler.WriteToken(token);
+
+        // Generate refresh token
+        string refreshToken = GenerateRefreshToken();
+        int refreshTokenDays = int.Parse(jwtSettings["REFRESH_TOKEN_EXPIRATION_DAYS"] ?? "3");
+        DateTime refreshTokenExpiration = DateTime.UtcNow.AddDays(refreshTokenDays);
+
         return new LoginResponseDto
         {
-            
             Token = tokenString,
-            Expiration = expiration
+            Expiration = expiration,
+            RefreshToken = refreshToken,
+            RefreshTokenExpiration = refreshTokenExpiration
         };
+    }
+
+    /// <summary>
+    /// Generates a cryptographically secure random refresh token
+    /// </summary>
+    public string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }

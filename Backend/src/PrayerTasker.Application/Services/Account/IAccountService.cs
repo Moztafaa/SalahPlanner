@@ -17,4 +17,8 @@ public interface IAccountService
     Task<IdentityResult> SetUserSettingsAsync(string userId, UserSettingsDto settings);
     // Get user settings
     Task<UserSettingsDto?> GetUserSettingsAsync(string userId);
+
+    // Refresh token methods
+    Task<LoginResponseDto> RefreshTokenAsync(string refreshToken);
+    Task RevokeRefreshTokenAsync(string userId);
 }

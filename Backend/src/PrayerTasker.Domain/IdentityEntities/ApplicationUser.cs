@@ -13,6 +13,5 @@ public class ApplicationUser : IdentityUser<Guid>
     public int CalculationMethod { get; set; }
     public ICollection<Taask>? Tasks { get; set; }
     public ICollection<DailyUserPrayerTime>? PrayerTimeCache { get; set; }
-
-
+    public ICollection<RefreshToken>? RefreshTokens { get; set; }
 }

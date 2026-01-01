@@ -7,5 +7,5 @@ namespace PrayerTasker.Application.Services.Account;
 public interface IJwtService
 {
     LoginResponseDto CreateToken(ApplicationUser user);
-
+    string GenerateRefreshToken();
 }

@@ -15,6 +15,5 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     }
     public DbSet<Taask> Tasks { get; set; }
     public DbSet<DailyUserPrayerTime> DailyUserPrayerTimes { get; set; }
-    
-
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 }

@@ -23,6 +23,7 @@ public static class ServiceContainer
 
         services.AddScoped<IDailyUserPrayerTimeRepository, DailyUserPrayerTimeRepository>();
         services.AddScoped<ITaskRepository, TaskRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         // add infrastructure services here for identity, database, logging, etc.
         // Identity
