@@ -29,13 +29,16 @@ const getApiBaseUrl = () => {
     // Development mode
     if (Platform.OS === "android") {
       // For physical device, use your machine's IP address
-      return "http://192.168.1.13:5169/api";
+      // return "http://192.168.1.13:5169/api";
+      return "https://salahplanner.runasp.net/api";
     } else if (Platform.OS === "ios") {
-      return "http://localhost:5169/api"; // iOS simulator
+      // return "http://localhost:5169/api"; // iOS simulator
       // return "http://192.168.1.11:5169/api"; // Physical iOS device
+      return "https://salahplanner.runasp.net/api";
     }
   }
-  return "http://192.168.1.13:5169/api"; // Default / Production
+  // Production - deployed API
+  return "https://salahplanner.runasp.net/api";
 };
 
 const API_BASE_URL = getApiBaseUrl();

@@ -104,7 +104,7 @@ public class PrayerTimeService : IPrayerTimeService
                 Country = country,
                 Latitude = latitude,
                 Longitude = longitude,
-                ApplicationUserId = userId!.ToString() != null ? Guid.Parse(userId) : null
+                ApplicationUserId = !string.IsNullOrEmpty(userId) ? Guid.Parse(userId) : null
             };
             await _dailyUserPrayerTimeRepository.AddPrayerTimeAsync(newPrayerTime);
 
