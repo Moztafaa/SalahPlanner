@@ -20,24 +20,22 @@ builder.Services.AddCors(options => options.AddPolicy("AllowAngularApp", policy 
             .AllowAnyHeader()
             .AllowAnyMethod()));
 
-// ?: Fix Maghrib is empty in Prayer Times response (Done)
-
 
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+// if (app.Environment.IsDevelopment())
+// {
+app.MapOpenApi();
+// }
 
 app.UseCors("AllowAngularApp");
 
 // Only use HTTPS redirection in development or if HTTPS is available
-if (app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
+// if (app.Environment.IsDevelopment())
+// {
+app.UseHttpsRedirection();
+// }
 
 app.UseMiddleware<ExceptionMiddleware>();
 

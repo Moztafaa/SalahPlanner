@@ -86,7 +86,7 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 bg-white dark:bg-gray-900"
+      className="flex-1 bg-background-light dark:bg-background-dark"
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -100,10 +100,10 @@ export default function RegisterScreen() {
               className="w-24 h-24 mb-4"
               resizeMode="contain"
             />
-            <Text className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <Text className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
               {t('auth.createAccount')}
             </Text>
-            <Text className="text-gray-600 dark:text-gray-300 text-center">
+            <Text className="text-slate-500 dark:text-slate-400 text-center">
               {t('auth.joinApp')}
             </Text>
           </View>
@@ -112,13 +112,13 @@ export default function RegisterScreen() {
           <View className="space-y-4">
             {/* Full Name */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.fullName')}</Text>
-              <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-                <Ionicons name="person-outline" size={20} color="#9ca3af" />
+              <Text className="text-slate-900 dark:text-white font-medium mb-2">{t('auth.fullName')}</Text>
+              <View className="flex-row items-center bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-xl px-4 py-3">
+                <Ionicons name="person-outline" size={20} color="#94a3b8" />
                 <TextInput
-                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  className="flex-1 ms-3 text-slate-900 dark:text-white text-start"
                   placeholder={t('auth.fullName')}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#94a3b8"
                   value={fullName}
                   onChangeText={setFullName}
                   autoCapitalize="words"
@@ -129,13 +129,13 @@ export default function RegisterScreen() {
 
             {/* Username */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.username')}</Text>
-              <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-                <Ionicons name="at-outline" size={20} color="#9ca3af" />
+              <Text className="text-slate-900 dark:text-white font-medium mb-2">{t('auth.username')}</Text>
+              <View className="flex-row items-center bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-xl px-4 py-3">
+                <Ionicons name="at-outline" size={20} color="#94a3b8" />
                 <TextInput
-                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  className="flex-1 ms-3 text-slate-900 dark:text-white text-start"
                   placeholder={t('auth.username')}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#94a3b8"
                   value={userName}
                   onChangeText={setUserName}
                   autoCapitalize="none"
@@ -146,13 +146,13 @@ export default function RegisterScreen() {
 
             {/* Email */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.email')}</Text>
-              <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-                <Ionicons name="mail-outline" size={20} color="#9ca3af" />
+              <Text className="text-slate-900 dark:text-white font-medium mb-2">{t('auth.email')}</Text>
+              <View className="flex-row items-center bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-xl px-4 py-3">
+                <Ionicons name="mail-outline" size={20} color="#94a3b8" />
                 <TextInput
-                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  className="flex-1 ms-3 text-slate-900 dark:text-white text-start"
                   placeholder={t('auth.email')}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#94a3b8"
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -165,13 +165,13 @@ export default function RegisterScreen() {
 
             {/* Password */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.password')}</Text>
-              <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-                <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" />
+              <Text className="text-slate-900 dark:text-white font-medium mb-2">{t('auth.password')}</Text>
+              <View className="flex-row items-center bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-xl px-4 py-3">
+                <Ionicons name="lock-closed-outline" size={20} color="#94a3b8" />
                 <TextInput
-                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  className="flex-1 ms-3 text-slate-900 dark:text-white text-start"
                   placeholder={t('auth.password')}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#94a3b8"
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry={!showPassword}
@@ -182,7 +182,7 @@ export default function RegisterScreen() {
                   <Ionicons
                     name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                     size={20}
-                    color="#9ca3af"
+                    color="#94a3b8"
                   />
                 </TouchableOpacity>
               </View>
@@ -190,13 +190,13 @@ export default function RegisterScreen() {
 
             {/* Confirm Password */}
             <View>
-              <Text className="text-gray-900 dark:text-white font-medium mb-2">{t('auth.confirmPassword')}</Text>
-              <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-                <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" />
+              <Text className="text-slate-900 dark:text-white font-medium mb-2">{t('auth.confirmPassword')}</Text>
+              <View className="flex-row items-center bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-xl px-4 py-3">
+                <Ionicons name="lock-closed-outline" size={20} color="#94a3b8" />
                 <TextInput
-                  className="flex-1 ms-3 text-gray-900 dark:text-white text-start"
+                  className="flex-1 ms-3 text-slate-900 dark:text-white text-start"
                   placeholder={t('auth.confirmPassword')}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#94a3b8"
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
                   secureTextEntry={!showConfirmPassword}
@@ -207,7 +207,7 @@ export default function RegisterScreen() {
                   <Ionicons
                     name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
                     size={20}
-                    color="#9ca3af"
+                    color="#94a3b8"
                   />
                 </TouchableOpacity>
               </View>
@@ -215,15 +215,15 @@ export default function RegisterScreen() {
 
             {/* Register Button */}
             <TouchableOpacity
-              className="bg-primary-500 dark:bg-primary-600 rounded-xl py-4 mt-6"
+              className="bg-primary rounded-xl py-4 mt-6"
               onPress={handleRegister}
               disabled={loading}
               activeOpacity={0.8}
             >
               {loading ? (
-                <ActivityIndicator color="white" />
+                <ActivityIndicator color="#102216" />
               ) : (
-                <Text className="text-white text-center font-semibold text-lg">
+                <Text className="text-background-dark text-center font-semibold text-lg">
                   {t('auth.createAccount')}
                 </Text>
               )}
@@ -231,10 +231,10 @@ export default function RegisterScreen() {
 
             {/* Login Link */}
             <View className="flex-row justify-center items-center mt-6">
-              <Text className="text-gray-600 dark:text-gray-300">{t('auth.alreadyHaveAccount')} </Text>
+              <Text className="text-slate-500 dark:text-slate-400">{t('auth.alreadyHaveAccount')} </Text>
               <Link href="/(auth)/login" asChild>
                 <TouchableOpacity disabled={loading}>
-                  <Text className="text-primary-500 dark:text-primary-400 font-semibold">{t('auth.login')}</Text>
+                  <Text className="text-primary font-semibold">{t('auth.login')}</Text>
                 </TouchableOpacity>
               </Link>
             </View>

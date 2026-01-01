@@ -19,6 +19,10 @@ module.exports = {
           800: "#166534",
           900: "#14532d",
         },
+        "background-light": "#f6f8f6",
+        "background-dark": "#102216",
+        "surface-dark": "#1c2e21",
+        "border-dark": "#2a4030",
         background: {
           light: "#f6f8f6",
           dark: "#102216",
@@ -26,7 +30,7 @@ module.exports = {
         },
         surface: {
           light: "#ffffff",
-          dark: "#16281e",
+          dark: "#1c2e21",
           highlight: "#1f3629",
         },
         text: {
